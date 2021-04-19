@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    image: blockchain-client
+    container_name: blockchain-react-client
+    command: yarn start
+    volumes:
+      - ./website/:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:3000"
