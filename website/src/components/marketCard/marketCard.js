@@ -7,26 +7,33 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
- 
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
     borderRadius: 8,
-    color: '#444'
+    color: "#444",
   },
   media: {
     height: 180,
     width: 180,
   },
 });
- 
-const MarketCard = ({ name, frequency, owner, imgUrl, price, auctionPrice }) => {
+
+const MarketCard = ({
+  name,
+  frequency,
+  owner,
+  imgUrl,
+  price,
+  auctionPrice,
+}) => {
   const classes = useStyles();
- 
+
   return (
     <Card className={classes.root} variant="outlined">
       <CardActionArea>
-        <CardMedia className={classes.media} image={imgUrl} title={name} />
+        {/* <CardMedia className={classes.media} image={imgUrl} title={name} /> */}
         <CardContent>
           <Typography variant="caption" comp>
             {frequency}
@@ -34,6 +41,7 @@ const MarketCard = ({ name, frequency, owner, imgUrl, price, auctionPrice }) => 
           <Typography gutterBottom variant="h7" component="h1">
             {name}
           </Typography>
+          <CardMedia className={classes.media} image={imgUrl} title={name} />
         </CardContent>
       </CardActionArea>
       <CardActions>
@@ -54,7 +62,7 @@ const MarketCard = ({ name, frequency, owner, imgUrl, price, auctionPrice }) => 
         <Typography gutterBottom variant="subtitle2" component="h2">
           Auction:
         </Typography>
- 
+
         <Button size="small" color="primary">
           {auctionPrice}
         </Button>
@@ -62,7 +70,5 @@ const MarketCard = ({ name, frequency, owner, imgUrl, price, auctionPrice }) => 
     </Card>
   );
 };
- 
-export default MarketCard;
- 
 
+export default MarketCard;

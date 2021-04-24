@@ -4,6 +4,8 @@ import { RecoilRoot } from "recoil";
 
 import CharacterCounter from "./containers/Demo/demo";
 import MarketPlace from "./containers/marketPlace/marketPlace";
+import Profile from "./containers/profile/profile";
+import ItemPage from "./containers/itemPage/itemPage";
 
 import Navbar from "./components/navbar/navbar";
 const App = () => {
@@ -16,6 +18,12 @@ const App = () => {
         </Switch>
         <Switch>
           <Route exact path="/marketplace" component={MarketPlace} />
+        </Switch>
+        <Switch>
+          <Route path="/profile" component={Profile} />
+        </Switch>
+        <Switch>
+          <Route path="/itempage" component={ItemPage} />
         </Switch>
       </Router>
     </RecoilRoot>
