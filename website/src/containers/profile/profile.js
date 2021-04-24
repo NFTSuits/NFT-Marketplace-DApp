@@ -1,54 +1,50 @@
 import React from "react";
 import Web3 from "web3";
 import Button from "@material-ui/core/Button";
-
+import { Container, Typography } from "@material-ui/core";
+// https://awantoch.medium.com/how-to-connect-web3-js-to-metamask-in-2020-fee2b2edf58a
 const Profile = () => {
-  const connectButton = () => {
-    console.log("deemee");
+
+  const ethEnabled = () => {
+    if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+      window.ethereum.enable();
+      return true;
+    }
+    return false;
   };
 
-  let web3 = null;
-  if (typeof web3 !== "undefined" && typeof window.web3 !== "undefined") {
-    web3 = new Web3(Web3.currentProvider);
-  }
-
-  React.useEffect(async () => {
-    const network = await web3.eth.net.getNetworkType();
-
-    console.log(network);
-  }, []);
+  const connectButton = () => {
+    if (!ethEnabled()) {
+      alert("Please install MetaMask to use this dApp!");
+    }
+    console.log("window.web3:",window.web3);
+  };
 
   return (
+    <Container maxWidth="md">
     <Button
       onClick={() => {
         connectButton();
       }}
     >
-      Profile
+      Connect
     </Button>
+    <Button
+      onClick={async () =>  {
+        if (window.web3 && window.web3.eth) {
+          window.web3 = new Web3(window.web3.currentProvider);
+          alert(await window.web3.eth.getAccounts());
+        }
+        else{
+          alert("connect your wallet");
+        }
+      }}
+    >
+    Info
+    </Button>
+  </Container>
   );
 };
 
 export default Profile;
-
-// import Web3 from "web3";
-
-// let web3 = null;
-// if (typeof web3 !== "undefined") {
-//   web3 = new Web3(web3.currentProvider);
-// } else {
-//   // set the provider you want from Web3.providers
-//   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-// }
-
-// var web3;
-
-// function init() {
-//   if (typeof web3 !== 'undefined') {
-//     console.log('Web3 found');
-//     window.web3 = new Web3(web3.currentProvider);
-//     web3.eth.defaultAccount = web3.eth.accounts[0];
-//   } else {
-//      console.error('web3 was undefined');
-//   }
-// }
