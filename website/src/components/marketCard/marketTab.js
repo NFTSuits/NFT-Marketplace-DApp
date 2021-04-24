@@ -1,19 +1,63 @@
 import React from "react";
 import { Typography, Paper, Tabs, Tab, AppBar, Box } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import PhoneIcon from "@material-ui/icons/Phone";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import PersonPinIcon from "@material-ui/icons/PersonPin";
-import HelpIcon from "@material-ui/icons/Help";
-import ShoppingBasket from "@material-ui/icons/ShoppingBasket";
-import ThumbDown from "@material-ui/icons/ThumbDown";
-import ThumbUp from "@material-ui/icons/ThumbUp";
+import { withStyles , makeStyles } from "@material-ui/core/styles";
+import FaceIcon from "@material-ui/icons/Face";
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import PropTypes from "prop-types";
 
 import MarketCardList from "./marketCardList";
 const MarketCardData = [
   {
     name: "Card1",
+    frequency: "Legendary",
+    owner: "Beni",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    price: "10",
+    auctionPrice: "12",
+  },
+  {
+    name: "Card2",
+    frequency: "Ordinary",
+    owner: "Neden",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    price: "10",
+    auctionPrice: "20",
+  },
+  {
+    name: "Card3",
+    frequency: "Rare",
+    owner: "Yazmadınız",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    price: "15",
+    auctionPrice: "20",
+  },
+  {
+    name: "Card1",
+    frequency: "Legendary",
+    owner: "Beni",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    price: "10",
+    auctionPrice: "12",
+  },
+  {
+    name: "Card2",
+    frequency: "Ordinary",
+    owner: "Sevmiyor",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    price: "10",
+    auctionPrice: "20",
+  },
+  {
+    name: "Card3",
+    frequency: "Rare",
+    owner: "Musunuz",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    price: "15",
+    auctionPrice: "20",
+  },
+  {
+    name: "Card1",
+    frequency: "Legendary",
     owner: "Gokberk",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
@@ -21,6 +65,7 @@ const MarketCardData = [
   },
   {
     name: "Card2",
+    frequency: "Ordinary",
     owner: "Kaya",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
@@ -28,6 +73,7 @@ const MarketCardData = [
   },
   {
     name: "Card3",
+    frequency: "Rare",
     owner: "Cavit",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
@@ -35,6 +81,7 @@ const MarketCardData = [
   },
   {
     name: "Card1",
+    frequency: "Legendary",
     owner: "Gokberk",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
@@ -42,6 +89,7 @@ const MarketCardData = [
   },
   {
     name: "Card2",
+    frequency: "Ordinary",
     owner: "Kaya",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
@@ -49,6 +97,7 @@ const MarketCardData = [
   },
   {
     name: "Card3",
+    frequency: "Rare",
     owner: "Cavit",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
@@ -56,27 +105,31 @@ const MarketCardData = [
   },
   {
     name: "Card1",
-    owner: "Gokberk",
+    frequency: "Legendary",
+    owner: "Beni",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
   },
   {
     name: "Card2",
-    owner: "Kaya",
+    frequency: "Ordinary",
+    owner: "Neden",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
   },
   {
     name: "Card3",
-    owner: "Cavit",
+    frequency: "Rare",
+    owner: "Yazmadınız",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
   },
   {
     name: "Card1",
+    frequency: "Legendary",
     owner: "Gokberk",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
@@ -84,6 +137,7 @@ const MarketCardData = [
   },
   {
     name: "Card2",
+    frequency: "Ordinary",
     owner: "Kaya",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
@@ -91,48 +145,7 @@ const MarketCardData = [
   },
   {
     name: "Card3",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-  },
-  {
-    name: "Card1",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-  },
-  {
-    name: "Card2",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-  },
-  {
-    name: "Card3",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-  },
-  {
-    name: "Card1",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-  },
-  {
-    name: "Card2",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-  },
-  {
-    name: "Card3",
+    frequency: "Rare",
     owner: "Cavit",
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
@@ -153,6 +166,40 @@ function a11yProps(index) {
   };
 }
 
+const StyledTabs = withStyles({
+  indicator: {
+    top: 5,
+    bottom: 5,
+    marginLeft: 4,
+    height: '80%',
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    '& > span': {
+      borderRadius: 10,
+      width: '100%',
+      backgroundColor: '#919191',
+      opacity: 0.15
+    },
+  },
+})((props) => <Tabs {...props} TabIndicatorProps = {{children: <span/>}} />);
+
+const StyledTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    color: '#5d5d5d',
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(15),
+    marginRight: theme.spacing(1),
+    '&:focus': {
+      opacity: 1,
+    },
+    alignSelf: 'center',
+  },
+}))((props) => <Tab disableRipple {...props} />);
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -160,6 +207,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
 }));
+
 const MarketTab = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -169,12 +217,13 @@ const MarketTab = () => {
   };
   return (
     <div className={classes.root}>
-      <AppBar
-        style={{ width: "%40", minWidth: "300" }}
-        position="static"
-        color="default"
-      >
-        <Tabs
+    <AppBar style={{  width: "%40", 
+                      maxWidth: "300",
+                      borderRadius: 10
+                    }}         
+            position="static"         
+            color="default">
+        <StyledTabs
           value={value}
           onChange={handleChange}
           variant="fullWidth"
@@ -183,11 +232,12 @@ const MarketTab = () => {
           textColor="primary"
           aria-label="scrollable force tabs example"
         >
-          <Tab label="Item One" icon={<PhoneIcon />} {...a11yProps(0)} />
-          <Tab label="Item Two" icon={<FavoriteIcon />} {...a11yProps(1)} />
-          <Tab label="Item Three" icon={<PersonPinIcon />} {...a11yProps(2)} />
-        </Tabs>
+          <StyledTab label = {<div><FaceIcon style = { {verticalAlign : 'middle', marginRight: 8} } /> Bean </div>} {...a11yProps(0)} />
+          <StyledTab label = {<div><AccessibilityNewIcon style = { {verticalAlign : 'middle', marginRight: 8} } /> Top Wear </div>} {...a11yProps(0)} />
+          <StyledTab label = {<div><AccessibilityNewIcon style = { {verticalAlign : 'middle', marginRight: 8} } /> Bottom Wear </div>} {...a11yProps(0)} />
+        </StyledTabs>
       </AppBar>
+
       <TabPanel value={value} index={0}>
         <MarketCardList marketCards={MarketCardData} />
       </TabPanel>

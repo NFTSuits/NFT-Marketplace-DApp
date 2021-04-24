@@ -4,12 +4,13 @@ import MarketTab from "../../components/marketCard/marketTab";
 
 const MarketPlace = () => {
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" color="primary">
+    <Container maxWidth="md">
+      <Typography variant="h4" color="primary" style={{ marginBottom: 20,
+                                                        marginTop: 30}}>
         MarketPlace
       </Typography>
 
-      <MarketTab />
+      <MarketTab style={{marginTop: 10}}/>
     </Container>
   );
 };
