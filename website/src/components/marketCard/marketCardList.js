@@ -56,6 +56,7 @@ const MarketCardList = (props) => {
         <GridListTile key={index}>
           <MarketCard
             name={cardItem.name}
+            frequency={cardItem.frequency}
             owner={cardItem.owner}
             imgUrl={cardItem.imgUrl}
             price={cardItem.price}
