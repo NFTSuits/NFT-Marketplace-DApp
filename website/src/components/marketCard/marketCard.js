@@ -7,16 +7,23 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { Grid, Container, Paper } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
     borderRadius: 8,
     color: "#444",
+    backgroundColor: "#e7e7e7",
+    maxHeight: 395,
   },
   media: {
-    height: 180,
-    width: 180,
+    height: 220,
+    width: "100%",
+  },
+  bidPriceInfoContainer: {
+    marginLeft: 15,
   },
 });
 
@@ -29,44 +36,69 @@ const MarketCard = ({
   auctionPrice,
 }) => {
   const classes = useStyles();
-
   return (
     <Card className={classes.root} variant="outlined">
-      <CardActionArea>
-        {/* <CardMedia className={classes.media} image={imgUrl} title={name} /> */}
-        <CardContent>
-          <Typography variant="caption" comp>
-            {frequency}
-          </Typography>
-          <Typography gutterBottom variant="h7" component="h1">
-            {name}
-          </Typography>
-          <CardMedia className={classes.media} image={imgUrl} title={name} />
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <Typography gutterBottom variant="caption">
-          Owner:
-        </Typography>
-        <Button size="small" color="primary">
-          {owner}
-        </Button>
-      </CardActions>
-      <CardActions>
-        <Typography gutterBottom variant="subtitle2" component="h2">
-          Price:
-        </Typography>
-        <Button size="small" color="primary">
-          {price}
-        </Button>
-        <Typography gutterBottom variant="subtitle2" component="h2">
-          Auction:
-        </Typography>
+      <div>
+        <CardActionArea
+          onClick={() => {
+            console.log("elma");
+          }}
+        >
+          <Grid container direction="column">
+            <Grid item xs={12}>
+              <CardMedia
+                className={classes.media}
+                image={imgUrl}
+                title={name}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <CardContent>
+                <Typography variant="caption">{frequency}</Typography>
+                <Typography gutterBottom variant="h7" component="h1">
+                  {name}
+                </Typography>
+              </CardContent>
+            </Grid>
+          </Grid>
+        </CardActionArea>
+      </div>
 
-        <Button size="small" color="primary">
-          {auctionPrice}
-        </Button>
-      </CardActions>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          className={classes.bidPriceInfoContainer}
+          // style={{ marginTop: -20 }}
+        >
+          <AccountCircleIcon
+            style={{ verticalAlign: "middle", marginRight: 8 }}
+          />
+          <Typography gutterBottom variant="caption">
+            Owner:
+          </Typography>
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              console.log("owner");
+            }}
+          >
+            {owner}
+          </Button>
+        </div>
+        <div className={classes.bidPriceInfoContainer}>
+          <Typography gutterBottom variant="caption">
+            Bid: {auctionPrice}
+          </Typography>
+        </div>
+        <div
+          className={classes.bidPriceInfoContainer}
+          style={{ marginBottom: 10 }}
+        >
+          <Typography gutterBottom variant="caption">
+            Price: {price}
+          </Typography>
+        </div>
+      </div>
     </Card>
   );
 };

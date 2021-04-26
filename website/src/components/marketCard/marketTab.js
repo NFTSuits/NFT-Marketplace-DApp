@@ -1,8 +1,8 @@
 import React from "react";
 import { Typography, Paper, Tabs, Tab, AppBar, Box } from "@material-ui/core";
-import { withStyles , makeStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import FaceIcon from "@material-ui/icons/Face";
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 import PropTypes from "prop-types";
 
 import MarketCardList from "./marketCardList";
@@ -72,10 +72,10 @@ const MarketCardData = [
     auctionPrice: "20",
   },
   {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    name: "Car  d3",
+
+    imgUrl:
+      "h);t}tps://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
   },
@@ -171,34 +171,32 @@ const StyledTabs = withStyles({
     top: 5,
     bottom: 5,
     marginLeft: 4,
-    height: '80%',
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    '& > span': {
+    height: "80%",
+    display: "flex",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    "& > span": {
       borderRadius: 10,
-      width: '100%',
-      backgroundColor: '#919191',
-      opacity: 0.15
+      width: "100%",
+      backgroundColor: "#919191",
+      opacity: 0.15,
     },
   },
-})((props) => <Tabs {...props} TabIndicatorProps = {{children: <span/>}} />);
+})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
 const StyledTab = withStyles((theme) => ({
   root: {
-    textTransform: 'none',
-    color: '#5d5d5d',
+    textTransform: "none",
+    color: "#5d5d5d",
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(15),
     marginRight: theme.spacing(1),
-    '&:focus': {
+    "&:focus": {
       opacity: 1,
     },
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 }))((props) => <Tab disableRipple {...props} />);
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -217,12 +215,11 @@ const MarketTab = () => {
   };
   return (
     <div className={classes.root}>
-    <AppBar style={{  width: "%40", 
-                      maxWidth: "300",
-                      borderRadius: 10
-                    }}         
-            position="static"         
-            color="default">
+      <AppBar
+        style={{ width: "%40", maxWidth: "300", borderRadius: 10 }}
+        position="static"
+        color="default"
+      >
         <StyledTabs
           value={value}
           onChange={handleChange}
@@ -232,9 +229,37 @@ const MarketTab = () => {
           textColor="primary"
           aria-label="scrollable force tabs example"
         >
-          <StyledTab label = {<div><FaceIcon style = { {verticalAlign : 'middle', marginRight: 8} } /> Bean </div>} {...a11yProps(0)} />
-          <StyledTab label = {<div><AccessibilityNewIcon style = { {verticalAlign : 'middle', marginRight: 8} } /> Top Wear </div>} {...a11yProps(0)} />
-          <StyledTab label = {<div><AccessibilityNewIcon style = { {verticalAlign : 'middle', marginRight: 8} } /> Bottom Wear </div>} {...a11yProps(0)} />
+          <StyledTab
+            label={
+              <div>
+                <FaceIcon style={{ verticalAlign: "middle", marginRight: 8 }} />{" "}
+                Bean{" "}
+              </div>
+            }
+            {...a11yProps(0)}
+          />
+          <StyledTab
+            label={
+              <div>
+                <AccessibilityNewIcon
+                  style={{ verticalAlign: "middle", marginRight: 8 }}
+                />{" "}
+                Top Wear{" "}
+              </div>
+            }
+            {...a11yProps(0)}
+          />
+          <StyledTab
+            label={
+              <div>
+                <AccessibilityNewIcon
+                  style={{ verticalAlign: "middle", marginRight: 8 }}
+                />{" "}
+                Bottom Wear{" "}
+              </div>
+            }
+            {...a11yProps(0)}
+          />
         </StyledTabs>
       </AppBar>
 
