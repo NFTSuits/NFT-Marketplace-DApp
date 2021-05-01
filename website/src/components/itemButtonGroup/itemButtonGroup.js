@@ -1,14 +1,24 @@
 import React from "react";
 import { makeStyles, Button, TextField } from "@material-ui/core";
 
+const useStyles = makeStyles({
+  myButton: {
+    color: "#fff",
+    backgroundColor: "#000",
+  },
+});
+
 const ItemButtonGroup = () => {
+  const classes = useStyles();
   const isBuyable = true;
   const isBidable = true;
   const isOnSale = true;
   const isOnAuction = true;
   const isThirdPerson = false;
 
-  const buyButton = isBuyable ? <Button>Buy</Button> : null;
+  const buyButton = isBuyable ? (
+    <Button className={classes.myButton}>Buy</Button>
+  ) : null;
 
   const bidButton = isBidable ? (
     <>

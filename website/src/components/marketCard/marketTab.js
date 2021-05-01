@@ -1,9 +1,27 @@
 import React from "react";
-import { Typography, Paper, Tabs, Tab, AppBar, Box } from "@material-ui/core";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import FaceIcon from "@material-ui/icons/Face";
 import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 import PropTypes from "prop-types";
+
+import {
+  Typography,
+  Tabs,
+  Tab,
+  AppBar,
+  Box,
+  Button,
+  Grid,
+  Container,
+  Paper,
+  Table,
+  TableRow,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableBody,
+  IconButton,
+} from "@material-ui/core";
 
 import MarketCardList from "./marketCardList";
 const MarketCardData = [
@@ -72,10 +90,10 @@ const MarketCardData = [
     auctionPrice: "20",
   },
   {
-    name: "Car  d3",
-
-    imgUrl:
-      "h);t}tps://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+    name: "Card3",
+    frequency: "Rare",
+    owner: "Musunuz",
+    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
   },
@@ -262,7 +280,21 @@ const MarketTab = () => {
           />
         </StyledTabs>
       </AppBar>
-
+      <div>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
+        >
+          <Grid item xs={4}>
+            deneme
+          </Grid>
+          <Grid item xs={4}>
+            deneme
+          </Grid>
+        </Grid>
+      </div>
       <TabPanel value={value} index={0}>
         <MarketCardList marketCards={MarketCardData} />
       </TabPanel>

@@ -36,11 +36,24 @@ const useStyles = makeStyles((theme) => ({
     // width: theme.spacing(25),
     // height: theme.spacing(25),
   },
+  numberTextStyle: {
+    color: "black",
+    marginBottom: 30,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
 }));
 
 // https://awantoch.medium.com/how-to-connect-web3-js-to-metamask-in-2020-fee2b2edf58a
 const Profile = () => {
   const classes = useStyles();
+  const [items, setitems] = React.useState([
+    { id: 1, title: "item #1" },
+    { id: 2, title: "item #2" },
+    { id: 3, title: "item #3" },
+    { id: 4, title: "item #4" },
+    { id: 5, title: "item #5" },
+  ]);
 
   // const ethEnabled = () => {
   //   if (window.web3) {
@@ -95,8 +108,8 @@ const Profile = () => {
             <Grid
               container
               direction="row"
-              justify="space-between"
-              alignItems="flex-start"
+              justify="space-around"
+              alignItems="center"
             >
               <Grid className={classes.profileLeft} item xs={4}>
                 <Avatar
@@ -106,16 +119,86 @@ const Profile = () => {
                 />
               </Grid>
 
-              <Grid item xs={7}>
-                @gokberkyar
+              <Grid item xs={6}>
+                <Typography variant="h4" color="initial">
+                  @gokberkyar
+                </Typography>
               </Grid>
             </Grid>
-            xs=4
+
+            <Grid
+              style={{ marginTop: 30 }}
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="flex-start"
+            >
+              <Grid item xs={3}>
+                <Typography variant="h5" style={{ color: "grey" }}>
+                  # Items
+                </Typography>
+
+                <Typography variant="h5" className={classes.numberTextStyle}>
+                  5
+                </Typography>
+                <Typography variant="h5" style={{ color: "grey" }}>
+                  # Sold
+                </Typography>
+                <Typography variant="h5" className={classes.numberTextStyle}>
+                  7
+                </Typography>
+                <Typography variant="h5" style={{ color: "grey" }}>
+                  # Sale
+                </Typography>
+                <Typography variant="h5" className={classes.numberTextStyle}>
+                  10
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant="h5" style={{ color: "grey" }}>
+                  # Spend
+                </Typography>
+                <Typography variant="h5" className={classes.numberTextStyle}>
+                  10$
+                </Typography>
+                <Typography variant="h5" style={{ color: "grey" }}>
+                  # Earned
+                </Typography>
+                <Typography variant="h5" className={classes.numberTextStyle}>
+                  15$
+                </Typography>
+                <Typography variant="h5" style={{ color: "grey" }}>
+                  # Possible
+                </Typography>
+                <Typography variant="h5" className={classes.numberTextStyle}>
+                  186
+                </Typography>
+              </Grid>
+            </Grid>
           </Paper>
         </Grid>
+
         <Grid item xs={7}>
-          <Paper variant="outlined" className={classes.paper}>
-            xs=8
+          <Paper
+            style={{ height: 300 }}
+            variant="outlined"
+            className={classes.paper}
+          >
+            <Carousel>
+              {items.map((item) => (
+                <Paper key={item.id}>{item.title}</Paper>
+              ))}
+            </Carousel>
+            <Carousel>
+              {items.map((item) => (
+                <div key={item.id}>{item.title}</div>
+              ))}
+            </Carousel>
+            <Carousel>
+              {items.map((item) => (
+                <div key={item.id}>{item.title}</div>
+              ))}
+            </Carousel>
           </Paper>
         </Grid>
       </Grid>

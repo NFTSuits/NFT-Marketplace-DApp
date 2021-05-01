@@ -3,10 +3,14 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import StorefrontIcon from "@material-ui/icons/Storefront";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import LabelIcon from "@material-ui/icons/Label";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -174,43 +178,50 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            CryptoBıdıs
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            <Button color="inherit">
+              <SupervisedUserCircleIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              Avatars
+            </Button>
+            <Button color="inherit">
+              <LabelIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              All items
+            </Button>
+            <Button color="inherit">
+              <StorefrontIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              Marketplace
+            </Button>
+            <Button color="inherit">
+              <AccountCircle
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              Profile
+            </Button>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
