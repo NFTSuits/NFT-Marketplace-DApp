@@ -11,13 +11,18 @@ import {
   TableContainer,
   TableHead,
   TableBody,
+  Typography,
   IconButton,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CloseIcon from "@material-ui/icons/Close";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
-
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import PanToolSharpIcon from "@material-ui/icons/PanToolSharp";
+import LocalOfferSharpIcon from "@material-ui/icons/LocalOfferSharp";
+import StarsIcon from "@material-ui/icons/Stars";
+import DnsIcon from "@material-ui/icons/Dns";
 import ItemButtonGroup from "../../components/itemButtonGroup/itemButtonGroup";
 
 {
@@ -76,7 +81,7 @@ const ItemPage = () => {
           alignItems="center"
           style={{ height: "90vh" }}
         >
-          <Grid container>
+          <Grid container style={{ marginTop: 40 }}>
             <Grid item xs={12}>
               <Grid
                 container
@@ -86,21 +91,107 @@ const ItemPage = () => {
               >
                 {/* <Paper variant="outlined"> */}
                 <div
-                // style={{
-                //   backgroundColor: "#666600",
-                //   width: "100%",
-                // }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginLeft: 20,
+                  }}
                 >
-                  Name: {MarketCardData.name}
+                  <div>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <Typography variant="h2" display="block" gutterbottom>
+                        Name: {MarketCardData.name}
+                      </Typography>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 20,
+                      }}
+                    >
+                      <StarsIcon
+                        style={{
+                          verticalAlign: "middle",
+                          marginTop: 5,
+                          marginRight: 5,
+                          fontSize: 20,
+                        }}
+                      />
+                      <Typography
+                        variant="overline"
+                        display="block"
+                        gutterbottom
+                      >
+                        Rarity: {MarketCardData.rarity}
+                      </Typography>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 10,
+                      }}
+                    >
+                      <AccountCircleIcon
+                        style={{
+                          verticalAlign: "middle",
+                          marginTop: 2,
+                          marginRight: 5,
+                          fontSize: 20,
+                        }}
+                      />
+                      <Typography variant="body1" display="block" gutterbottom>
+                        Owner: {MarketCardData.owner}
+                      </Typography>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 10,
+                      }}
+                    >
+                      <LocalOfferSharpIcon
+                        style={{
+                          verticalAlign: "middle",
+                          marginTop: 3,
+                          marginRight: 5,
+                          fontSize: 20,
+                        }}
+                      />
+                      <Typography variant="body1" display="block" gutterbottom>
+                        Price: Ξ {MarketCardData.price}
+                      </Typography>
+                    </div>
+                    <div>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <PanToolSharpIcon
+                          style={{
+                            verticalAlign: "middle",
+                            marginRight: 5,
+                            marginTop: 2,
+                            fontSize: 20,
+                          }}
+                        />
+                        <Typography
+                          variant="body1"
+                          display="block"
+                          gutterbottom
+                        >
+                          Highest Bid: Ξ {MarketCardData.auctionPrice}
+                        </Typography>
+                      </div>
+                      {!isThirdPerson && <Button>isThirdPerson=false</Button>}
+                    </div>
+                  </div>
+                  <div style={{ marginRight: 140, marginTop: 30 }}>
+                    <ItemButtonGroup />
+                  </div>
                 </div>
-                <div>Rarity: {MarketCardData.rarity}</div>
-                <div>owner: {MarketCardData.owner}</div>
-                <div>price: {MarketCardData.price}</div>
-                <div>
-                  highest bid: milyor milyar ETH
-                  {!isThirdPerson && <Button>isThirdPerson=false</Button>}
-                </div>
-                <ItemButtonGroup />
                 {/* </Paper> */}
               </Grid>
             </Grid>
@@ -114,7 +205,7 @@ const ItemPage = () => {
                 {/* <Paper variant="outlined"> */}
                 <TableContainer
                   component={Paper}
-                  style={{ marginTop: 50, width: "60vw", height: "50vh" }}
+                  style={{ marginTop: 50, width: "60vw", height: "40vh" }}
                 >
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -127,7 +218,7 @@ const ItemPage = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableRow key={0} style={{ backgroundColor: "#00ff00" }}>
+                      <TableRow key={0}>
                         <TableCell align="center">a</TableCell>
 
                         <TableCell align="center">b</TableCell>
@@ -135,7 +226,7 @@ const ItemPage = () => {
                         <TableCell align="center">d</TableCell>
                         <TableCell align="center">e</TableCell>
                       </TableRow>
-                      <TableRow key={1} style={{ backgroundColor: "#0000ff" }}>
+                      <TableRow key={1}>
                         <TableCell align="center">a</TableCell>
 
                         <TableCell align="center">b</TableCell>
@@ -143,7 +234,7 @@ const ItemPage = () => {
                         <TableCell align="center">d</TableCell>
                         <TableCell align="center">e</TableCell>
                       </TableRow>
-                      <TableRow key={2} style={{ backgroundColor: "#ff0000" }}>
+                      <TableRow key={2}>
                         <TableCell align="center">a</TableCell>
 
                         <TableCell align="center">b</TableCell>
@@ -151,7 +242,7 @@ const ItemPage = () => {
                         <TableCell align="center">d</TableCell>
                         <TableCell align="center">e</TableCell>
                       </TableRow>
-                      <TableRow key={3} style={{ backgroundColor: "#ff00ff" }}>
+                      <TableRow key={3}>
                         <TableCell align="center">a</TableCell>
 
                         <TableCell align="center">b</TableCell>

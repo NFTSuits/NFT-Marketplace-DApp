@@ -45,6 +45,7 @@ const MarketCard = ({
   imgUrl,
   price,
   auctionPrice,
+  type,
 }) => {
   const classes = useStyles();
   return (
@@ -97,7 +98,7 @@ const MarketCard = ({
                         }}
                       />
                       <Typography variant="caption">
-                        Highest bid: Ξ {auctionPrice}
+                        Highest bid: Ξ {auctionPrice} , {type}
                       </Typography>
                     </div>
                   </div>

@@ -61,6 +61,7 @@ const MarketCardList = (props) => {
             imgUrl={cardItem.imgUrl}
             price={cardItem.price}
             auctionPrice={cardItem.auctionPrice}
+            type={cardItem.type}
           />
         </GridListTile>
       ))}

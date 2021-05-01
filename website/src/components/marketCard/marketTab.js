@@ -21,7 +21,14 @@ import {
   TableHead,
   TableBody,
   IconButton,
+  Switch,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
+
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import MarketCardList from "./marketCardList";
 const MarketCardData = [
@@ -32,6 +39,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
+    type: "bean",
   },
   {
     name: "Card2",
@@ -40,6 +48,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
+    type: "topWear",
   },
   {
     name: "Card3",
@@ -48,6 +57,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
+    type: "bottomWear",
   },
   {
     name: "Card1",
@@ -56,6 +66,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
+    type: "bean",
   },
   {
     name: "Card2",
@@ -64,6 +75,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
+    type: "topWear",
   },
   {
     name: "Card3",
@@ -72,6 +84,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
+    type: "bottomWear",
   },
   {
     name: "Card1",
@@ -80,6 +93,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
+    type: "bean",
   },
   {
     name: "Card2",
@@ -88,6 +102,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
+    type: "topWear",
   },
   {
     name: "Card3",
@@ -96,6 +111,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
+    type: "bottomWear",
   },
   {
     name: "Card1",
@@ -104,6 +120,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
+    type: "bean",
   },
   {
     name: "Card2",
@@ -112,6 +129,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
+    type: "topWear",
   },
   {
     name: "Card3",
@@ -120,6 +138,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
+    type: "bottomWear",
   },
   {
     name: "Card1",
@@ -128,6 +147,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
+    type: "bean",
   },
   {
     name: "Card2",
@@ -136,6 +156,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
+    type: "topWear",
   },
   {
     name: "Card3",
@@ -144,6 +165,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
+    type: "bottomWear",
   },
   {
     name: "Card1",
@@ -152,6 +174,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "12",
+    type: "bean",
   },
   {
     name: "Card2",
@@ -160,6 +183,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "10",
     auctionPrice: "20",
+    type: "topWear",
   },
   {
     name: "Card3",
@@ -168,6 +192,7 @@ const MarketCardData = [
     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
     price: "15",
     auctionPrice: "20",
+    type: "bottomWear",
   },
 ];
 
@@ -280,29 +305,121 @@ const MarketTab = () => {
           />
         </StyledTabs>
       </AppBar>
-      <div>
+      <div style={{ marginTop: 20, marginLeft: 45, marginRight: 60 }}>
         <Grid
           container
           direction="row"
           justify="space-between"
           alignItems="flex-start"
         >
-          <Grid item xs={4}>
-            deneme
+          <Grid item xs={10}>
+            <Grid
+              container
+              direction="column"
+              justify="space-between"
+              alignItems="flex-start"
+            >
+              <Grid item>Filter By:</Grid>
+              <Grid item>
+                <FormGroup row style={{ marginLeft: -16 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        // checked={state.checkedA}
+                        // onChange={handleChange}
+                        name="Biddable"
+                      />
+                    }
+                    label="Biddable"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        // checked={state.checkedB}
+                        // onChange={handleChange}
+                        name="Fixed Price"
+                        color="primary"
+                      />
+                    }
+                    label="Fixed Price"
+                    labelPlacement="start"
+                  />
+                  <div
+                    style={{ marginTop: 10, marginLeft: 20, marginRight: 10 }}
+                  >
+                    Rarity:
+                  </div>
+                  <FormControl>
+                    {/* <InputLabel htmlFor="age-native-simple">Rarity</InputLabel> */}
+                    <Select
+                      style={{ width: 100 }}
+                      native
+                      // value={state.age}
+                      // onChange={handleChange}
+                      inputProps={{
+                        name: "age",
+                        id: "age-native-simple",
+                      }}
+                    >
+                      <option value={10}>All</option>
+                      <option value={10}>Legendary</option>
+                      <option value={10}>Epic</option>
+                      <option value={20}>Rare</option>
+                      <option value={30}>Common</option>
+                    </Select>
+                  </FormControl>
+                </FormGroup>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            deneme
+          <Grid item xs={2}>
+            <Grid
+              container
+              direction="column"
+              justify="space-between"
+              alignItems="flex-start"
+            >
+              <Grid>Sort By:</Grid>
+              <Grid>
+                <FormControl>
+                  {/* <InputLabel htmlFor="age-native-simple">Age</InputLabel> */}
+                  <Select
+                    style={{ width: 150 }}
+                    native
+                    // value={state.age}
+                    // onChange={handleChange}
+                    inputProps={{
+                      name: "age",
+                      id: "age-native-simple",
+                    }}
+                  >
+                    <option value={10}>Ten</option>
+                    <option value={20}>Twenty</option>
+                    <option value={30}>Thirty</option>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </div>
       <TabPanel value={value} index={0}>
-        <MarketCardList marketCards={MarketCardData} />
+        <MarketCardList
+          marketCards={MarketCardData.filter((item) => item.type == "bean")}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <MarketCardList marketCards={MarketCardData} />
+        <MarketCardList
+          marketCards={MarketCardData.filter((item) => item.type == "topWear")}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <MarketCardList marketCards={MarketCardData} />
+        <MarketCardList
+          marketCards={MarketCardData.filter(
+            (item) => item.type == "bottomWear"
+          )}
+        />
       </TabPanel>
     </div>
   );
