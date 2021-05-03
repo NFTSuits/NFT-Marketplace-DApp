@@ -18,6 +18,14 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import Web3 from "web3";
+import addresses from "../../constants/contracts";
+
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { getUsername } from "../../recoils/selectors";
+import { myUsername, myAddress } from "../../recoils/atoms";
+
+import Username from "../../abis/username.json";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -90,9 +98,47 @@ const Navbar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [address, setAddress] = useRecoilState(myAddress);
+  const [username, setUsername] = useRecoilState(myUsername);
+  const [triggerEth, setTriggerEth] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  window.ethereum.on("accountsChanged", function (accounts) {
+    setAddress("");
+    setUsername("");
+    setTriggerEth(!triggerEth);
+  });
+
+  React.useEffect(async () => {
+    try {
+      window.web3 = new Web3("http://localhost:8545");
+      if (window.ethereum) {
+        await window.ethereum.enable(); // pop up
+        let myAddress = await window.ethereum.selectedAddress;
+
+        var smart_contract_interface = new window.web3.eth.Contract(
+          Username.abi,
+          addresses.USERNAME_ADDRESS
+        );
+
+        console.log("methods:", smart_contract_interface.methods);
+
+        smart_contract_interface.methods
+          .usernames(myAddress)
+          .call()
+          .then((data) => {
+            console.log("dataa", data);
+            setUsername(data);
+          });
+
+        setAddress(myAddress);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [triggerEth]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -185,6 +231,19 @@ const Navbar = () => {
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+            {useRecoilValue(getUsername)}
+
+            {window.ethereum && !window.ethereum.selectedAddress && (
+              <>
+                <Button
+                  onClick={() => {
+                    setTriggerEth(!triggerEth);
+                  }}
+                >
+                  Connect
+                </Button>
+              </>
+            )}
             <Button color="inherit">
               <SupervisedUserCircleIcon
                 style={{

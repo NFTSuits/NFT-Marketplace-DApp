@@ -29,6 +29,9 @@ import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 
+import { myUsername, myAddress } from "../../recoils/atoms";
+import { getUsername } from "../../recoils/selectors";
+
 import MarketCardList from "../../components/marketCard/marketCardList";
 const MarketCardData = [
   {
@@ -316,6 +319,9 @@ const Profile = () => {
 
   const UpperProfile = () => {
     const classes = useStyles();
+
+    const username = useRecoilValue(getUsername);
+
     return (
       <Grid
         container
@@ -333,7 +339,7 @@ const Profile = () => {
 
         <Grid item xs={6}>
           <Typography variant="h5" color="initial">
-            @gokberkyar
+            @{username}
           </Typography>
         </Grid>
       </Grid>
@@ -458,6 +464,8 @@ const Profile = () => {
     }))((props) => <Tab disableRipple {...props} />);
 
     const [value, setValue] = useRecoilState(tabValueState);
+    const username = useRecoilValue(myUsername);
+    const address = useRecoilValue(myAddress);
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
