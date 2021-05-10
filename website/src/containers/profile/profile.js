@@ -33,6 +33,7 @@ import { myUsername, myAddress } from "../../recoils/atoms";
 import { getUsername } from "../../recoils/selectors";
 
 import MarketCardList from "../../components/marketCard/marketCardList";
+
 const MarketCardData = [
   {
     name: "Card1",
@@ -392,7 +393,7 @@ const Profile = () => {
             15$
           </Typography>
           <Typography variant="h5" style={{ color: "grey" }}>
-            Possible
+            #gorkem
           </Typography>
           <Typography variant="h5" className={classes.numberTextStyle}>
             186
@@ -522,17 +523,6 @@ const Profile = () => {
                 }
                 {...a11yProps(1)}
               />
-              <StyledTab
-                label={
-                  <div>
-                    <AccessibilityNewIcon
-                      style={{ verticalAlign: "middle", marginRight: 4 }}
-                    />{" "}
-                    On Sale
-                  </div>
-                }
-                {...a11yProps(2)}
-              />
             </StyledTabs>
           </AppBar>
         </Grid>
@@ -549,9 +539,6 @@ const Profile = () => {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <ProfileAllItems />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <ProfileOnSale />
         </TabPanel>
       </>
     );
@@ -735,30 +722,6 @@ const Profile = () => {
         </Grid>
         <Grid item xs={12} style={{ marginTop: 20 }}>
           <MarketCardList marketCards={MarketCardData} />
-        </Grid>
-      </Grid>
-    );
-  };
-  const ProfileOnSale = () => {
-    const classes = useStyles();
-
-    return (
-      <Grid
-        style={{ marginTop: 30 }}
-        container
-        direction="row"
-        justify="space-around"
-        alignItems="flex-start"
-      >
-        <Grid item xs={12}>
-          <FilterItems />
-        </Grid>
-        <Grid item xs={12} style={{ marginTop: 20 }}>
-          <MarketCardList
-            marketCards={MarketCardData.filter(
-              (item) => item.type == "topWear"
-            )}
-          />
         </Grid>
       </Grid>
     );

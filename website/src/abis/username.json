@@ -1,41 +1,23 @@
 {
   "abi": [
     {
+      "constant": false,
       "inputs": [
         {
-          "internalType": "string",
           "name": "username",
           "type": "string"
         }
       ],
       "name": "setUsername",
       "outputs": [],
+      "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "anonymous": false,
+      "constant": true,
       "inputs": [
         {
-          "indexed": false,
-          "internalType": "address",
-          "name": "setter",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "username",
-          "type": "string"
-        }
-      ],
-      "name": "usernameSet",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "",
           "type": "address"
         }
@@ -43,13 +25,30 @@
       "name": "usernames",
       "outputs": [
         {
-          "internalType": "string",
           "name": "",
           "type": "string"
         }
       ],
+      "payable": false,
       "stateMutability": "view",
       "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "setter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "username",
+          "type": "string"
+        }
+      ],
+      "name": "usernameSet",
+      "type": "event"
     }
   ]
 }

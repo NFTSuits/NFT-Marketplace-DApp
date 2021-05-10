@@ -46,91 +46,95 @@ const MarketCard = ({
   price,
   auctionPrice,
   type,
+  isBiddable,
+  isOnSale,
+  id,
 }) => {
   const classes = useStyles();
   return (
     <Card className={classes.root} variant="outlined">
-      <div
-        className={classes.clickable}
-        onClick={() => {
-          console.log("elma");
-        }}
-      >
-        <Grid container>
-          <Grid item xs>
-            <CardActionArea disableRipple>
-              <Grid container>
-                <CardMedia
-                  className={classes.media}
-                  image={imgUrl}
-                  title={name}
-                />
-              </Grid>
-              <Grid container direction="column" style={{ marginTop: 15 }}>
-                <Grid item style={{ marginLeft: 15, marginBottom: 6 }}>
-                  <Typography variant="caption">{frequency}</Typography>
-                  <Typography gutterBottom variant="h7" component="h1">
-                    {name}
-                  </Typography>
-                </Grid>
-                <Grid item style={{ alignSelf: "flex-start", marginLeft: 15 }}>
-                  <div style={{ textAlign: "left" }}>
-                    <div>
-                      <LocalOfferSharpIcon
-                        style={{
-                          verticalAlign: "middle",
-                          marginRight: 5,
-                          fontSize: 20,
-                        }}
-                      />
-                      <Typography variant="caption">
-                        Price: Ξ {price}
-                      </Typography>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 7, textAlign: "left" }}>
-                    <div>
-                      <PanToolSharpIcon
-                        style={{
-                          verticalAlign: "middle",
-                          marginRight: 5,
-                          fontSize: 20,
-                        }}
-                      />
-                      <Typography variant="caption">
-                        Highest bid: Ξ {auctionPrice} , {type}
-                      </Typography>
-                    </div>
-                  </div>
-                </Grid>
-              </Grid>
-            </CardActionArea>
-            <Grid container style={{ marginTop: 13, marginBottom: 5 }}>
-              <div className={classes.bidPriceInfoContainer}>
-                <AccountCircleIcon
-                  style={{
-                    verticalAlign: "middle",
-                    marginRight: 4,
-                    fontSize: 24,
-                  }}
-                />
-                <Typography gutterBottom variant="caption">
-                  Owner:
-                </Typography>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => {
-                    console.log("owner");
-                  }}
-                >
-                  {owner}
-                </Button>
-              </div>
+      <Grid container>
+        <Grid item xs>
+          <CardActionArea
+            disableRipple
+            onClick={() => {
+              window.location.href = "/item/" + id;
+            }}
+          >
+            <Grid container>
+              <CardMedia
+                className={classes.media}
+                image={imgUrl}
+                title={name}
+              />
             </Grid>
+            <Grid container direction="column" style={{ marginTop: 15 }}>
+              <Grid item style={{ marginLeft: 15, marginBottom: 6 }}>
+                <Typography variant="caption">{frequency}</Typography>
+                <Typography gutterBottom variant="h6" component="h1">
+                  {name}
+                </Typography>
+              </Grid>
+              <Grid item style={{ alignSelf: "flex-start", marginLeft: 15 }}>
+                <div style={{ textAlign: "left" }}>
+                  <div>
+                    <LocalOfferSharpIcon
+                      style={{
+                        verticalAlign: "middle",
+                        marginRight: 5,
+                        fontSize: 20,
+                      }}
+                    />
+
+                    <Typography variant="caption">
+                      Price: {isOnSale ? "Ξ " + price : "-"}
+                    </Typography>
+                  </div>
+                </div>
+                <div style={{ marginTop: 7, textAlign: "left" }}>
+                  <div>
+                    <PanToolSharpIcon
+                      style={{
+                        verticalAlign: "middle",
+                        marginRight: 5,
+                        fontSize: 20,
+                      }}
+                    />
+                    <Typography variant="caption">
+                      Highest bid: {isBiddable ? "Ξ " + auctionPrice : "-"}
+                    </Typography>
+                  </div>
+                </div>
+              </Grid>
+            </Grid>
+          </CardActionArea>
+          <Grid container style={{ marginTop: 13, marginBottom: 5 }}>
+            <div className={classes.bidPriceInfoContainer}>
+              <AccountCircleIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 4,
+                  fontSize: 24,
+                }}
+              />
+              <Typography gutterBottom variant="caption">
+                Owner:
+              </Typography>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => {
+                  window.location.href = "profile/" + owner;
+                }}
+              >
+                {owner.slice(0, 6) +
+                  "..." +
+                  owner.slice(owner.length - 4, owner.length)}
+              </Button>
+            </div>
           </Grid>
         </Grid>
-      </div>
+      </Grid>
     </Card>
   );
 };

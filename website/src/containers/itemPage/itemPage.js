@@ -24,6 +24,17 @@ import LocalOfferSharpIcon from "@material-ui/icons/LocalOfferSharp";
 import StarsIcon from "@material-ui/icons/Stars";
 import DnsIcon from "@material-ui/icons/Dns";
 import ItemButtonGroup from "../../components/itemButtonGroup/itemButtonGroup";
+import NftContract from "../../abis/nft.json";
+
+import addresses from "../../constants/contracts";
+import { useRecoilCallback } from "recoil";
+import {
+  allItems,
+  itemData,
+  myAddress,
+  transactionData,
+} from "../../recoils/atoms";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 
 {
   /* <div
@@ -46,7 +57,67 @@ const MarketCardData = {
 };
 const isThirdPerson = true;
 
-const ItemPage = () => {
+const ItemPage = (props) => {
+  //const [data, setData] = useRecoilState(allItems);
+
+  const [data, setData] = useRecoilState(itemData);
+  const [address, setAddress] = useRecoilState(myAddress);
+  const [transactions, setTransactions] = useRecoilState(transactionData);
+  const [id, setId] = React.useState(props.match.params.id);
+
+  React.useEffect(async () => {
+    let myAddress = await window.ethereum.selectedAddress;
+    setAddress(myAddress);
+
+    var nft_contract_interface = new window.web3.eth.Contract(
+      NftContract.abi,
+      addresses.NFT_CONTRACTS_ADDRESS
+    );
+
+    nft_contract_interface.methods
+      .tokenByIndex(id)
+      .call()
+      .then((currentTokenId) => {
+        return nft_contract_interface.methods
+          .nfts(currentTokenId - 1)
+          .call()
+          .then((currentNftData) => {
+            nft_contract_interface.methods
+              .ownerOf(currentTokenId)
+              .call()
+              .then((owner) => {
+                // console.log("currentTokenId", currentTokenId);
+                // console.log("owner", owner);
+                setData({ ...currentNftData, owner: owner });
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          });
+      });
+
+    nft_contract_interface
+      .getPastEvents("nftTransaction", {
+        filter: { id: parseInt(id) + 1 },
+        fromBlock: 0,
+        toBlock: "latest",
+      })
+      .then((events) => {
+        console.log("events.console.log", events);
+        setTransactions(events);
+      });
+
+    // var event = nft_contract_interface.events.nftTransaction(
+    //   (error, result) => {
+    //     if (!error) console.log("result", result);
+    //   }
+    // );
+  }, [window.web3.eth]);
+
+  if (!data || data.owner == undefined || transactions == undefined) {
+    return <div>loading</div>;
+  }
+
   return (
     <Grid
       container
@@ -68,7 +139,7 @@ const ItemPage = () => {
           //   backgroundColor: "#006666",
           // }}
           >
-            <img style={{ width: 300 }} src={MarketCardData.imgUrl} />
+            <img style={{ width: 300 }} src={data.cid} />
           </div>
           {/* </Paper> */}
         </Grid>
@@ -103,7 +174,7 @@ const ItemPage = () => {
                   <div>
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <Typography variant="h2" display="block" gutterbottom>
-                        Name: {MarketCardData.name}
+                        Name: {data.name}
                       </Typography>
                     </div>
                     <div
@@ -126,7 +197,7 @@ const ItemPage = () => {
                         display="block"
                         gutterbottom
                       >
-                        Rarity: {MarketCardData.rarity}
+                        Rarity: {data.rarity}
                       </Typography>
                     </div>
                     <div
@@ -145,7 +216,21 @@ const ItemPage = () => {
                         }}
                       />
                       <Typography variant="body1" display="block" gutterbottom>
-                        Owner: {MarketCardData.owner}
+                        Owner:{" "}
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            window.location = "/profile/" + data.owner;
+                          }}
+                        >
+                          {data.owner.slice(0, 6) +
+                            "..." +
+                            data.owner.slice(
+                              data.owner.length - 4,
+                              data.owner.length
+                            )}
+                        </Button>
                       </Typography>
                     </div>
                     <div
@@ -164,7 +249,7 @@ const ItemPage = () => {
                         }}
                       />
                       <Typography variant="body1" display="block" gutterbottom>
-                        Price: Ξ {MarketCardData.price}
+                        Price: {data.isOnSale ? "Ξ " + data.sellPrice : "-"}
                       </Typography>
                     </div>
                     <div>
@@ -182,7 +267,8 @@ const ItemPage = () => {
                           display="block"
                           gutterbottom
                         >
-                          Highest Bid: Ξ {MarketCardData.auctionPrice}
+                          Highest Bid:{" "}
+                          {data.isBiddable ? "Ξ " + data.maxBid : "-"}
                         </Typography>
                       </div>
                       {!isThirdPerson && <Button>isThirdPerson=false</Button>}
@@ -214,82 +300,79 @@ const ItemPage = () => {
                         <TableCell align="center">From</TableCell>
                         <TableCell align="center">To</TableCell>
                         <TableCell align="center">Amount</TableCell>
-                        <TableCell align="center">Txn</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableRow key={0}>
-                        <TableCell align="center">a</TableCell>
+                      {transactions.map((transaction, index) => {
+                        return (
+                          <TableRow
+                            key={index}
+                            style={{
+                              backgroundColor:
+                                transaction.returnValues.transactionType ===
+                                "claimed"
+                                  ? "#ff00ff"
+                                  : "#ffff00",
+                            }}
+                          >
+                            <TableCell align="center">
+                              {transaction.returnValues.transactionType}
+                            </TableCell>
 
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={1}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={2}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={3}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={4}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={5}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={6}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={7}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
-                      <TableRow key={8}>
-                        <TableCell align="center">a</TableCell>
-
-                        <TableCell align="center">b</TableCell>
-                        <TableCell align="center">c</TableCell>
-                        <TableCell align="center">d</TableCell>
-                        <TableCell align="center">e</TableCell>
-                      </TableRow>
+                            <TableCell align="center">
+                              {transaction.returnValues.fromAddress ==
+                              "0x0000000000000000000000000000000000000000" ? (
+                                "0x0"
+                              ) : (
+                                <Button
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => {
+                                    window.location = "/profile/" + data.owner;
+                                  }}
+                                >
+                                  {transaction.returnValues.fromAddress.slice(
+                                    0,
+                                    6
+                                  ) +
+                                    "..." +
+                                    transaction.returnValues.fromAddress.slice(
+                                      transaction.returnValues.fromAddress
+                                        .length - 4,
+                                      transaction.returnValues.fromAddress
+                                        .length
+                                    )}
+                                </Button>
+                              )}
+                            </TableCell>
+                            <TableCell align="center">
+                              <Button
+                                size="small"
+                                color="primary"
+                                onClick={() => {
+                                  window.location = "/profile/" + data.owner;
+                                }}
+                              >
+                                {transaction.returnValues.toAddress.slice(
+                                  0,
+                                  6
+                                ) +
+                                  "..." +
+                                  transaction.returnValues.toAddress.slice(
+                                    transaction.returnValues.toAddress.length -
+                                      4,
+                                    transaction.returnValues.toAddress.length
+                                  )}
+                              </Button>
+                            </TableCell>
+                            <TableCell align="center">
+                              {transaction.returnValues.value == 0
+                                ? " - "
+                                : "Ξ " + transaction.returnValues.value}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>

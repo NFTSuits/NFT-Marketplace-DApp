@@ -20,10 +20,13 @@ const App = () => {
           <Route exact path="/marketplace" component={MarketPlace} />
         </Switch>
         <Switch>
-          <Route path="/profile" component={Profile} />
+          <Route exact path="/allItems" component={MarketPlace} />
         </Switch>
         <Switch>
-          <Route path="/itempage" component={ItemPage} />
+          <Route path="/profile/:address" component={Profile} />
+        </Switch>
+        <Switch>
+          <Route path="/item/:id" component={ItemPage} />
         </Switch>
       </Router>
     </RecoilRoot>

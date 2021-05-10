@@ -4,6 +4,15 @@ import FaceIcon from "@material-ui/icons/Face";
 import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 import PropTypes from "prop-types";
 
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import {
+  getUsername,
+  getHeads,
+  getMiddles,
+  getBottoms,
+} from "../../recoils/selectors";
+import { myUsername, myAddress, allItems } from "../../recoils/atoms";
+
 import {
   Typography,
   Tabs,
@@ -31,170 +40,170 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import MarketCardList from "./marketCardList";
-const MarketCardData = [
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Beni",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Neden",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Yazmadınız",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Beni",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Sevmiyor",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Musunuz",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Musunuz",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Beni",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Neden",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Yazmadınız",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-];
+// const MarketCardData = [
+//   {
+//     name: "Card1",
+//     frequency: "Legendary",
+//     owner: "Beni",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "12",
+//     type: "bean",
+//   },
+//   {
+//     name: "Card2",
+//     frequency: "Ordinary",
+//     owner: "Neden",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "20",
+//     type: "topWear",
+//   },
+//   {
+//     name: "Card3",
+//     frequency: "Rare",
+//     owner: "Yazmadınız",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "15",
+//     auctionPrice: "20",
+//     type: "bottomWear",
+//   },
+//   {
+//     name: "Card1",
+//     frequency: "Legendary",
+//     owner: "Beni",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "12",
+//     type: "bean",
+//   },
+//   {
+//     name: "Card2",
+//     frequency: "Ordinary",
+//     owner: "Sevmiyor",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "20",
+//     type: "topWear",
+//   },
+//   {
+//     name: "Card3",
+//     frequency: "Rare",
+//     owner: "Musunuz",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "15",
+//     auctionPrice: "20",
+//     type: "bottomWear",
+//   },
+//   {
+//     name: "Card1",
+//     frequency: "Legendary",
+//     owner: "Gokberk",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "12",
+//     type: "bean",
+//   },
+//   {
+//     name: "Card2",
+//     frequency: "Ordinary",
+//     owner: "Kaya",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "20",
+//     type: "topWear",
+//   },
+//   {
+//     name: "Card3",
+//     frequency: "Rare",
+//     owner: "Musunuz",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "15",
+//     auctionPrice: "20",
+//     type: "bottomWear",
+//   },
+//   {
+//     name: "Card1",
+//     frequency: "Legendary",
+//     owner: "Gokberk",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "12",
+//     type: "bean",
+//   },
+//   {
+//     name: "Card2",
+//     frequency: "Ordinary",
+//     owner: "Kaya",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "20",
+//     type: "topWear",
+//   },
+//   {
+//     name: "Card3",
+//     frequency: "Rare",
+//     owner: "Cavit",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "15",
+//     auctionPrice: "20",
+//     type: "bottomWear",
+//   },
+//   {
+//     name: "Card1",
+//     frequency: "Legendary",
+//     owner: "Beni",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "12",
+//     type: "bean",
+//   },
+//   {
+//     name: "Card2",
+//     frequency: "Ordinary",
+//     owner: "Neden",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "20",
+//     type: "topWear",
+//   },
+//   {
+//     name: "Card3",
+//     frequency: "Rare",
+//     owner: "Yazmadınız",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "15",
+//     auctionPrice: "20",
+//     type: "bottomWear",
+//   },
+//   {
+//     name: "Card1",
+//     frequency: "Legendary",
+//     owner: "Gokberk",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "12",
+//     type: "bean",
+//   },
+//   {
+//     name: "Card2",
+//     frequency: "Ordinary",
+//     owner: "Kaya",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "10",
+//     auctionPrice: "20",
+//     type: "topWear",
+//   },
+//   {
+//     name: "Card3",
+//     frequency: "Rare",
+//     owner: "Cavit",
+//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
+//     price: "15",
+//     auctionPrice: "20",
+//     type: "bottomWear",
+//   },
+// ];
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -252,6 +261,16 @@ const useStyles = makeStyles((theme) => ({
 const MarketTab = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+
+  const items = useRecoilValue(allItems);
+  const heads = useRecoilValue(getHeads);
+  const middles = useRecoilValue(getMiddles);
+  const bottoms = useRecoilValue(getBottoms);
+
+  console.log("allItems", items);
+  console.log("heads", heads);
+  console.log("middles", middles);
+  console.log("bottoms", bottoms);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -405,21 +424,13 @@ const MarketTab = () => {
         </Grid>
       </div>
       <TabPanel value={value} index={0}>
-        <MarketCardList
-          marketCards={MarketCardData.filter((item) => item.type == "bean")}
-        />
+        <MarketCardList marketCards={heads} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <MarketCardList
-          marketCards={MarketCardData.filter((item) => item.type == "topWear")}
-        />
+        <MarketCardList marketCards={middles} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <MarketCardList
-          marketCards={MarketCardData.filter(
-            (item) => item.type == "bottomWear"
-          )}
-        />
+        <MarketCardList marketCards={bottoms} />
       </TabPanel>
     </div>
   );

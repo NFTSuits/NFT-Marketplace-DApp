@@ -1,5 +1,7 @@
 import React from "react";
 import { makeStyles, Button, TextField, Divider } from "@material-ui/core";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { allItems, itemData, myAddress } from "../../recoils/atoms";
 
 const useStyles = makeStyles({
   myButton: {
@@ -27,19 +29,19 @@ bugs:
 
 const ItemButtonGroup = () => {
   const classes = useStyles();
-  const isBuyable = true;
-  const isBidable = true;
-  const isOnSale = false;
-  const isOnAuction = true;
-  const isThirdPerson = false;
-  const thirdSeesBothButtons = isBidable && isBuyable;
-  const alreadyWearing = false;
 
-  const buyButton = isBuyable ? (
+  const alreadyWearing = false; // düzeltilmeli
+
+  const addr = useRecoilValue(myAddress);
+  const data = useRecoilValue(itemData);
+
+  const isThirdPerson = data.owner.toLowerCase() != addr.toLowerCase();
+
+  const buyButton = data.isOnSale ? (
     <Button className={classes.myButton}>Buy</Button>
   ) : null;
 
-  const bidButton = isBidable ? (
+  const bidButton = data.isBiddable ? (
     <>
       <div
         style={{
@@ -61,7 +63,7 @@ const ItemButtonGroup = () => {
     </>
   ) : null;
 
-  const saleButton = isOnSale ? (
+  const saleButton = data.isOnSale ? (
     <Button className={classes.myButton}>Cancel Sale</Button>
   ) : (
     <div
@@ -83,7 +85,7 @@ const ItemButtonGroup = () => {
     </div>
   );
 
-  const auctionButton = isOnAuction ? (
+  const auctionButton = data.isBiddable ? (
     <div
       style={{
         display: "flex",
@@ -98,13 +100,14 @@ const ItemButtonGroup = () => {
     <Button className={classes.myButton}>Start an Auction</Button>
   );
 
-  const isDivider = thirdSeesBothButtons ? (
-    <Divider
-      orientation="vertical"
-      flexItem
-      style={{ height: 55, marginRight: 10 }}
-    />
-  ) : null;
+  const isDivider = // KULLANILMIYO 🐥🐥🐥🐥🐥🐥🐥
+    data.isBiddable && data.isOnSale ? (
+      <Divider
+        orientation="vertical"
+        flexItem
+        style={{ height: 55, marginRight: 10 }}
+      />
+    ) : null;
 
   const wearButton = !alreadyWearing ? (
     <Button className={classes.myButton}>Wear this item</Button>

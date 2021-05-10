@@ -123,13 +123,13 @@ const Navbar = () => {
           addresses.USERNAME_ADDRESS
         );
 
-        console.log("methods:", smart_contract_interface.methods);
+        // console.log("methods:", smart_contract_interface.methods);
 
         smart_contract_interface.methods
           .usernames(myAddress)
           .call()
           .then((data) => {
-            console.log("dataa", data);
+            // console.log("dataa", data);
             setUsername(data);
           });
 
@@ -231,19 +231,8 @@ const Navbar = () => {
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {useRecoilValue(getUsername)}
+            {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
 
-            {window.ethereum && !window.ethereum.selectedAddress && (
-              <>
-                <Button
-                  onClick={() => {
-                    setTriggerEth(!triggerEth);
-                  }}
-                >
-                  Connect
-                </Button>
-              </>
-            )}
             <Button color="inherit">
               <SupervisedUserCircleIcon
                 style={{
@@ -254,7 +243,12 @@ const Navbar = () => {
               />
               Avatars
             </Button>
-            <Button color="inherit">
+            {/* <Button
+              color="inherit"
+              onClick={() => {
+                window.location.href = "/allItems";
+              }}
+            >
               <LabelIcon
                 style={{
                   verticalAlign: "middle",
@@ -263,8 +257,13 @@ const Navbar = () => {
                 }}
               />
               All items
-            </Button>
-            <Button color="inherit">
+            </Button> */}
+            <Button
+              color="inherit"
+              onClick={() => {
+                window.location.href = "/marketplace";
+              }}
+            >
               <StorefrontIcon
                 style={{
                   verticalAlign: "middle",
@@ -272,18 +271,49 @@ const Navbar = () => {
                   fontSize: 20,
                 }}
               />
-              Marketplace
+              All items{/*Marketplace */}
             </Button>
-            <Button color="inherit">
-              <AccountCircle
-                style={{
-                  verticalAlign: "middle",
-                  marginRight: 5,
-                  fontSize: 20,
+            {/* {window.ethereum && !window.ethereum.selectedAddress && (
+              <>
+                <Button
+                  onClick={() => {
+                    setTriggerEth(!triggerEth);
+                  }}
+                >
+                  Connect
+                </Button>
+              </>
+            )} */}
+            {window.ethereum && !window.ethereum.selectedAddress ? (
+              <>
+                <Button
+                  onClick={() => {
+                    setTriggerEth(!triggerEth);
+                  }}
+                >
+                  Connect
+                </Button>
+              </>
+            ) : (
+              <Button
+                color="inherit"
+                onClick={() => {
+                  window.location.href = "/profile/" + address;
                 }}
-              />
-              Profile
-            </Button>
+              >
+                <AccountCircle
+                  style={{
+                    verticalAlign: "middle",
+                    marginRight: 5,
+                    fontSize: 20,
+                  }}
+                />
+                {/* {address} */}
+                {address.slice(0, 6) +
+                  "..." +
+                  address.slice(address.length - 4, address.length)}
+              </Button>
+            )}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
