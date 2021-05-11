@@ -12,6 +12,11 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PanToolSharpIcon from "@material-ui/icons/PanToolSharp";
 import LocalOfferSharpIcon from "@material-ui/icons/LocalOfferSharp";
 import { Grid, Container, Paper } from "@material-ui/core";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+
+import NftContract from "../../abis/nft.json";
+import addresses from "../../constants/contracts";
+import { getUsername } from "../../utils/getUsernameFromAddress";
 
 const useStyles = makeStyles({
   root: {
@@ -51,6 +56,23 @@ const MarketCard = ({
   id,
 }) => {
   const classes = useStyles();
+  // var owner = ;
+
+  const [usernameToBeShown, setUsernameToBeShown] = React.useState(
+    owner.slice(0, 6) + "..." + owner.slice(owner.length - 4, owner.length)
+  );
+
+  React.useEffect(async () => {
+    var nft_contract_interface = new window.web3.eth.Contract(
+      NftContract.abi,
+      addresses.NFT_CONTRACTS_ADDRESS
+    );
+
+    getUsername(nft_contract_interface, owner).then((data) => {
+      setUsernameToBeShown(data.username);
+    });
+  }, [window.web3.eth]);
+
   return (
     <Card className={classes.root} variant="outlined">
       <Grid container>
@@ -127,9 +149,7 @@ const MarketCard = ({
                   window.location.href = "profile/" + owner;
                 }}
               >
-                {owner.slice(0, 6) +
-                  "..." +
-                  owner.slice(owner.length - 4, owner.length)}
+                {usernameToBeShown}
               </Button>
             </div>
           </Grid>

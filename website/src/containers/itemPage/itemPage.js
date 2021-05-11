@@ -103,7 +103,7 @@ const ItemPage = (props) => {
         toBlock: "latest",
       })
       .then((events) => {
-        console.log("events.console.log", events);
+        // console.log("events.console.log", events);
         setTransactions(events);
       });
 

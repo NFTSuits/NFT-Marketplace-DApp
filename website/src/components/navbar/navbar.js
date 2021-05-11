@@ -22,10 +22,10 @@ import Web3 from "web3";
 import addresses from "../../constants/contracts";
 
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import { getUsername } from "../../recoils/selectors";
+import { getMyUsername } from "../../recoils/selectors";
 import { myUsername, myAddress } from "../../recoils/atoms";
 
-import Username from "../../abis/username.json";
+import Nft from "../../abis/nft.json";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -119,20 +119,22 @@ const Navbar = () => {
         let myAddress = await window.ethereum.selectedAddress;
 
         var smart_contract_interface = new window.web3.eth.Contract(
-          Username.abi,
-          addresses.USERNAME_ADDRESS
+          Nft.abi,
+          addresses.NFT_CONTRACTS_ADDRESS
         );
 
         // console.log("methods:", smart_contract_interface.methods);
 
         smart_contract_interface.methods
-          .usernames(myAddress)
+          .users(myAddress)
           .call()
           .then((data) => {
             // console.log("dataa", data);
-            setUsername(data);
+            setUsername(data.username);
+          })
+          .catch((error) => {
+            console.log(error);
           });
-
         setAddress(myAddress);
       }
     } catch (err) {
@@ -308,10 +310,11 @@ const Navbar = () => {
                     fontSize: 20,
                   }}
                 />
-                {/* {address} */}
-                {address.slice(0, 6) +
-                  "..." +
-                  address.slice(address.length - 4, address.length)}
+                {username
+                  ? username
+                  : address.slice(0, 6) +
+                    "..." +
+                    address.slice(address.length - 4, address.length)}
               </Button>
             )}
           </div>

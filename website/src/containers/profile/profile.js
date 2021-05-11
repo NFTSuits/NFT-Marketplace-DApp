@@ -18,7 +18,12 @@ import {
   FormGroup,
   InputLabel,
   Select,
+  Input,
+  TextField,
 } from "@material-ui/core";
+
+import EditSharpIcon from "@material-ui/icons/EditSharp";
+import SaveIcon from "@material-ui/icons/Save";
 
 import FaceIcon from "@material-ui/icons/Face";
 
@@ -29,175 +34,30 @@ import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 
-import { myUsername, myAddress } from "../../recoils/atoms";
-import { getUsername } from "../../recoils/selectors";
+import {
+  myUsername,
+  myAddress,
+  allItems,
+  profileDataAtom,
+  isBiddable,
+  isOnSale,
+  rarityLevel,
+  isThirdPersonAtom,
+} from "../../recoils/atoms";
+import {
+  getMyUsername,
+  getHeads,
+  getMiddles,
+  getBottoms,
+  getAllItemsFiltered,
+} from "../../recoils/selectors";
+
+import NftContract from "../../abis/nft.json";
+import addresses from "../../constants/contracts";
 
 import MarketCardList from "../../components/marketCard/marketCardList";
 
-const MarketCardData = [
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Beni",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Neden",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Yazmadınız",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Beni",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Sevmiyor",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Musunuz",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Musunuz",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Beni",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Neden",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Yazmadınız",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-  {
-    name: "Card1",
-    frequency: "Legendary",
-    owner: "Gokberk",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "12",
-    type: "bean",
-  },
-  {
-    name: "Card2",
-    frequency: "Ordinary",
-    owner: "Kaya",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "10",
-    auctionPrice: "20",
-    type: "topWear",
-  },
-  {
-    name: "Card3",
-    frequency: "Rare",
-    owner: "Cavit",
-    imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-    price: "15",
-    auctionPrice: "20",
-    type: "bottomWear",
-  },
-];
+import { getUsername } from "../../utils/getUsernameFromAddress";
 
 const tabValueState = atom({
   key: "tabValueState", // unique ID (with respect to other atoms/selectors)
@@ -267,61 +127,100 @@ function TabPanel(props) {
 }
 
 // https://awantoch.medium.com/how-to-connect-web3-js-to-metamask-in-2020-fee2b2edf58a
-const Profile = () => {
+const Profile = (props) => {
   const classes = useStyles();
-  const [items, setitems] = React.useState([
-    { id: 1, title: "item #1" },
-    { id: 2, title: "item #2" },
-    { id: 3, title: "item #3" },
-    { id: 4, title: "item #4" },
-    { id: 5, title: "item #5" },
-  ]);
+  const [profileAddress, setProfileAdress] = React.useState(
+    props.match.params.address
+  );
 
-  // const ethEnabled = () => {
-  //   if (window.web3) {
-  //     window.web3 = new Web3(window.web3.currentProvider);
-  //     window.ethereum.enable();
-  //     return true;
-  //   }
-  //   return false;
-  // };
+  const [profileData, setProfileData] = useRecoilState(profileDataAtom);
 
-  // const connectButton = () => {
-  //   if (!ethEnabled()) {
-  //     alert("Please install MetaMask to use this dApp!");
-  //   }
-  //   console.log("window.web3:",window.web3);
-  // };
+  const [address, setAddress] = useRecoilState(myAddress);
 
-  // return (
-  //   <Container maxWidth="md">
-  //   <Button
-  //     onClick={() => {
-  //       connectButton();
-  //     }}
-  //   >
-  //     Connect
-  //   </Button>
-  //   <Button
-  //     onClick={async () =>  {
-  //       if (window.web3 && window.web3.eth) {
-  //         window.web3 = new Web3(window.web3.currentProvider);
-  //         alert(await window.web3.eth.getAccounts());
-  //       }
-  //       else{
-  //         alert("connect your wallet");
-  //       }
-  //     }}
-  //   >
-  //   Info
-  //   </Button>
-  // </Container>
-  // );
+  const [data, setData] = useRecoilState(allItems);
+
+  const [isThirdPerson, setIsThirdPerson] = useRecoilState(isThirdPersonAtom);
+
+  const heads = useRecoilValue(getHeads);
+  const middles = useRecoilValue(getMiddles);
+  const bottoms = useRecoilValue(getBottoms);
+
+  // console.log("profile all items", data);
+
+  React.useEffect(async () => {
+    let myAddress = await window.ethereum.selectedAddress;
+    setAddress(myAddress);
+
+    // alert(myAddress.toLowerCase());
+    // alert(profileAddress.toLowerCase());
+    setIsThirdPerson(myAddress.toLowerCase() !== profileAddress.toLowerCase());
+
+    var nft_contract_interface = new window.web3.eth.Contract(
+      NftContract.abi,
+      addresses.NFT_CONTRACTS_ADDRESS
+    );
+
+    const username_temp = await getUsername(
+      nft_contract_interface,
+      profileAddress
+    );
+    // console.log("awaited username", username_temp);
+    setProfileData(username_temp);
+    // window.ethereum.enable();
+
+    // console.log("profileAddress", profileAddress);
+    nft_contract_interface.methods
+      .tokensOfOwner(profileAddress)
+      .call()
+      .then((tokenList) => {
+        // console.log("token list of owner", profileAddress, tokenList);
+
+        Promise.all(
+          tokenList.map((tokenId) => {
+            // console.log("tokenId", tokenId);
+            return Promise.resolve(
+              nft_contract_interface.methods
+                .nfts(tokenId - 1)
+                .call()
+                .then((currentNftData) => {
+                  //the request below can be send with
+                  //the same time of methods.nfts()
+                  //how
+                  //but need to do promise againever it makes the code more efficient
+
+                  return nft_contract_interface.methods
+                    .ownerOf(tokenId)
+                    .call()
+                    .then((owner) => {
+                      return {
+                        ...currentNftData,
+                        id: tokenId - 1,
+                        tokenId: tokenId,
+                        owner: owner,
+                      };
+                    });
+                })
+            );
+          })
+        )
+          .then((values) => {
+            setData(values);
+          })
+          .catch((err) => console.log("err", err));
+      });
+  }, [window.web3.eth]);
 
   const UpperProfile = () => {
     const classes = useStyles();
+    const [firstPersonUsername, setFirstPersonUsername] =
+      useRecoilState(myUsername);
+    const isThirdPerson = useRecoilValue(isThirdPersonAtom);
 
-    const username = useRecoilValue(getUsername);
+    //const [, set] = React.useState();
+    const [isSetting, setIsSetting] = React.useState(false);
+    const [usernameEditText, setUsernameEditText] = React.useState("");
+
+    const [profileData, setProfileData] = useRecoilState(profileDataAtom);
 
     return (
       <Grid
@@ -333,16 +232,87 @@ const Profile = () => {
         <Grid className={classes.profileLeft} item xs={4}>
           <Avatar
             alt="Remy Sharp"
-            src="https://randomuser.me/api/portraits/lego/5.jpg"
+            src="https://randomuser.me/api/portraits/lego/2.jpg"
             className={classes.large}
           />
         </Grid>
 
-        <Grid item xs={6}>
-          <Typography variant="h5" color="initial">
-            @{username}
-          </Typography>
-        </Grid>
+        {/* <Grid item xs={6} direction="row"> */}
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {isSetting ? (
+            <TextField
+              value={usernameEditText}
+              onChange={(event) => setUsernameEditText(event.target.value)}
+              // onChange={(event) => {
+              //   // event.stopPropagation();
+              //   // event.preventDefault();
+              //   setUsernameEditText(event.target.value);
+              //   console.log("event.target.value", event.target.value);
+              //   console.log("event.target", event.target);
+              //   console.log("issetting", isSetting);
+              // }}
+            />
+          ) : (
+            <Typography variant="h5" color="initial">
+              @{isThirdPerson ? profileData.username : firstPersonUsername}
+            </Typography>
+          )}
+
+          {isSetting && !isThirdPerson ? (
+            <IconButton
+              //style={{ marginTop: -15 }}
+              color="primary"
+              onClick={async (event) => {
+                // console.log(event.target.value);
+                let myAddress = await window.ethereum.selectedAddress;
+
+                var nft_contract_interface = new window.web3.eth.Contract(
+                  NftContract.abi,
+                  addresses.NFT_CONTRACTS_ADDRESS
+                );
+                nft_contract_interface.methods
+                  .setUsername(usernameEditText)
+                  .send({ from: myAddress })
+                  .on("transactionHash", function (hash) {
+                    console.log(hash);
+                  })
+                  .on("confirmation", function (confirmationNumber, receipt) {
+                    console.log(confirmationNumber, receipt);
+                  })
+                  .on("receipt", async function (receipt) {
+                    // receipt example
+                    console.log(receipt);
+                    getUsername(nft_contract_interface, myAddress).then(
+                      (data) => {
+                        console.log(data);
+                        setFirstPersonUsername(data.username);
+                        setIsSetting(false);
+                      }
+                    );
+                  })
+                  .on("error", function (error, receipt) {
+                    console.log(error, receipt);
+                    setIsSetting(false);
+                  });
+              }}
+            >
+              <SaveIcon />
+            </IconButton>
+          ) : !isThirdPerson ? (
+            <IconButton
+              style={{ marginTop: -9 }}
+              color="primary"
+              onClick={() => {
+                setIsSetting(true);
+              }}
+            >
+              <EditSharpIcon />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+        </div>
+        {/* </Grid> */}
       </Grid>
     );
   };
@@ -547,6 +517,33 @@ const Profile = () => {
   const ProfileAvatar = () => {
     const classes = useStyles();
 
+    const profileData = useRecoilValue(profileDataAtom);
+    const heads = useRecoilValue(getHeads);
+    const middles = useRecoilValue(getMiddles);
+    const bottoms = useRecoilValue(getBottoms);
+
+    const isThirdPerson = useRecoilValue(isThirdPersonAtom);
+
+    const headTry = heads.findIndex((item) => profileData.head == item.tokenId);
+    const headStartingIndex = headTry !== -1 ? headTry : -1;
+
+    const middleTry = middles.findIndex(
+      (item) => profileData.middle == item.tokenId
+    );
+    const middleStartingIndex = middleTry !== -1 ? middleTry : -1;
+
+    const bottomTry = bottoms.findIndex(
+      (item) => profileData.bottom == item.tokenId
+    );
+    const bottomStartingIndex = bottomTry !== -1 ? bottomTry : -1;
+
+    const [selectedHeadIndex, setSelectedHeadIndex] =
+      React.useState(headStartingIndex);
+    const [selectedMiddleIndex, setSelectedMiddleIndex] =
+      React.useState(middleStartingIndex);
+    const [selectedBottomIndex, setSelectedBottomIndex] =
+      React.useState(bottomStartingIndex);
+
     return (
       <Grid
         style={{ marginTop: 30 }}
@@ -557,53 +554,177 @@ const Profile = () => {
       >
         <Grid item xs={8}>
           {/* <Paper variant="outlined" className={classes.paper}> */}
-          <Carousel pagination={false}>
-            {items.map((item) => (
-              <Avatar
-                alt="Remy Sharp"
-                src="https://randomuser.me/api/portraits/lego/5.jpg"
-                className={classes.large}
-                key={item.id}
-              />
-            ))}
-          </Carousel>
-          {/* </Paper> */}
-          {/* <Paper variant="outlined" className={classes.paper}> */}
-          <Carousel pagination={false}>
-            {items.map((item) => (
-              <Avatar
-                alt="Remy Sharp"
-                src="https://randomuser.me/api/portraits/lego/5.jpg"
-                className={classes.large}
-                key={item.id}
-              />
-            ))}
-          </Carousel>
-          {/* </Paper> */}
-          {/* <Paper variant="outlined" className={classes.paper}> */}
-          <Carousel pagination={false}>
-            {items.map((item) => (
-              <Avatar
-                alt="Remy Sharp"
-                src="https://randomuser.me/api/portraits/lego/5.jpg"
-                className={classes.large}
-                key={item.id}
-              />
-            ))}
-          </Carousel>
-          {/* </Paper> */}
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ float: "center", marginTop: 20 }}
+          <Carousel
+            showArrows={!isThirdPerson ? true : false}
+            enableSwipe={!isThirdPerson ? true : false}
+            pagination={false}
+            initialActiveIndex={
+              heads.findIndex((item) => profileData.head === item.tokenId) !==
+              -1
+                ? heads.findIndex((item) => profileData.head === item.tokenId) +
+                  1
+                : 0
+            }
+            onChange={(currentItem, pageIndex) => {
+              setSelectedHeadIndex(pageIndex - 1);
+            }}
           >
-            Save
-          </Button>
+            <Avatar
+              alt="empty"
+              src="https://via.placeholder.com/300/09f/fff.png"
+              className={classes.large}
+              key="gorkem"
+            />
+            {heads.map((item) => (
+              <Avatar
+                alt={item.name}
+                src={item.cid}
+                className={classes.large}
+                key={item.cid}
+              />
+            ))}
+          </Carousel>
+          {/* </Paper> */}
+          {/* <Paper variant="outlined" className={classes.paper}> */}
+          <Carousel
+            showArrows={!isThirdPerson ? true : false}
+            enableSwipe={!isThirdPerson ? true : false}
+            pagination={false}
+            initialActiveIndex={
+              middles.findIndex(
+                (item) => profileData.middle == item.tokenId
+              ) !== -1
+                ? middles.findIndex(
+                    (item) => profileData.middle == item.tokenId
+                  ) + 1
+                : 0
+            }
+            onChange={(currentItem, pageIndex) => {
+              setSelectedMiddleIndex(pageIndex - 1);
+            }}
+          >
+            <Avatar
+              alt="empty"
+              src="https://via.placeholder.com/300/09f/fff.png"
+              className={classes.large}
+              key="gorkem 2"
+            />
+            {middles.map((item) => (
+              <Avatar
+                alt={item.name}
+                src={item.cid}
+                className={classes.large}
+                key={item.cid}
+              />
+            ))}
+          </Carousel>
+          {/* </Paper> */}
+          {/* <Paper variant="outlined" className={classes.paper}> */}
+          <Carousel
+            showArrows={!isThirdPerson ? true : false}
+            enableSwipe={!isThirdPerson ? true : false}
+            pagination={false}
+            initialActiveIndex={
+              bottoms.findIndex(
+                (item) => profileData.bottom == item.tokenId
+              ) !== -1
+                ? bottoms.findIndex(
+                    (item) => profileData.bottom == item.tokenId
+                  ) + 1
+                : 0
+            }
+            onChange={(currentItem, pageIndex) => {
+              setSelectedBottomIndex(pageIndex - 1);
+            }}
+          >
+            <Avatar
+              alt="empty"
+              src="https://via.placeholder.com/300/09f/fff.png"
+              className={classes.large}
+              key="gorkem 3"
+            />
+            {bottoms.map((item) => (
+              <Avatar
+                alt={item.name}
+                src={item.cid}
+                className={classes.large}
+                key={item.cid}
+              />
+            ))}
+          </Carousel>
+          {/* </Paper> */}
+          {!isThirdPerson && (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ float: "center", marginTop: 20 }}
+              onClick={async () => {
+                // console.log(selectedHeadIndex);
+                // console.log(selectedMiddleIndex);
+                // console.log(selectedBottomIndex);
+
+                // console.log("---------");
+
+                // console.log(
+                //   selectedHeadIndex === -1 ? 0 : heads[selectedHeadIndex].tokenId
+                // );
+                // console.log(
+                //   selectedMiddleIndex === -1
+                //     ? 0
+                //     : middles[selectedMiddleIndex].tokenId
+                // );
+                // console.log(
+                //   selectedBottomIndex === -1
+                //     ? 0
+                //     : bottoms[selectedBottomIndex].tokenId
+                // );
+
+                var nft_contract_interface = new window.web3.eth.Contract(
+                  NftContract.abi,
+                  addresses.NFT_CONTRACTS_ADDRESS
+                );
+                let myAddress = await window.ethereum.selectedAddress;
+                nft_contract_interface.methods
+                  .wearItems(
+                    selectedHeadIndex === -1
+                      ? 0
+                      : heads[selectedHeadIndex].tokenId,
+                    selectedMiddleIndex === -1
+                      ? 0
+                      : middles[selectedMiddleIndex].tokenId,
+                    selectedBottomIndex === -1
+                      ? 0
+                      : bottoms[selectedBottomIndex].tokenId
+                  )
+                  .send({ from: myAddress })
+                  .on("transactionHash", function (hash) {
+                    console.log(hash);
+                  })
+                  .on("confirmation", function (confirmationNumber, receipt) {
+                    console.log(confirmationNumber, receipt);
+                  })
+                  .on("receipt", function (receipt) {
+                    // receipt example
+                    console.log(receipt);
+                  })
+                  .on("error", function (error, receipt) {
+                    console.log(error, receipt);
+                  });
+              }}
+            >
+              Save
+            </Button>
+          )}
         </Grid>
       </Grid>
     );
   };
+
   const FilterItems = () => {
+    const [marketIsBiddable, setMarketIsBiddable] = useRecoilState(isBiddable);
+    const [marketIsOnSale, setMarketIsOnSale] = useRecoilState(isOnSale);
+    const [marketRariryLevel, setMarketRariryLevel] =
+      useRecoilState(rarityLevel);
     return (
       <>
         <Grid
@@ -625,8 +746,10 @@ const Profile = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        // checked={state.checkedA}
-                        // onChange={handleChange}
+                        checked={marketIsBiddable}
+                        onChange={() => {
+                          setMarketIsBiddable(!marketIsBiddable);
+                        }}
                         name="Biddable"
                       />
                     }
@@ -636,8 +759,10 @@ const Profile = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        // checked={state.checkedB}
-                        // onChange={handleChange}
+                        checked={marketIsOnSale}
+                        onChange={() => {
+                          setMarketIsOnSale(!marketIsOnSale);
+                        }}
                         name="Fixed Price"
                         color="primary"
                       />
@@ -655,18 +780,20 @@ const Profile = () => {
                     <Select
                       style={{ width: 100 }}
                       native
-                      // value={state.age}
-                      // onChange={handleChange}
+                      value={marketRariryLevel}
+                      onChange={(event) => {
+                        setMarketRariryLevel(event.target.value);
+                      }}
                       inputProps={{
                         name: "age",
                         id: "age-native-simple",
                       }}
                     >
-                      <option value={10}>All</option>
-                      <option value={10}>Legendary</option>
-                      <option value={10}>Epic</option>
-                      <option value={20}>Rare</option>
-                      <option value={30}>Common</option>
+                      <option value={"all"}>All</option>
+                      <option value={"legendary"}>Legendary</option>
+                      <option value={"epic"}>Epic</option>
+                      <option value={"rare"}>Rare</option>
+                      <option value={"common"}>Common</option>
                     </Select>
                   </FormControl>
                 </FormGroup>
@@ -709,6 +836,8 @@ const Profile = () => {
   const ProfileAllItems = () => {
     const classes = useStyles();
 
+    const allFilteredData = useRecoilValue(getAllItemsFiltered);
+
     return (
       <Grid
         style={{ marginTop: 30 }}
@@ -721,7 +850,7 @@ const Profile = () => {
           <FilterItems />
         </Grid>
         <Grid item xs={12} style={{ marginTop: 20 }}>
-          <MarketCardList marketCards={MarketCardData} />
+          <MarketCardList marketCards={allFilteredData} />
         </Grid>
       </Grid>
     );

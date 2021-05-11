@@ -4,15 +4,18 @@ import MarketTab from "../../components/marketCard/marketTab";
 import Web3 from "web3";
 import * as fs from "fs";
 
-import Username from "../../abis/username.json";
 import NftContract from "../../abis/nft.json";
 
 import addresses from "../../constants/contracts";
 import { useRecoilCallback } from "recoil";
-import { allItems } from "../../recoils/atoms";
+import {
+  allItems,
+  isBiddable,
+  isOnSale,
+  rarityLevel,
+} from "../../recoils/atoms";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-// const { username_abi } = require("../../abis/username.abi");
-// const contractJson = fs.readFileSync("../../abis/username.json");
+
 // const username_abi = JSON.parse(contractJson);
 
 const MarketPlace = () => {
@@ -96,7 +99,7 @@ const MarketPlace = () => {
       >
         MarketPlace
       </Typography>
-      {address && <> {address}</>}
+      {/* {address && <> {address}</>} */}
 
       <MarketTab style={{ marginTop: 10 }} />
       {/* <div>

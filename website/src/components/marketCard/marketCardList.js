@@ -53,14 +53,14 @@ const MarketCardList = (props) => {
       className={classes.gridList}
     >
       {props.marketCards.map((cardItem, index) => {
-        console.log(
-          cardItem.name,
-          cardItem.rarity,
-          cardItem.cid,
-          cardItem.sellPrice,
-          cardItem.maxBid,
-          cardItem.clothType
-        );
+        // console.log(
+        //   cardItem.name,
+        //   cardItem.rarity,
+        //   cardItem.cid,
+        //   cardItem.sellPrice,
+        //   cardItem.maxBid,
+        //   cardItem.clothType
+        // );
         return (
           <GridListTile key={index}>
             <MarketCard

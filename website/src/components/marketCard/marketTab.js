@@ -6,12 +6,20 @@ import PropTypes from "prop-types";
 
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import {
-  getUsername,
+  getMyUsername,
   getHeads,
   getMiddles,
   getBottoms,
+  getAllItemsFiltered,
 } from "../../recoils/selectors";
-import { myUsername, myAddress, allItems } from "../../recoils/atoms";
+import {
+  myUsername,
+  myAddress,
+  allItems,
+  isBiddable,
+  isOnSale,
+  rarityLevel,
+} from "../../recoils/atoms";
 
 import {
   Typography,
@@ -40,170 +48,6 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import MarketCardList from "./marketCardList";
-// const MarketCardData = [
-//   {
-//     name: "Card1",
-//     frequency: "Legendary",
-//     owner: "Beni",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "12",
-//     type: "bean",
-//   },
-//   {
-//     name: "Card2",
-//     frequency: "Ordinary",
-//     owner: "Neden",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "20",
-//     type: "topWear",
-//   },
-//   {
-//     name: "Card3",
-//     frequency: "Rare",
-//     owner: "Yazmadınız",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "15",
-//     auctionPrice: "20",
-//     type: "bottomWear",
-//   },
-//   {
-//     name: "Card1",
-//     frequency: "Legendary",
-//     owner: "Beni",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "12",
-//     type: "bean",
-//   },
-//   {
-//     name: "Card2",
-//     frequency: "Ordinary",
-//     owner: "Sevmiyor",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "20",
-//     type: "topWear",
-//   },
-//   {
-//     name: "Card3",
-//     frequency: "Rare",
-//     owner: "Musunuz",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "15",
-//     auctionPrice: "20",
-//     type: "bottomWear",
-//   },
-//   {
-//     name: "Card1",
-//     frequency: "Legendary",
-//     owner: "Gokberk",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "12",
-//     type: "bean",
-//   },
-//   {
-//     name: "Card2",
-//     frequency: "Ordinary",
-//     owner: "Kaya",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "20",
-//     type: "topWear",
-//   },
-//   {
-//     name: "Card3",
-//     frequency: "Rare",
-//     owner: "Musunuz",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "15",
-//     auctionPrice: "20",
-//     type: "bottomWear",
-//   },
-//   {
-//     name: "Card1",
-//     frequency: "Legendary",
-//     owner: "Gokberk",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "12",
-//     type: "bean",
-//   },
-//   {
-//     name: "Card2",
-//     frequency: "Ordinary",
-//     owner: "Kaya",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "20",
-//     type: "topWear",
-//   },
-//   {
-//     name: "Card3",
-//     frequency: "Rare",
-//     owner: "Cavit",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "15",
-//     auctionPrice: "20",
-//     type: "bottomWear",
-//   },
-//   {
-//     name: "Card1",
-//     frequency: "Legendary",
-//     owner: "Beni",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "12",
-//     type: "bean",
-//   },
-//   {
-//     name: "Card2",
-//     frequency: "Ordinary",
-//     owner: "Neden",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "20",
-//     type: "topWear",
-//   },
-//   {
-//     name: "Card3",
-//     frequency: "Rare",
-//     owner: "Yazmadınız",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "15",
-//     auctionPrice: "20",
-//     type: "bottomWear",
-//   },
-//   {
-//     name: "Card1",
-//     frequency: "Legendary",
-//     owner: "Gokberk",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "12",
-//     type: "bean",
-//   },
-//   {
-//     name: "Card2",
-//     frequency: "Ordinary",
-//     owner: "Kaya",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "10",
-//     auctionPrice: "20",
-//     type: "topWear",
-//   },
-//   {
-//     name: "Card3",
-//     frequency: "Rare",
-//     owner: "Cavit",
-//     imgUrl: "https://sc04.alicdn.com/kf/Uf4c62ba9db5c4371a07c52c140f7054cG.jpg",
-//     price: "15",
-//     auctionPrice: "20",
-//     type: "bottomWear",
-//   },
-// ];
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -266,11 +110,16 @@ const MarketTab = () => {
   const heads = useRecoilValue(getHeads);
   const middles = useRecoilValue(getMiddles);
   const bottoms = useRecoilValue(getBottoms);
+  const allItemsFiltered = useRecoilValue(getAllItemsFiltered);
 
-  console.log("allItems", items);
-  console.log("heads", heads);
-  console.log("middles", middles);
-  console.log("bottoms", bottoms);
+  const [marketIsBiddable, setMarketIsBiddable] = useRecoilState(isBiddable);
+  const [marketIsOnSale, setMarketIsOnSale] = useRecoilState(isOnSale);
+  const [marketRariryLevel, setMarketRariryLevel] = useRecoilState(rarityLevel);
+
+  // console.log("allItems", items);
+  // console.log("heads", heads);
+  // console.log("middles", middles);
+  // console.log("bottoms", bottoms);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -295,10 +144,19 @@ const MarketTab = () => {
             label={
               <div>
                 <FaceIcon style={{ verticalAlign: "middle", marginRight: 8 }} />{" "}
-                Bean{" "}
+                All Items{" "}
               </div>
             }
             {...a11yProps(0)}
+          />
+          <StyledTab
+            label={
+              <div>
+                <FaceIcon style={{ verticalAlign: "middle", marginRight: 8 }} />{" "}
+                Bean{" "}
+              </div>
+            }
+            {...a11yProps(1)}
           />
           <StyledTab
             label={
@@ -309,7 +167,7 @@ const MarketTab = () => {
                 Top Wear{" "}
               </div>
             }
-            {...a11yProps(0)}
+            {...a11yProps(2)}
           />
           <StyledTab
             label={
@@ -320,7 +178,7 @@ const MarketTab = () => {
                 Bottom Wear{" "}
               </div>
             }
-            {...a11yProps(0)}
+            {...a11yProps(3)}
           />
         </StyledTabs>
       </AppBar>
@@ -344,8 +202,10 @@ const MarketTab = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        // checked={state.checkedA}
-                        // onChange={handleChange}
+                        checked={marketIsBiddable}
+                        onChange={() => {
+                          setMarketIsBiddable(!marketIsBiddable);
+                        }}
                         name="Biddable"
                       />
                     }
@@ -355,8 +215,10 @@ const MarketTab = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        // checked={state.checkedB}
-                        // onChange={handleChange}
+                        checked={marketIsOnSale}
+                        onChange={() => {
+                          setMarketIsOnSale(!marketIsOnSale);
+                        }}
                         name="Fixed Price"
                         color="primary"
                       />
@@ -374,18 +236,20 @@ const MarketTab = () => {
                     <Select
                       style={{ width: 100 }}
                       native
-                      // value={state.age}
-                      // onChange={handleChange}
+                      value={marketRariryLevel}
+                      onChange={(event) => {
+                        setMarketRariryLevel(event.target.value);
+                      }}
                       inputProps={{
                         name: "age",
                         id: "age-native-simple",
                       }}
                     >
-                      <option value={10}>All</option>
-                      <option value={10}>Legendary</option>
-                      <option value={10}>Epic</option>
-                      <option value={20}>Rare</option>
-                      <option value={30}>Common</option>
+                      <option value={"all"}>All</option>
+                      <option value={"legendary"}>Legendary</option>
+                      <option value={"epic"}>Epic</option>
+                      <option value={"rare"}>Rare</option>
+                      <option value={"common"}>Common</option>
                     </Select>
                   </FormControl>
                 </FormGroup>
@@ -423,15 +287,24 @@ const MarketTab = () => {
           </Grid>
         </Grid>
       </div>
-      <TabPanel value={value} index={0}>
-        <MarketCardList marketCards={heads} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <MarketCardList marketCards={middles} />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <MarketCardList marketCards={bottoms} />
-      </TabPanel>
+      {heads.length == 0 ? (
+        <div>BIDILAR LOADING</div>
+      ) : (
+        <>
+          <TabPanel value={value} index={0}>
+            <MarketCardList marketCards={allItemsFiltered} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <MarketCardList marketCards={heads} />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <MarketCardList marketCards={middles} />
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <MarketCardList marketCards={bottoms} />
+          </TabPanel>
+        </>
+      )}
     </div>
   );
   return;
