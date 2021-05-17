@@ -1,7 +1,10 @@
 import React from "react";
 import { makeStyles, Button, TextField, Divider } from "@material-ui/core";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import { allItems, itemData, myAddress } from "../../recoils/atoms";
+import { allItems, itemData, myAddress, itemIdAtom } from "../../recoils/atoms";
+
+import addresses from "../../constants/contracts";
+import NftContract from "../../abis/nft.json";
 
 const useStyles = makeStyles({
   myButton: {
@@ -27,19 +30,150 @@ const useStyles = makeStyles({
 bugs:
 */
 
-const ItemButtonGroup = () => {
+const ItemButtonGroup = (props) => {
   const classes = useStyles();
 
-  const alreadyWearing = false; // düzeltilmeli
-
-  const addr = useRecoilValue(myAddress);
+  const userAddress = useRecoilValue(myAddress);
   const data = useRecoilValue(itemData);
+  const id = useRecoilValue(itemIdAtom);
 
-  const isThirdPerson = data.owner.toLowerCase() != addr.toLowerCase();
+  const [sellPrice, setSellPrice] = React.useState(0);
+
+  const [contractInterface, setContractInterface] = React.useState();
+
+  const isThirdPerson = data.owner.toLowerCase() != userAddress.toLowerCase();
 
   const buyButton = data.isOnSale ? (
-    <Button className={classes.myButton}>Buy</Button>
+    <Button className={classes.myButton} onClick={() => handleBuy()}>
+      Buy
+    </Button>
   ) : null;
+
+  React.useEffect(() => {
+    var nft_contract_interface = new window.web3.eth.Contract(
+      NftContract.abi,
+      addresses.NFT_CONTRACTS_ADDRESS
+    );
+    setContractInterface(nft_contract_interface);
+  }, []);
+
+  const handlePutOnSale = () => {
+    console.log("handlePutOnSaleCalled");
+    console.log("contractInterface", contractInterface);
+    console.log("sellPrice", "===>", sellPrice);
+    console.log("tokenId", "===>", parseInt(id) + 1);
+    console.log("data", "===>", data);
+    console.log("price_in_bottons", "===>", sellPrice);
+
+    contractInterface.methods
+      .putOnSale(parseInt(id) + 1, sellPrice)
+      .send({ from: userAddress, gas: 500000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handleBuy = () => {
+    console.log("handleBuy");
+    console.log("contractInterface", contractInterface);
+    console.log("tokenId", "===>", parseInt(id) + 1);
+    console.log("data", "===>", data);
+    console.log("price_in_bottons", "===>", sellPrice);
+    console.log("price_in_bottons data sell price", "===>", data.sellPrice);
+
+    contractInterface.methods
+      .buyFromSale(parseInt(id) + 1)
+      .send({ from: userAddress, value: data.sellPrice, gas: 3000000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(receipt);
+        console.log(error, receipt);
+
+        console.log(error.data);
+      });
+  };
+
+  const handleCancelSale = () => {
+    console.log("handleBuy");
+    console.log("contractInterface", contractInterface);
+    console.log("tokenId", "===>", parseInt(id) + 1);
+    console.log("data", "===>", data);
+    console.log("price_in_bottons", "===>", sellPrice);
+
+    contractInterface.methods
+      .cancelSale(parseInt(id) + 1)
+      .send({ from: userAddress })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handleWear = () => {
+    contractInterface.methods
+      .wearItem(parseInt(id) + 1)
+      .send({ from: userAddress })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handleUnwear = () => {
+    contractInterface.methods
+      .unWearItem(parseInt(data.clothType))
+      .send({ from: userAddress })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
 
   const bidButton = data.isBiddable ? (
     <>
@@ -64,7 +198,14 @@ const ItemButtonGroup = () => {
   ) : null;
 
   const saleButton = data.isOnSale ? (
-    <Button className={classes.myButton}>Cancel Sale</Button>
+    <Button
+      className={classes.myButton}
+      onClick={() => {
+        handleCancelSale();
+      }}
+    >
+      Cancel Sale
+    </Button>
   ) : (
     <div
       style={{
@@ -74,6 +215,10 @@ const ItemButtonGroup = () => {
       }}
     >
       <TextField
+        value={sellPrice}
+        onChange={(evt) => {
+          setSellPrice(evt.target.value);
+        }}
         label="Price"
         id="outlined-margin-none"
         className={classes.textField}
@@ -81,7 +226,9 @@ const ItemButtonGroup = () => {
         helperText="Must fix a price"
         variant="outlined"
       />
-      <Button className={classes.myButton}>Put on sale</Button>
+      <Button className={classes.myButton} onClick={() => handlePutOnSale()}>
+        Put on sale
+      </Button>
     </div>
   );
 
@@ -109,9 +256,25 @@ const ItemButtonGroup = () => {
       />
     ) : null;
 
-  const wearButton = !alreadyWearing ? (
-    <Button className={classes.myButton}>Wear this item</Button>
-  ) : null;
+  const wearButton = !data.isWearing ? (
+    <Button
+      className={classes.myButton}
+      onClick={() => {
+        handleWear();
+      }}
+    >
+      Wear this item
+    </Button>
+  ) : (
+    <Button
+      className={classes.myButton}
+      onClick={() => {
+        handleUnwear();
+      }}
+    >
+      Unwear this item
+    </Button>
+  );
   const thridPerson = (
     <>
       <div

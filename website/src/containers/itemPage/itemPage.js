@@ -33,6 +33,7 @@ import {
   itemData,
   myAddress,
   transactionData,
+  itemIdAtom,
 } from "../../recoils/atoms";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 
@@ -59,15 +60,19 @@ const isThirdPerson = true;
 
 const ItemPage = (props) => {
   //const [data, setData] = useRecoilState(allItems);
+  // const [loading, setLoading] = React.useState(true);
 
   const [data, setData] = useRecoilState(itemData);
   const [address, setAddress] = useRecoilState(myAddress);
   const [transactions, setTransactions] = useRecoilState(transactionData);
-  const [id, setId] = React.useState(props.match.params.id);
+  const [id, setId] = useRecoilState(itemIdAtom);
 
   React.useEffect(async () => {
     let myAddress = await window.ethereum.selectedAddress;
     setAddress(myAddress);
+    const myId = props.match.params.id;
+    setId(myId);
+    // setLoading(false);
 
     var nft_contract_interface = new window.web3.eth.Contract(
       NftContract.abi,
@@ -75,7 +80,7 @@ const ItemPage = (props) => {
     );
 
     nft_contract_interface.methods
-      .tokenByIndex(id)
+      .tokenByIndex(myId)
       .call()
       .then((currentTokenId) => {
         return nft_contract_interface.methods
@@ -98,7 +103,7 @@ const ItemPage = (props) => {
 
     nft_contract_interface
       .getPastEvents("nftTransaction", {
-        filter: { id: parseInt(id) + 1 },
+        filter: { id: parseInt(myId) + 1 },
         fromBlock: 0,
         toBlock: "latest",
       })
@@ -114,7 +119,12 @@ const ItemPage = (props) => {
     // );
   }, [window.web3.eth]);
 
-  if (!data || data.owner == undefined || transactions == undefined) {
+  if (
+    !data ||
+    data.owner == undefined ||
+    transactions == undefined ||
+    id == undefined
+  ) {
     return <div>loading</div>;
   }
 

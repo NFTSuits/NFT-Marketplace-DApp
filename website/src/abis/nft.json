@@ -31,6 +31,34 @@
       "constant": false,
       "inputs": [
         {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyFromSale",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelSale",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
           "name": "_clothType",
           "type": "uint256"
         },
@@ -48,6 +76,24 @@
         }
       ],
       "name": "mint",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_sellPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "putOnSale",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -200,6 +246,20 @@
         }
       ],
       "name": "wearItems",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawMoney",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -373,6 +433,20 @@
     {
       "constant": true,
       "inputs": [],
+      "name": "myBalance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
       "name": "name",
       "outputs": [
         {
@@ -425,6 +499,10 @@
         {
           "name": "maxBid",
           "type": "uint256"
+        },
+        {
+          "name": "isWearing",
+          "type": "bool"
         }
       ],
       "payable": false,
@@ -602,6 +680,10 @@
         {
           "name": "username",
           "type": "string"
+        },
+        {
+          "name": "userBalance",
+          "type": "uint256"
         }
       ],
       "payable": false,

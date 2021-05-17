@@ -50,6 +50,11 @@ const rarityLevel = atom({
   default: "all",
 });
 
+const itemIdAtom = atom({
+  key: "itemIdAtom", // unique ID (with respect to other atoms/selectors)
+  default: undefined,
+});
+
 export {
   myUsername,
   profileDataAtom,
@@ -61,4 +66,5 @@ export {
   isOnSale,
   rarityLevel,
   isThirdPersonAtom,
+  itemIdAtom,
 };

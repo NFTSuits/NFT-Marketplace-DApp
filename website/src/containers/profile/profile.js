@@ -104,6 +104,23 @@ const useStyles = makeStyles((theme) => ({
   carouselStyle: {
     width: 300,
   },
+  myButton: {
+    color: "#3F51B5",
+    backgroundColor: "#fff",
+    height: 42,
+    position: "relative",
+    top: 7,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+    border: "1px solid",
+    borderColor: "#3F51B5",
+    "&:hover": {
+      backgroundColor: "#3F51B5",
+      borderColor: "#3F51B5",
+      color: "#fff",
+    },
+  },
 }));
 
 function TabPanel(props) {
@@ -319,57 +336,131 @@ const Profile = (props) => {
 
   const LowerProfile = () => {
     const classes = useStyles();
+    const [firstPersonUsername, setFirstPersonUsername] =
+      useRecoilState(myUsername);
+    const isThirdPerson = useRecoilValue(isThirdPersonAtom);
+
+    //const [, set] = React.useState();
+    const [isSetting, setIsSetting] = React.useState(false);
+    const [withdrawAmount, setWithdrawAmount] = React.useState(0);
+    const [usernameEditText, setUsernameEditText] = React.useState("");
+
+    const [profileData, setProfileData] = useRecoilState(profileDataAtom);
+
+    const onWithdrawPress = async () => {
+      console.log("amount:", withdrawAmount);
+      let myAddress = await window.ethereum.selectedAddress;
+
+      var nft_contract_interface = new window.web3.eth.Contract(
+        NftContract.abi,
+        addresses.NFT_CONTRACTS_ADDRESS
+      );
+      nft_contract_interface.methods
+        .withdrawMoney(withdrawAmount)
+        .send({ from: myAddress })
+        .on("transactionHash", function (hash) {
+          console.log(hash);
+        })
+        .on("confirmation", function (confirmationNumber, receipt) {
+          console.log(confirmationNumber, receipt);
+        })
+        .on("receipt", async function (receipt) {
+          // receipt example
+          console.log(receipt);
+          getUsername(nft_contract_interface, myAddress).then((data) => {
+            console.log(data);
+            setFirstPersonUsername(data.username);
+            setIsSetting(false);
+          });
+        })
+        .on("error", function (error, receipt) {
+          console.log(error, receipt);
+          setIsSetting(false);
+        });
+    };
 
     return (
-      <Grid
-        style={{ marginTop: 30 }}
-        container
-        direction="row"
-        justify="space-around"
-        alignItems="flex-start"
-      >
-        <Grid item xs={3}>
-          <Typography variant="h5" style={{ color: "grey" }}>
-            #Items
-          </Typography>
+      <>
+        <Grid
+          style={{ marginTop: 30 }}
+          container
+          direction="row"
+          justify="space-around"
+          alignItems="flex-start"
+        >
+          <Grid item xs={3}>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              #Items
+            </Typography>
 
-          <Typography variant="h5" className={classes.numberTextStyle}>
-            5
-          </Typography>
-          <Typography variant="h5" style={{ color: "grey" }}>
-            #Sold
-          </Typography>
-          <Typography variant="h5" className={classes.numberTextStyle}>
-            7
-          </Typography>
-          <Typography variant="h5" style={{ color: "grey" }}>
-            #Sale
-          </Typography>
-          <Typography variant="h5" className={classes.numberTextStyle}>
-            10
-          </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              5
+            </Typography>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              #Sold
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              7
+            </Typography>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              #Sale
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              10
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              Spent
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              10$
+            </Typography>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              Earned
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              15$
+            </Typography>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              #gorkem
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              186
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h5" style={{ color: "grey" }}>
-            Spent
-          </Typography>
-          <Typography variant="h5" className={classes.numberTextStyle}>
-            10$
-          </Typography>
-          <Typography variant="h5" style={{ color: "grey" }}>
-            Earned
-          </Typography>
-          <Typography variant="h5" className={classes.numberTextStyle}>
-            15$
-          </Typography>
-          <Typography variant="h5" style={{ color: "grey" }}>
-            #gorkem
-          </Typography>
-          <Typography variant="h5" className={classes.numberTextStyle}>
-            186
-          </Typography>
-        </Grid>
-      </Grid>
+        {!isThirdPerson && (
+          <>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Typography>Balance: </Typography>
+              <Typography>{profileData.userBalance}</Typography>
+            </div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <TextField
+                onChange={(event) => {
+                  // console.log(event.target.value);
+                  setWithdrawAmount(event.target.value);
+                }}
+                label="Amount"
+                id="outlined-margin-none"
+                className={classes.textField}
+                margin="dense"
+                helperText="Must fix a price"
+                variant="outlined"
+              />
+              <Button
+                className={classes.myButton}
+                onClick={() => {
+                  onWithdrawPress();
+                }}
+              >
+                Withdraw
+              </Button>
+            </div>
+          </>
+        )}
+      </>
     );
   };
 
