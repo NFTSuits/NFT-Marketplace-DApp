@@ -20,12 +20,14 @@ import { getUsername } from "../../utils/getUsernameFromAddress";
 
 const useStyles = makeStyles({
   root: {
+    backgroundColor: "#080808",
     maxWidth: 345,
     borderRadius: 8,
-    color: "#444",
+    color: "#f1ffe3",
     maxHeight: 395,
     "&:hover": {
-      boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.24)",
+      boxShadow:
+        "0 1px 3px rgba(255,255,255,0.12), 0 1px 3px rgba(255,255,255,0.24)",
       transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     },
   },
@@ -40,6 +42,24 @@ const useStyles = makeStyles({
   },
   bidPriceInfoContainer: {
     marginLeft: 15,
+  },
+  myButton: {
+    color: "#00D54B",
+    backgroundColor: "#080808",
+    height: 23,
+    position: "relative",
+    top: 7,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 12,
+    borderRadius: 5,
+    border: "1px solid",
+    borderColor: "#00D54B",
+    "&:hover": {
+      backgroundColor: "#00D54B",
+      borderColor: "#00D54B",
+      color: "#000",
+    },
   },
 });
 
@@ -145,7 +165,7 @@ const MarketCard = ({
               </Typography>
               <Button
                 size="small"
-                color="primary"
+                className={classes.myButton}
                 onClick={() => {
                   isProfile
                     ? (window.location.href = owner)

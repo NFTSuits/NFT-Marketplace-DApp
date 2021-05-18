@@ -74,7 +74,7 @@ const StyledTabs = withStyles({
     "& > span": {
       borderRadius: 10,
       width: "100%",
-      backgroundColor: "#919191",
+      backgroundColor: "#000",
       opacity: 0.15,
     },
   },
@@ -83,7 +83,7 @@ const StyledTabs = withStyles({
 const StyledTab = withStyles((theme) => ({
   root: {
     textTransform: "none",
-    color: "#5d5d5d",
+    color: "#000000",
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(15),
     marginRight: theme.spacing(1),
@@ -127,9 +127,13 @@ const MarketTab = () => {
   return (
     <div className={classes.root}>
       <AppBar
-        style={{ width: "%40", maxWidth: "300", borderRadius: 10 }}
+        style={{
+          backgroundColor: "#00D54B",
+          width: "%40",
+          maxWidth: "300",
+          borderRadius: 10,
+        }}
         position="static"
-        color="default"
       >
         <StyledTabs
           value={value}
@@ -220,7 +224,6 @@ const MarketTab = () => {
                           setMarketIsOnSale(!marketIsOnSale);
                         }}
                         name="Fixed Price"
-                        color="primary"
                       />
                     }
                     label="Fixed Price"

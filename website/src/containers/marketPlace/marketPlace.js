@@ -93,11 +93,7 @@ const MarketPlace = () => {
 
   return (
     <Container maxWidth="md">
-      <Typography
-        variant="h4"
-        color="primary"
-        style={{ marginBottom: 20, marginTop: 30 }}
-      >
+      <Typography variant="h4" style={{ marginBottom: 20, marginTop: 30 }}>
         MarketPlace
       </Typography>
       {/* {address && <> {address}</>} */}

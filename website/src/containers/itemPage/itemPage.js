@@ -56,7 +56,38 @@ const MarketCardData = {
   price: "10",
   auctionPrice: "12",
 };
-const isThirdPerson = true;
+
+const transactionColors = {
+  "On Sale": "#8f84d8ff",
+  "Sale Cancelled": "#8058bcff",
+  sold: "#b246b1ff",
+  "Auction Starts": "#e333a5ff",
+  "Auction Cancelled": "#f0388bff",
+  Bidded: "#fa7658ff",
+  "Sold From Auction": "#ff9a17ff",
+  "Bid Withdrawn": "#f7c11fff",
+  claimed: "#fd397eff",
+};
+
+const useStyles = makeStyles({
+  myButton: {
+    color: "#00D54B",
+    backgroundColor: "#121212",
+    height: 42,
+    position: "relative",
+    top: 7,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+    border: "1px solid",
+    borderColor: "#00D54B",
+    "&:hover": {
+      backgroundColor: "#00D54B",
+      borderColor: "#00D54B",
+      color: "#000",
+    },
+  },
+});
 
 const ItemPage = (props) => {
   //const [data, setData] = useRecoilState(allItems);
@@ -125,6 +156,8 @@ const ItemPage = (props) => {
     //   }
     // );
   }, [window.web3.eth]);
+
+  const classes = useStyles();
 
   if (
     !data ||
@@ -205,7 +238,7 @@ const ItemPage = (props) => {
                         style={{
                           verticalAlign: "middle",
                           marginTop: 5,
-                          marginRight: 5,
+                          marginRight: 10,
                           fontSize: 20,
                         }}
                       />
@@ -227,28 +260,33 @@ const ItemPage = (props) => {
                       <AccountCircleIcon
                         style={{
                           verticalAlign: "middle",
-                          marginTop: 2,
-                          marginRight: 5,
+                          marginTop: 15,
+                          marginRight: 10,
                           fontSize: 20,
                         }}
                       />
-                      <Typography variant="body1" display="block" gutterbottom>
+                      <Typography
+                        variant="body1"
+                        display="block"
+                        gutterbottom
+                        style={{ marginRight: 10, marginTop: 15 }}
+                      >
                         Owner:{" "}
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            window.location = "/profile/" + data.owner;
-                          }}
-                        >
-                          {data.owner.slice(0, 6) +
-                            "..." +
-                            data.owner.slice(
-                              data.owner.length - 4,
-                              data.owner.length
-                            )}
-                        </Button>
                       </Typography>
+                      <Button
+                        variant="outlined"
+                        className={classes.myButton}
+                        onClick={() => {
+                          window.location = "/profile/" + data.owner;
+                        }}
+                      >
+                        {data.owner.slice(0, 6) +
+                          "..." +
+                          data.owner.slice(
+                            data.owner.length - 4,
+                            data.owner.length
+                          )}
+                      </Button>
                     </div>
                     <div
                       style={{
@@ -261,7 +299,7 @@ const ItemPage = (props) => {
                         style={{
                           verticalAlign: "middle",
                           marginTop: 3,
-                          marginRight: 5,
+                          marginRight: 10,
                           fontSize: 20,
                         }}
                       />
@@ -274,7 +312,7 @@ const ItemPage = (props) => {
                         <PanToolSharpIcon
                           style={{
                             verticalAlign: "middle",
-                            marginRight: 5,
+                            marginRight: 10,
                             marginTop: 2,
                             fontSize: 20,
                           }}
@@ -288,7 +326,6 @@ const ItemPage = (props) => {
                           {data.isBiddable ? "Ξ " + data.maxBid : "-"}
                         </Typography>
                       </div>
-                      {!isThirdPerson && <Button>isThirdPerson=false</Button>}
                     </div>
                   </div>
                   <div style={{ marginRight: 140, marginTop: 30 }}>
@@ -313,11 +350,46 @@ const ItemPage = (props) => {
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center">Type</TableCell>
-                        <TableCell align="center">From</TableCell>
-                        <TableCell align="center">To</TableCell>
-                        <TableCell align="center">Amount</TableCell>
-                        <TableCell align="center">Txn</TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            backgroundColor: "#232323",
+                          }}
+                        >
+                          Type
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            backgroundColor: "#232323",
+                          }}
+                        >
+                          From
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            backgroundColor: "#232323",
+                          }}
+                        >
+                          To
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            backgroundColor: "#232323",
+                          }}
+                        >
+                          Amount
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            backgroundColor: "#232323",
+                          }}
+                        >
+                          Txn
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -328,10 +400,9 @@ const ItemPage = (props) => {
                             key={index}
                             style={{
                               backgroundColor:
-                                transaction.returnValues.transactionType ===
-                                "claimed"
-                                  ? "#af11dd"
-                                  : "#afdf00",
+                                transactionColors[
+                                  transaction.returnValues.transactionType
+                                ],
                             }}
                           >
                             <TableCell align="center">

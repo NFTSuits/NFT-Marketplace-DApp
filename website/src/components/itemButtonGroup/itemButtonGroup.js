@@ -1,30 +1,45 @@
 import React from "react";
-import { makeStyles, Button, TextField, Divider } from "@material-ui/core";
+import {
+  makeStyles,
+  Button,
+  TextField,
+  Divider,
+  createStyles,
+} from "@material-ui/core";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import { allItems, itemData, myAddress, itemIdAtom } from "../../recoils/atoms";
 
 import addresses from "../../constants/contracts";
 import NftContract from "../../abis/nft.json";
 
-const useStyles = makeStyles({
-  myButton: {
-    color: "#3F51B5",
-    backgroundColor: "#fff",
-    height: 42,
-    position: "relative",
-    top: 7,
-    marginRight: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    border: "1px solid",
-    borderColor: "#3F51B5",
-    "&:hover": {
-      backgroundColor: "#3F51B5",
-      borderColor: "#3F51B5",
-      color: "#fff",
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    myButton: {
+      color: "#000",
+      backgroundColor: "#00D54B",
+      height: 42,
+      position: "relative",
+      top: 7,
+      marginRight: 10,
+      marginBottom: 10,
+      borderRadius: 5,
+      border: "1px solid",
+      borderColor: "#00D54B",
+      "&:hover": {
+        backgroundColor: "#121212",
+        borderColor: "#00D54B",
+        color: "#00D54B",
+      },
     },
-  },
-});
+  })
+);
+
+// const useStyles = makeStyles((theme) =>
+//   createStyles({
+//     container: {
+//       padding: theme.spacing(2)
+//     },
+//   });
 
 /*
 bugs:

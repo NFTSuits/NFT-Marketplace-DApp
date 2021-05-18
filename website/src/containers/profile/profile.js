@@ -26,8 +26,11 @@ import EditSharpIcon from "@material-ui/icons/EditSharp";
 import SaveIcon from "@material-ui/icons/Save";
 
 import FaceIcon from "@material-ui/icons/Face";
+import KeyboardArrowRightRoundedIcon from "@material-ui/icons/KeyboardArrowRightRounded";
+import KeyboardArrowLeftRoundedIcon from "@material-ui/icons/KeyboardArrowLeftRounded";
 
-import Carousel from "react-elastic-carousel";
+import Carousel, { consts } from "react-elastic-carousel";
+
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 
 import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
@@ -97,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
     // height: theme.spacing(25),
   },
   numberTextStyle: {
-    color: "black",
+    //color: "black",
     marginBottom: 30,
     textAlign: "center",
     fontWeight: "bold",
@@ -106,8 +109,8 @@ const useStyles = makeStyles((theme) => ({
     width: 300,
   },
   myButton: {
-    color: "#3F51B5",
-    backgroundColor: "#fff",
+    color: "#000",
+    backgroundColor: "#00D54B",
     height: 42,
     position: "relative",
     top: 7,
@@ -115,11 +118,43 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 10,
     borderRadius: 5,
     border: "1px solid",
-    borderColor: "#3F51B5",
+    borderColor: "#00D54B",
     "&:hover": {
-      backgroundColor: "#3F51B5",
-      borderColor: "#3F51B5",
-      color: "#fff",
+      backgroundColor: "#121212",
+      borderColor: "#00D54B",
+      color: "#00D54B",
+    },
+  },
+  myMoneyButton: {
+    color: "#00D54B",
+    backgroundColor: "#121212",
+    height: 42,
+    position: "relative",
+    top: 7,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+    border: "1px solid",
+    borderColor: "#00D54B",
+    "&:hover": {
+      backgroundColor: "#00D54B",
+      borderColor: "#00D54B",
+      color: "#000",
+    },
+  },
+  arrowButton: {
+    rec: {
+      recArrow: {
+        backgroundColor: "#00D54B",
+      },
+    },
+    /* round buttons on hover */
+    rec: {
+      recArrow: {
+        "&hover": {
+          backgroundColor: "#00D54B",
+        },
+      },
     },
   },
 }));
@@ -334,7 +369,7 @@ const Profile = (props) => {
               // }}
             />
           ) : (
-            <Typography variant="h5" color="initial">
+            <Typography variant="h5">
               @{isThirdPerson ? profileData.username : firstPersonUsername}
             </Typography>
           )}
@@ -377,7 +412,7 @@ const Profile = (props) => {
                   });
               }}
             >
-              <SaveIcon />
+              <SaveIcon style={{ color: "#00D54B" }} />
             </IconButton>
           ) : !isThirdPerson ? (
             <IconButton
@@ -387,7 +422,7 @@ const Profile = (props) => {
                 setIsSetting(true);
               }}
             >
-              <EditSharpIcon />
+              <EditSharpIcon style={{ color: "#00D54B" }} />
             </IconButton>
           ) : (
             <></>
@@ -448,42 +483,32 @@ const Profile = (props) => {
         >
           {/* {heads.length() + middles.length() + bottoms.length()} */}
           <Grid item xs={3}>
-            <Typography variant="h5" style={{ color: "grey" }}>
+            <Typography variant="h5">
               #Items
               {/* {console.log("transactions", transactions)} */}
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {heads.length + middles.length + bottoms.length}
             </Typography>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              Spent
-            </Typography>
+            <Typography variant="h5">Spent</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {spentBought}
             </Typography>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              Earned
-            </Typography>
+            <Typography variant="h5">Earned</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {earnedSold}
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              #combinations
-            </Typography>
+            <Typography variant="h5">#combinations</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {(heads.length + 1) * (middles.length + 1) * (bottoms.length + 1)}
             </Typography>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              #Bought
-            </Typography>
+            <Typography variant="h5">#Bought</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {numberBought}
             </Typography>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              #Sold
-            </Typography>
+            <Typography variant="h5">#Sold</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {numberSold}
             </Typography>
@@ -510,7 +535,7 @@ const Profile = (props) => {
                 variant="outlined"
               />
               <Button
-                className={classes.myButton}
+                className={classes.myMoneyButton}
                 onClick={() => {
                   onWithdrawPress();
                 }}
@@ -563,7 +588,7 @@ const Profile = (props) => {
         "& > span": {
           borderRadius: 10,
           width: "100%",
-          backgroundColor: "#919191",
+          backgroundColor: "#000",
           opacity: 0.15,
         },
       },
@@ -574,7 +599,7 @@ const Profile = (props) => {
     const StyledTab = withStyles((theme) => ({
       root: {
         textTransform: "none",
-        color: "#5d5d5d",
+        color: "#000",
         fontWeight: theme.typography.fontWeightRegular,
         fontSize: theme.typography.pxToRem(15),
         marginRight: theme.spacing(1),
@@ -609,7 +634,12 @@ const Profile = (props) => {
       >
         <Grid item xs={8}>
           <AppBar
-            style={{ width: "%40", maxWidth: "300", borderRadius: 10 }}
+            style={{
+              backgroundColor: "#00D54B",
+              width: "%40",
+              maxWidth: "300",
+              borderRadius: 10,
+            }}
             position="static"
             color="default"
           >
@@ -706,6 +736,31 @@ const Profile = (props) => {
         <Grid item xs={8}>
           {/* <Paper variant="outlined" className={classes.paper}> */}
           <Carousel
+            //enableSwipe={false}
+            renderArrow={({ type, onClick, isEdge }) => {
+              const pointer =
+                type === consts.PREV ? (
+                  <KeyboardArrowLeftRoundedIcon
+                    style={{
+                      fontSize: 50,
+                      color: isEdge ? "#343434" : "#00D54B",
+                    }}
+                  />
+                ) : (
+                  <KeyboardArrowRightRoundedIcon
+                    style={{
+                      fontSize: 50,
+                      color: isEdge ? "#343434" : "#00D54B",
+                    }}
+                  />
+                );
+              return (
+                <Button onClick={onClick} disabled={isEdge}>
+                  {pointer}
+                </Button>
+              );
+            }}
+            enableMouseSwipe={false}
             showArrows={!isThirdPerson ? true : false}
             enableSwipe={!isThirdPerson ? true : false}
             pagination={false}
@@ -738,6 +793,31 @@ const Profile = (props) => {
           {/* </Paper> */}
           {/* <Paper variant="outlined" className={classes.paper}> */}
           <Carousel
+            //enableSwipe={false}
+            renderArrow={({ type, onClick, isEdge }) => {
+              const pointer =
+                type === consts.PREV ? (
+                  <KeyboardArrowLeftRoundedIcon
+                    style={{
+                      fontSize: 50,
+                      color: isEdge ? "#343434" : "#00D54B",
+                    }}
+                  />
+                ) : (
+                  <KeyboardArrowRightRoundedIcon
+                    style={{
+                      fontSize: 50,
+                      color: isEdge ? "#343434" : "#00D54B",
+                    }}
+                  />
+                );
+              return (
+                <Button onClick={onClick} disabled={isEdge}>
+                  {pointer}
+                </Button>
+              );
+            }}
+            enableMouseSwipe={false}
             showArrows={!isThirdPerson ? true : false}
             enableSwipe={!isThirdPerson ? true : false}
             pagination={false}
@@ -772,6 +852,31 @@ const Profile = (props) => {
           {/* </Paper> */}
           {/* <Paper variant="outlined" className={classes.paper}> */}
           <Carousel
+            //enableSwipe={false}
+            renderArrow={({ type, onClick, isEdge }) => {
+              const pointer =
+                type === consts.PREV ? (
+                  <KeyboardArrowLeftRoundedIcon
+                    style={{
+                      fontSize: 50,
+                      color: isEdge ? "#343434" : "#00D54B",
+                    }}
+                  />
+                ) : (
+                  <KeyboardArrowRightRoundedIcon
+                    style={{
+                      fontSize: 50,
+                      color: isEdge ? "#343434" : "#00D54B",
+                    }}
+                  />
+                );
+              return (
+                <Button onClick={onClick} disabled={isEdge}>
+                  {pointer}
+                </Button>
+              );
+            }}
+            enableMouseSwipe={false}
             showArrows={!isThirdPerson ? true : false}
             enableSwipe={!isThirdPerson ? true : false}
             pagination={false}
@@ -807,7 +912,7 @@ const Profile = (props) => {
           {!isThirdPerson && (
             <Button
               variant="contained"
-              color="primary"
+              className={classes.myButton}
               style={{ float: "center", marginTop: 20 }}
               onClick={async () => {
                 // console.log(selectedHeadIndex);
@@ -847,7 +952,7 @@ const Profile = (props) => {
                       ? 0
                       : bottoms[selectedBottomIndex].tokenId
                   )
-                  .send({ from: myAddress })
+                  .send({ from: myAddress, gas: 500000 })
                   .on("transactionHash", function (hash) {
                     console.log(hash);
                   })
@@ -915,7 +1020,6 @@ const Profile = (props) => {
                           setMarketIsOnSale(!marketIsOnSale);
                         }}
                         name="Fixed Price"
-                        color="primary"
                       />
                     }
                     label="Fixed Price"
