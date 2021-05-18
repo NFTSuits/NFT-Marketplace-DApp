@@ -235,7 +235,12 @@ const Navbar = () => {
           <div className={classes.sectionDesktop}>
             {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
 
-            <Button color="inherit">
+            <Button
+              color="inherit"
+              onClick={() => {
+                window.location.href = "/avatars";
+              }}
+            >
               <SupervisedUserCircleIcon
                 style={{
                   verticalAlign: "middle",

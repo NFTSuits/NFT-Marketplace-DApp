@@ -6,6 +6,7 @@ import CharacterCounter from "./containers/Demo/demo";
 import MarketPlace from "./containers/marketPlace/marketPlace";
 import Profile from "./containers/profile/profile";
 import ItemPage from "./containers/itemPage/itemPage";
+import AvatarPage from "./containers/avatarPage/avatarPage";
 
 import Navbar from "./components/navbar/navbar";
 const App = () => {
@@ -27,6 +28,9 @@ const App = () => {
         </Switch>
         <Switch>
           <Route path="/item/:id" component={ItemPage} />
+        </Switch>
+        <Switch>
+          <Route exact path="/avatars" component={AvatarPage} />
         </Switch>
       </Router>
     </RecoilRoot>

@@ -43,6 +43,7 @@ import {
   isOnSale,
   rarityLevel,
   isThirdPersonAtom,
+  transactionData,
 } from "../../recoils/atoms";
 import {
   getMyUsername,
@@ -149,6 +150,11 @@ const Profile = (props) => {
   const [profileAddress, setProfileAdress] = React.useState(
     props.match.params.address
   );
+  const [numberSold, setNumberSold] = React.useState(0);
+  const [earnedSold, setEarnedSold] = React.useState(0);
+
+  const [numberBought, setNumberBought] = React.useState(0);
+  const [earnedBought, setEarnedBought] = React.useState(0);
 
   const [profileData, setProfileData] = useRecoilState(profileDataAtom);
 
@@ -161,6 +167,8 @@ const Profile = (props) => {
   const heads = useRecoilValue(getHeads);
   const middles = useRecoilValue(getMiddles);
   const bottoms = useRecoilValue(getBottoms);
+
+  const [transactions, setTransactions] = useRecoilState(transactionData);
 
   // console.log("profile all items", data);
 
@@ -224,6 +232,28 @@ const Profile = (props) => {
             setData(values);
           })
           .catch((err) => console.log("err", err));
+      });
+    // contract.getPastEvents("allEvents", { fromBlock: 1}).then(console.log);
+    nft_contract_interface
+      .getPastEvents("nftTransaction", {
+        fromBlock: 0,
+        toBlock: "latest",
+      })
+      .then((events) => {
+        setTransactions(events);
+
+        //          [numberSold, setNumberSold]
+        //          [earnedSold, setEarnedSold]
+        //          [numberBought, setNumberBought]
+        //          [earnedBought, setEarnedBought]
+
+        //TODO: bu doğru muhtemelen ama kontrol edilmeli
+        // const soldItems = events.filter((item) => {
+        //     return item.returnValues[1] === "sold" && item.returnValues[2] === myAddress;
+        //   })
+        // const boughtItems = events.filter((item) => {
+        //   return item.returnValues[1] === "sold" && item.returnValues[3] === myAddress;
+        // })
       });
   }, [window.web3.eth]);
 
@@ -388,28 +418,15 @@ const Profile = (props) => {
           justify="space-around"
           alignItems="flex-start"
         >
+          {/* {heads.length() + middles.length() + bottoms.length()} */}
           <Grid item xs={3}>
             <Typography variant="h5" style={{ color: "grey" }}>
               #Items
-            </Typography>
-
-            <Typography variant="h5" className={classes.numberTextStyle}>
-              5
-            </Typography>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              #Sold
+              {console.log("transactions", transactions)}
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              7
+              {heads.length + middles.length + bottoms.length}
             </Typography>
-            <Typography variant="h5" style={{ color: "grey" }}>
-              #Sale
-            </Typography>
-            <Typography variant="h5" className={classes.numberTextStyle}>
-              10
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
             <Typography variant="h5" style={{ color: "grey" }}>
               Spent
             </Typography>
@@ -422,14 +439,29 @@ const Profile = (props) => {
             <Typography variant="h5" className={classes.numberTextStyle}>
               15$
             </Typography>
+          </Grid>
+          <Grid item xs={4}>
             <Typography variant="h5" style={{ color: "grey" }}>
-              #gorkem
+              #combinations
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              186
+              {(heads.length + 1) * (middles.length + 1) * (bottoms.length + 1)}
+            </Typography>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              #Bought
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              7
+            </Typography>
+            <Typography variant="h5" style={{ color: "grey" }}>
+              #Sold
+            </Typography>
+            <Typography variant="h5" className={classes.numberTextStyle}>
+              7
             </Typography>
           </Grid>
         </Grid>
+
         {!isThirdPerson && (
           <>
             <div style={{ display: "flex", flexDirection: "row" }}>

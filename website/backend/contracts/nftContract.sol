@@ -10,7 +10,6 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/docs-org/con
 //        // solhint-disable-previous-line no-empty-blocks
 //    }
 //}
-
 contract nftContract is ERC721Full {
     struct nftData {
         uint256 clothType; //--> 1 --> head, 2 --> middle, 3 --> bottom
@@ -21,6 +20,7 @@ contract nftContract is ERC721Full {
         uint256 sellPrice;
         bool isBiddable;
         uint256 maxBid;
+        address maxBidder;
         bool isWearing;
     }
 
@@ -42,23 +42,15 @@ contract nftContract is ERC721Full {
         address fromAddress,
         address toAddress,
         uint256 value
-
         //address txn
     );
-
     mapping(address => userData) public users;
-
     mapping(string => bool) isExist;
-
     nftData[] public nfts;
 
     //mapping(uint => nftData) public nfts; //uint is reference to tokenId from openzeppelin-contracts
 
     constructor() public ERC721Full("nftContract", "NFTC") {}
-
-    function myBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
 
     function setUsername(string memory _username) public {
         users[msg.sender].username = _username;
@@ -179,13 +171,24 @@ contract nftContract is ERC721Full {
         //msg.sender owner olmalalı
         //paranın en az sellPrice kadar olmalı
         //approve var mı diye check et --> getApproved(uint256 tokenId) → address operator
-        address sellerAddress = ownerOf(_tokenId); //tokenId or tokenId-1 ??????
+        address sellerAddress = this.ownerOf(_tokenId); //tokenId or tokenId-1 ??????
         this.safeTransferFrom(sellerAddress, msg.sender, _tokenId); //transfer with ERC721 //change owner
         nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].sellPrice = 0; //tokenId or tokenId-1 ??????
         users[sellerAddress].userBalance =
             users[sellerAddress].userBalance +
             msg.value; //overflow attack assert ile check et prev balance + sellPrice = new balance
+
+        //satıldı we bid açıksa bunlar yapılmalı
+        if (nfts[_tokenId - 1].maxBid > 0) {
+            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
+                _tokenId - 1
+            ]
+                .maxBid; //check overflow attack
+        }
+        nfts[_tokenId - 1].maxBid = 0;
+        nfts[_tokenId - 1].maxBidder = address(0x0);
+        nfts[_tokenId - 1].isBiddable = false; //tokenId or tokenId-1 ??????
 
         emit nftTransaction(
             _tokenId,
@@ -196,27 +199,104 @@ contract nftContract is ERC721Full {
         ); //tokenId or tokenId-1 ??????
     }
 
-    /*    
-    function putOnAuction(uint _tokenId) public {
-        
-    }
-    
-    function cancelAuction(uint _tokenId) public {
-        
-    }
-    
-    function bid(uint _tokenId) public {
-        
-    }
-    
-    function acceptHighestBid(uint _tokenId) public {
-        
+    function putOnAuction(uint256 _tokenId) public {
+        nfts[_tokenId - 1].isBiddable = true; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
+        approve(address(this), _tokenId);
+
+        emit nftTransaction(
+            _tokenId,
+            "Auction Starts",
+            msg.sender,
+            address(0x0),
+            0
+        ); //tokenId or tokenId-1 ??????
     }
 
-    function withdrawBid(uint _tokenId) public {
-        
+    function cancelAuction(uint256 _tokenId) public {
+        if (nfts[_tokenId - 1].maxBid > 0) {
+            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
+                _tokenId - 1
+            ]
+                .maxBid; //check overflow attack
+        }
+        nfts[_tokenId - 1].isBiddable = false; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].maxBidder = address(0x0); //tokenId or tokenId-1 ??????
+
+        emit nftTransaction(
+            _tokenId,
+            "Auction Cancelled",
+            msg.sender,
+            address(0x0),
+            0
+        ); //tokenId or tokenId-1 ??????
     }
-*/
+
+    function bid(uint256 _tokenId) public payable {
+        //maxbidden büyük olmalı message.value
+        //owner kendisi olmıcak
+        //0 dan büyük olmalı msg.value
+        if (nfts[_tokenId - 1].maxBid > 0) {
+            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
+                _tokenId - 1
+            ]
+                .maxBid; //check overflow attack
+        }
+        nfts[_tokenId - 1].maxBid = msg.value;
+        nfts[_tokenId - 1].maxBidder = msg.sender;
+
+        emit nftTransaction(
+            _tokenId,
+            "Bidded",
+            msg.sender,
+            ownerOf(_tokenId),
+            msg.value
+        ); //tokenId or tokenId-1 ??????
+    }
+
+    function acceptHighestBid(uint256 _tokenId) public {
+        //msg.sender tokenId ownerı olmalı
+        address buyer = nfts[_tokenId - 1].maxBidder;
+        uint256 soldValue = nfts[_tokenId - 1].maxBid;
+        this.safeTransferFrom(
+            msg.sender,
+            nfts[_tokenId - 1].maxBidder,
+            _tokenId
+        ); //transfer with ERC721 //change owner
+        users[msg.sender].userBalance += nfts[_tokenId - 1].maxBid; //check overflow attack
+        nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].maxBidder = address(0x0); //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].isBiddable = false; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].sellPrice = 0; //tokenId or tokenId-1 ??????
+
+        emit nftTransaction(
+            _tokenId,
+            "Sold From Auction",
+            msg.sender,
+            buyer,
+            soldValue
+        ); //tokenId or tokenId-1 ??????
+    }
+
+    function withdrawBid(uint256 _tokenId) public {
+        //msg.sender maxBidder olmalı
+        uint256 withdrawnValue = nfts[_tokenId - 1].maxBid;
+        users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[_tokenId - 1]
+            .maxBid; //check overflow attack
+        nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
+        nfts[_tokenId - 1].maxBidder = address(0x0); //tokenId or tokenId-1 ??????
+
+        emit nftTransaction(
+            _tokenId,
+            "Bid Withdrawn",
+            msg.sender,
+            address(0x0),
+            withdrawnValue
+        ); //tokenId or tokenId-1 ??????
+    }
+
     function withdrawMoney(uint256 _amount) public {
         //amount balancetan küçük eşit olmalı
         users[msg.sender].userBalance = users[msg.sender].userBalance - _amount; //underflow attack
@@ -241,6 +321,7 @@ contract nftContract is ERC721Full {
                     0,
                     false,
                     0,
+                    address(0x0),
                     false
                 )
             );
@@ -248,221 +329,5 @@ contract nftContract is ERC721Full {
         isExist[_cid] = true;
 
         emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-    }
-
-    function bulkmint() public {
-        uint256 _id =
-            nfts.push(
-                nftData(
-                    1,
-                    "head 1",
-                    "https://dummyimage.com/600x400/f5c011/fff&text=h 1",
-                    "rare",
-                    true,
-                    20,
-                    false,
-                    0,
-                    false
-                )
-            );
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-
-        emit nftTransaction(
-            _id,
-            "claimed",
-            address(0x0),
-            address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2),
-            0
-        );
-
-        _id = nfts.push(
-            nftData(
-                1,
-                "head 2",
-                "https://dummyimage.com/600x400/1e00ff/fff&text=h 2",
-                "common",
-                false,
-                0,
-                true,
-                5,
-                false
-            )
-        );
-        _mint(msg.sender, _id);
-
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-
-        _id = nfts.push(
-            nftData(
-                1,
-                "head 3",
-                "https://dummyimage.com/600x400/f5c011/fff&text=h 3",
-                "rare",
-                true,
-                50,
-                true,
-                10,
-                false
-            )
-        );
-        _mint(msg.sender, _id);
-
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        /*
-            _id = nfts.push(nftData(1, "head 4", "https://dummyimage.com/600x400/1e00ff/fff&text=h 4", "common", false, 0, false, 0, false));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-            _id = nfts.push(nftData(1, "head 5", "https://dummyimage.com/600x400/00ff84/000&text=h 5", "legendary", false, 0, false, 0, false));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-       
-            _id = nfts.push(nftData(1, "head 6", "https://dummyimage.com/600x400/c400ff/fff&text=h 6", "epic", true, 505, false, 0));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-            _id = nfts.push(nftData(1, "head 7", "https://dummyimage.com/600x400/f5c011/fff&text=h 7", "rare", false, 0, false, 0));
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), 0);
-        
-            _id = nfts.push(nftData(1, "head 8", "https://dummyimage.com/600x400/1e00ff/fff&text=h 8", "common", false, 0, false, 0));
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), 0);
-        
-        _id = nfts.push(nftData(1, "head 9", "https://dummyimage.com/600x400/c400ff/fff&text=h 9", "epic", false, 0, false, 0));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        */
-
-        _id = nfts.push(
-            nftData(
-                2,
-                "middle 1",
-                "https://dummyimage.com/600x400/1e00ff/fff&text=m 1",
-                "common",
-                false,
-                0,
-                false,
-                0,
-                false
-            )
-        );
-        _mint(msg.sender, _id);
-
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        /*
-            _id = nfts.push(nftData(2, "middle 2", "https://dummyimage.com/600x400/f5c011/fff&text=m 2", "rare", true, 40, false, 0));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-        _id = nfts.push(nftData(2, "middle 3", "https://dummyimage.com/600x400/1e00ff/fff&text=m 3", "common", false, 0, true, 50));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-        _id = nfts.push(nftData(2, "middle 4", "https://dummyimage.com/600x400/c400ff/fff&text=m 4", "epic", false, 0, false, 0));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-        _id = nfts.push(nftData(2, "middle 5", "https://dummyimage.com/600x400/f5c011/fff&text=m 5", "rare", false, 0, false, 0));
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), 0);
-        
-        _id = nfts.push(nftData(2, "middle 6", "https://dummyimage.com/600x400/1e00ff/fff&text=m 6", "common", true, 30, true, 20));
-        _mint(msg.sender, _id);
-       
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-         */
-
-        _id = nfts.push(
-            nftData(
-                3,
-                "bottom 1",
-                "https://dummyimage.com/600x400/1e00ff/fff&text=b 1",
-                "common",
-                false,
-                0,
-                false,
-                0,
-                false
-            )
-        );
-        _mint(msg.sender, _id);
-
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-
-        _id = nfts.push(
-            nftData(
-                3,
-                "bottom 2",
-                "https://dummyimage.com/600x400/f5c011/fff&text=b 2",
-                "rare",
-                true,
-                70,
-                false,
-                0,
-                false
-            )
-        );
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-
-        emit nftTransaction(
-            _id,
-            "claimed",
-            address(0x0),
-            address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2),
-            0
-        );
-        /*
-        _id = nfts.push(nftData(3, "bottom 3", "https://dummyimage.com/600x400/f5c011/fff&text=b 3", "rare", false, 0, false, 0));
-        _mint(msg.sender, _id);
-        
-       
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-        _id = nfts.push(nftData(3, "bottom 4", "https://dummyimage.com/600x400/f5c011/fff&text=b 4", "epic", false, 0, false, 0));
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), 0);
-        
-        _id = nfts.push(nftData(3, "bottom 5", "https://dummyimage.com/600x400/00ff84/000&text=b 5", "legendary", true, 999, false, 0));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-        _id = nfts.push(nftData(3, "bottom 6", "https://dummyimage.com/600x400/1e00ff/fff&text=b 6", "common", false, 0, true, 2));
-        _mint(msg.sender, _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
-        
-        _id = nfts.push(nftData(3, "bottom 7", "https://dummyimage.com/600x400/f5c011/fff&text=b 7", "rare", false, 0, false, 0));
-        _mint(address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), _id);
-        
-        
-        emit nftTransaction(_id, "claimed", address(0x0), address(0x7556820cE8b55436AE61CffB7FA93ae8DC8C99f2), 0);
-        */
     }
 }
