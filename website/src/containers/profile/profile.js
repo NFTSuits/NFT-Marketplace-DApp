@@ -154,7 +154,9 @@ const Profile = (props) => {
   const [earnedSold, setEarnedSold] = React.useState(0);
 
   const [numberBought, setNumberBought] = React.useState(0);
-  const [earnedBought, setEarnedBought] = React.useState(0);
+  const [spentBought, setSpentBought] = React.useState(0);
+
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const [profileData, setProfileData] = useRecoilState(profileDataAtom);
 
@@ -168,16 +170,22 @@ const Profile = (props) => {
   const middles = useRecoilValue(getMiddles);
   const bottoms = useRecoilValue(getBottoms);
 
-  const [transactions, setTransactions] = useRecoilState(transactionData);
+  // //const [transactions, setTransactions] = useRecoilState(transactionData);
+
+  // const [firstPersonUsername, setFirstPersonUsername] =
+  // useRecoilState(myUsername);
 
   // console.log("profile all items", data);
 
   React.useEffect(async () => {
+    let accounts = await window.ethereum.enable();
     let myAddress = await window.ethereum.selectedAddress;
+
     setAddress(myAddress);
 
-    // alert(myAddress.toLowerCase());
-    // alert(profileAddress.toLowerCase());
+    // console.log("profileaddress", profileAddress);
+    // console.log("myaddress", myAddress);
+
     setIsThirdPerson(myAddress.toLowerCase() !== profileAddress.toLowerCase());
 
     var nft_contract_interface = new window.web3.eth.Contract(
@@ -189,6 +197,10 @@ const Profile = (props) => {
       nft_contract_interface,
       profileAddress
     );
+    // ).then((data) => {
+    //   console.log("datadata", data);
+    //   setFirstPersonUsername(data.username);
+    // });
     // console.log("awaited username", username_temp);
     setProfileData(username_temp);
     // window.ethereum.enable();
@@ -240,21 +252,43 @@ const Profile = (props) => {
         toBlock: "latest",
       })
       .then((events) => {
-        setTransactions(events);
+        // setTransactions(events);
 
         //          [numberSold, setNumberSold]
         //          [earnedSold, setEarnedSold]
         //          [numberBought, setNumberBought]
-        //          [earnedBought, setEarnedBought]
+        //          [spentBought, setSpentBought]
 
         //TODO: bu doğru muhtemelen ama kontrol edilmeli
-        // const soldItems = events.filter((item) => {
-        //     return item.returnValues[1] === "sold" && item.returnValues[2] === myAddress;
-        //   })
-        // const boughtItems = events.filter((item) => {
-        //   return item.returnValues[1] === "sold" && item.returnValues[3] === myAddress;
-        // })
+        //FIXME: Doğruluğundan emin değilim
+        const soldItems = events.filter((item) => {
+          // console.log("item ==> ", item);
+          return (
+            item.returnValues[1] === "sold" &&
+            item.returnValues[2].toLowerCase() === myAddress.toLowerCase()
+          );
+        });
+        setNumberSold(soldItems.length);
+        var sum = 0;
+        soldItems.forEach((item) => {
+          sum += parseInt(item.returnValues[4]);
+        });
+        setEarnedSold(sum);
+        const boughtItems = events.filter((item) => {
+          return (
+            item.returnValues[1] === "sold" &&
+            item.returnValues[3].toLowerCase() === myAddress.toLowerCase()
+          );
+        });
+        setNumberBought(boughtItems.length);
+        sum = 0;
+        boughtItems.forEach((item) => {
+          sum += parseInt(item.returnValues[4]);
+        });
+        setSpentBought(sum);
       });
+    setIsLoading(false);
+    console.log("useeffect 😫😩😫😩");
   }, [window.web3.eth]);
 
   const UpperProfile = () => {
@@ -371,14 +405,14 @@ const Profile = (props) => {
     const isThirdPerson = useRecoilValue(isThirdPersonAtom);
 
     //const [, set] = React.useState();
-    const [isSetting, setIsSetting] = React.useState(false);
+    // const [isSetting, setIsSetting] = React.useState(false);
     const [withdrawAmount, setWithdrawAmount] = React.useState(0);
     const [usernameEditText, setUsernameEditText] = React.useState("");
 
     const [profileData, setProfileData] = useRecoilState(profileDataAtom);
 
     const onWithdrawPress = async () => {
-      console.log("amount:", withdrawAmount);
+      // console.log("amount:", withdrawAmount);
       let myAddress = await window.ethereum.selectedAddress;
 
       var nft_contract_interface = new window.web3.eth.Contract(
@@ -397,15 +431,9 @@ const Profile = (props) => {
         .on("receipt", async function (receipt) {
           // receipt example
           console.log(receipt);
-          getUsername(nft_contract_interface, myAddress).then((data) => {
-            console.log(data);
-            setFirstPersonUsername(data.username);
-            setIsSetting(false);
-          });
         })
         .on("error", function (error, receipt) {
           console.log(error, receipt);
-          setIsSetting(false);
         });
     };
 
@@ -422,7 +450,7 @@ const Profile = (props) => {
           <Grid item xs={3}>
             <Typography variant="h5" style={{ color: "grey" }}>
               #Items
-              {console.log("transactions", transactions)}
+              {/* {console.log("transactions", transactions)} */}
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
               {heads.length + middles.length + bottoms.length}
@@ -431,13 +459,13 @@ const Profile = (props) => {
               Spent
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              10$
+              {spentBought}
             </Typography>
             <Typography variant="h5" style={{ color: "grey" }}>
               Earned
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              15$
+              {earnedSold}
             </Typography>
           </Grid>
           <Grid item xs={4}>
@@ -451,13 +479,13 @@ const Profile = (props) => {
               #Bought
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              7
+              {numberBought}
             </Typography>
             <Typography variant="h5" style={{ color: "grey" }}>
               #Sold
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              7
+              {numberSold}
             </Typography>
           </Grid>
         </Grid>
@@ -973,12 +1001,18 @@ const Profile = (props) => {
           <FilterItems />
         </Grid>
         <Grid item xs={12} style={{ marginTop: 20 }}>
-          <MarketCardList marketCards={allFilteredData} />
+          <MarketCardList marketCards={allFilteredData} isProfile={true} />
         </Grid>
       </Grid>
     );
   };
-
+  if (isLoading) {
+    return (
+      <Container className={classes.container} maxWidth="lg">
+        Loading
+      </Container>
+    );
+  }
   return (
     <Container className={classes.container} maxWidth="lg">
       <Grid

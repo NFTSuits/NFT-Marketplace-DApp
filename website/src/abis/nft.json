@@ -4,6 +4,20 @@
       "constant": false,
       "inputs": [
         {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "acceptHighestBid",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
           "name": "to",
           "type": "address"
         },
@@ -20,11 +34,16 @@
     },
     {
       "constant": false,
-      "inputs": [],
-      "name": "bulkmint",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "bid",
       "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
+      "payable": true,
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -283,6 +302,20 @@
       "constant": false,
       "inputs": [
         {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawBid",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
           "name": "_amount",
           "type": "uint256"
         }
@@ -461,20 +494,6 @@
     {
       "constant": true,
       "inputs": [],
-      "name": "myBalance",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
       "name": "name",
       "outputs": [
         {
@@ -527,6 +546,10 @@
         {
           "name": "maxBid",
           "type": "uint256"
+        },
+        {
+          "name": "maxBidder",
+          "type": "address"
         },
         {
           "name": "isWearing",

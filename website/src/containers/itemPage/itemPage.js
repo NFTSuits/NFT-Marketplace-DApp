@@ -68,6 +68,7 @@ const ItemPage = (props) => {
   const [id, setId] = useRecoilState(itemIdAtom);
 
   React.useEffect(async () => {
+    let accounts = await window.ethereum.enable();
     let myAddress = await window.ethereum.selectedAddress;
     setAddress(myAddress);
     const myId = props.match.params.id;
@@ -99,6 +100,10 @@ const ItemPage = (props) => {
                 console.log(error);
               });
           });
+      })
+      .catch((error) => {
+        console.log(error);
+        window.location = "/notFound";
       });
 
     nft_contract_interface
@@ -108,7 +113,9 @@ const ItemPage = (props) => {
         toBlock: "latest",
       })
       .then((events) => {
-        // console.log("events.console.log", events);
+        //console.log("events.console.log", events);
+        events.reverse();
+        //console.log("events.console.log reverse", events);
         setTransactions(events);
       });
 
@@ -310,10 +317,12 @@ const ItemPage = (props) => {
                         <TableCell align="center">From</TableCell>
                         <TableCell align="center">To</TableCell>
                         <TableCell align="center">Amount</TableCell>
+                        <TableCell align="center">Txn</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {transactions.map((transaction, index) => {
+                        console.log(transaction);
                         return (
                           <TableRow
                             key={index}
@@ -321,8 +330,8 @@ const ItemPage = (props) => {
                               backgroundColor:
                                 transaction.returnValues.transactionType ===
                                 "claimed"
-                                  ? "#ff00ff"
-                                  : "#ffff00",
+                                  ? "#af11dd"
+                                  : "#afdf00",
                             }}
                           >
                             <TableCell align="center">
@@ -332,7 +341,7 @@ const ItemPage = (props) => {
                             <TableCell align="center">
                               {transaction.returnValues.fromAddress ==
                               "0x0000000000000000000000000000000000000000" ? (
-                                "0x0"
+                                "-"
                               ) : (
                                 <Button
                                   size="small"
@@ -356,29 +365,42 @@ const ItemPage = (props) => {
                               )}
                             </TableCell>
                             <TableCell align="center">
-                              <Button
-                                size="small"
-                                color="primary"
-                                onClick={() => {
-                                  window.location = "/profile/" + data.owner;
-                                }}
-                              >
-                                {transaction.returnValues.toAddress.slice(
-                                  0,
-                                  6
-                                ) +
-                                  "..." +
-                                  transaction.returnValues.toAddress.slice(
-                                    transaction.returnValues.toAddress.length -
-                                      4,
-                                    transaction.returnValues.toAddress.length
-                                  )}
-                              </Button>
+                              {transaction.returnValues.toAddress ==
+                              "0x0000000000000000000000000000000000000000" ? (
+                                "-"
+                              ) : (
+                                <Button
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => {
+                                    window.location = "/profile/" + data.owner;
+                                  }}
+                                >
+                                  {transaction.returnValues.toAddress.slice(
+                                    0,
+                                    6
+                                  ) +
+                                    "..." +
+                                    transaction.returnValues.toAddress.slice(
+                                      transaction.returnValues.toAddress
+                                        .length - 4,
+                                      transaction.returnValues.toAddress.length
+                                    )}
+                                </Button>
+                              )}
                             </TableCell>
                             <TableCell align="center">
                               {transaction.returnValues.value == 0
                                 ? " - "
                                 : "Ξ " + transaction.returnValues.value}
+                            </TableCell>
+                            <TableCell align="center">
+                              {transaction.transactionHash.slice(0, 6) +
+                                "..." +
+                                transaction.transactionHash.slice(
+                                  transaction.transactionHash.length - 4,
+                                  transaction.transactionHash.length
+                                )}
                             </TableCell>
                           </TableRow>
                         );

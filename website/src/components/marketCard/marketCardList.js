@@ -74,6 +74,7 @@ const MarketCardList = (props) => {
               isBiddable={cardItem.isBiddable}
               isOnSale={cardItem.isOnSale}
               id={cardItem.id}
+              isProfile={props.isProfile}
             />
           </GridListTile>
         );

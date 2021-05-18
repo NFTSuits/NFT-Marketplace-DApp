@@ -34,6 +34,7 @@ const MarketPlace = () => {
   // }, [window.web3.eth]);
 
   React.useEffect(async () => {
+    let accounts = await window.ethereum.enable();
     let myAddress = await window.ethereum.selectedAddress;
     setAddress(myAddress);
 

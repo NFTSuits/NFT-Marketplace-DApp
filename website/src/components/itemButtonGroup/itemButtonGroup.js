@@ -37,11 +37,17 @@ const ItemButtonGroup = (props) => {
   const data = useRecoilValue(itemData);
   const id = useRecoilValue(itemIdAtom);
 
-  const [sellPrice, setSellPrice] = React.useState(0);
+  const [sellPrice, setSellPrice] = React.useState();
+  const [bidPrice, setBidPrice] = React.useState();
 
   const [contractInterface, setContractInterface] = React.useState();
 
   const isThirdPerson = data.owner.toLowerCase() != userAddress.toLowerCase();
+
+  const isMaxBidder = data.maxBidder.toLowerCase() == userAddress.toLowerCase();
+
+  console.log("maxBidder", data.maxBidder);
+  console.log("isMaxBidder", isMaxBidder);
 
   const buyButton = data.isOnSale ? (
     <Button className={classes.myButton} onClick={() => handleBuy()}>
@@ -55,7 +61,7 @@ const ItemButtonGroup = (props) => {
       addresses.NFT_CONTRACTS_ADDRESS
     );
     setContractInterface(nft_contract_interface);
-  }, []);
+  }, [window.web3.eth]);
 
   const handlePutOnSale = () => {
     console.log("handlePutOnSaleCalled");
@@ -121,7 +127,7 @@ const ItemButtonGroup = (props) => {
 
     contractInterface.methods
       .cancelSale(parseInt(id) + 1)
-      .send({ from: userAddress })
+      .send({ from: userAddress, gas: 500000 })
       .on("transactionHash", function (hash) {
         console.log(hash);
       })
@@ -175,24 +181,150 @@ const ItemButtonGroup = (props) => {
       });
   };
 
+  const handleBidding = () => {
+    contractInterface.methods
+      .bid(parseInt(id) + 1)
+      .send({ from: userAddress, value: bidPrice, gas: 3000000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handlePutOnAuction = () => {
+    contractInterface.methods
+      .putOnAuction(parseInt(id) + 1)
+      .send({ from: userAddress, gas: 500000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handleCancelAuction = () => {
+    contractInterface.methods
+      .cancelAuction(parseInt(id) + 1)
+      .send({ from: userAddress, gas: 500000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handleAcceptBidding = () => {
+    contractInterface.methods
+      .acceptHighestBid(parseInt(id) + 1)
+      .send({ from: userAddress, gas: 500000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const handleWithdrawBid = () => {
+    contractInterface.methods
+      .withdrawBid(parseInt(id) + 1)
+      .send({ from: userAddress, gas: 500000 })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("receipt", async function (receipt) {
+        // receipt example
+        console.log(receipt);
+      })
+      .on("error", function (error, receipt) {
+        console.log(error, receipt);
+      });
+  };
+
+  const withdrawBidButton = isMaxBidder ? (
+    <Button
+      className={classes.myButton}
+      onClick={() => {
+        handleWithdrawBid();
+      }}
+    >
+      withdraw bid
+    </Button>
+  ) : null;
+
   const bidButton = data.isBiddable ? (
     <>
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           justifyContent: "center",
         }}
       >
-        <TextField
-          label="Bid amount"
-          id="outlined-margin-none"
-          className={classes.textField}
-          margin="dense"
-          helperText="Must enter a bid value"
-          variant="outlined"
-        />
-        <Button className={classes.myButton}>Bid</Button>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <TextField
+            label="Bid amount"
+            id="outlined-margin-none"
+            className={classes.textField}
+            margin="dense"
+            helperText="Must enter a bid value"
+            variant="outlined"
+            value={bidPrice}
+            onChange={(evt) => {
+              setBidPrice(evt.target.value);
+            }}
+          />
+          <Button
+            className={classes.myButton}
+            onClick={() => {
+              handleBidding();
+            }}
+          >
+            Bid
+          </Button>
+        </div>
+        {withdrawBidButton}
       </div>
     </>
   ) : null;
@@ -240,11 +372,32 @@ const ItemButtonGroup = (props) => {
         justifyContent: "center",
       }}
     >
-      <Button className={classes.myButton}>Cancel auction</Button>
-      <Button className={classes.myButton}>Accept highest bid</Button>
+      <Button
+        className={classes.myButton}
+        onClick={() => {
+          handleCancelAuction();
+        }}
+      >
+        Cancel auction
+      </Button>
+      <Button
+        className={classes.myButton}
+        onClick={() => {
+          handleAcceptBidding();
+        }}
+      >
+        Accept highest bid
+      </Button>
     </div>
   ) : (
-    <Button className={classes.myButton}>Start an Auction</Button>
+    <Button
+      className={classes.myButton}
+      onClick={() => {
+        handlePutOnAuction();
+      }}
+    >
+      Start an Auction
+    </Button>
   );
 
   const isDivider = // KULLANILMIYO 🐥🐥🐥🐥🐥🐥🐥

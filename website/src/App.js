@@ -7,6 +7,7 @@ import MarketPlace from "./containers/marketPlace/marketPlace";
 import Profile from "./containers/profile/profile";
 import ItemPage from "./containers/itemPage/itemPage";
 import AvatarPage from "./containers/avatarPage/avatarPage";
+import NotFoundPage from "./containers/notFoundPage/notFoundPage";
 
 import Navbar from "./components/navbar/navbar";
 const App = () => {
@@ -31,6 +32,9 @@ const App = () => {
         </Switch>
         <Switch>
           <Route exact path="/avatars" component={AvatarPage} />
+        </Switch>
+        <Switch>
+          <Route exact path="/notFound" component={NotFoundPage} />
         </Switch>
       </Router>
     </RecoilRoot>

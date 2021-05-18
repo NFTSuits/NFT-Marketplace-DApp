@@ -54,6 +54,7 @@ const MarketCard = ({
   isBiddable,
   isOnSale,
   id,
+  isProfile,
 }) => {
   const classes = useStyles();
   // var owner = ;
@@ -146,7 +147,9 @@ const MarketCard = ({
                 size="small"
                 color="primary"
                 onClick={() => {
-                  window.location.href = "profile/" + owner;
+                  isProfile
+                    ? (window.location.href = owner)
+                    : (window.location.href = "profile/" + owner);
                 }}
               >
                 {usernameToBeShown}
