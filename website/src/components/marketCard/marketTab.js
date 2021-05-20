@@ -295,16 +295,16 @@ const MarketTab = () => {
       ) : (
         <>
           <TabPanel value={value} index={0}>
-            <MarketCardList marketCards={allItemsFiltered} />
+            {allItemsFiltered.length ? <MarketCardList marketCards={allItemsFiltered} /> : <>No Items Found</>}
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <MarketCardList marketCards={heads} isProfile={false} />
+            {heads.length ? <MarketCardList marketCards={heads} isProfile={false} /> : <>No Items Found</>}
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <MarketCardList marketCards={middles} isProfile={false} />
+            {middles.length ? <MarketCardList marketCards={middles} isProfile={false} />: <>No Items Found</>}
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <MarketCardList marketCards={bottoms} isProfile={false} />
+            {bottoms.length ? <MarketCardList marketCards={bottoms} isProfile={false} />: <>No Items Found</>}
           </TabPanel>
         </>
       )}

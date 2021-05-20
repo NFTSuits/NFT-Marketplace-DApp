@@ -82,9 +82,9 @@ const getBottoms = selector({
     let tempIsOnSale = get(isOnSale);
     let tempRarityLevel = get(rarityLevel);
 
-    // console.log("tempIsBiddable", tempIsBiddable);
-    // console.log("tempIsOnSale", tempIsOnSale);
-    // console.log("tempRarityLevel", tempRarityLevel);
+    console.log("tempIsBiddable", tempIsBiddable);
+    console.log("tempIsOnSale", tempIsOnSale);
+    console.log("tempRarityLevel", tempRarityLevel);
     const temp = get(allItems);
 
     const tempClothType = "3";
@@ -105,9 +105,9 @@ const getAllItemsFiltered = selector({
     let tempIsOnSale = get(isOnSale);
     let tempRarityLevel = get(rarityLevel);
 
-    // console.log("tempIsBiddable", tempIsBiddable);
-    // console.log("tempIsOnSale", tempIsOnSale);
-    // console.log("tempRarityLevel", tempRarityLevel);
+    console.log("tempIsBiddable", tempIsBiddable);
+    console.log("tempIsOnSale", tempIsOnSale);
+    console.log("tempRarityLevel", tempRarityLevel);
     const temp = get(allItems);
 
     // const tempClothType = "3" || "2" || "1";
@@ -155,12 +155,57 @@ const getAllItemsFiltered = selector({
 //   },
 // });
 
+const unFilteredGetHeads = selector({
+  key: "unFilteredGetHeads", // unique ID (with respect to other atoms/selectors)
+  get: ({ get }) => {
+    let tempIsBiddable = get(isBiddable);
+    let tempIsOnSale = get(isOnSale);
+    let tempRarityLevel = get(rarityLevel);
+
+    const temp = get(allItems);
+    const tempClothType = "1";
+
+    return temp.filter((item) => { return item.clothType === tempClothType});
+  },
+});
+
+const unFilteredGetMiddles = selector({
+  key: "unFilteredGetMiddles", // unique ID (with respect to other atoms/selectors)
+  get: ({ get }) => {
+    const temp = get(allItems);
+    const tempClothType = "2";
+    return temp.filter((item) => {return item.clothType === tempClothType});
+
+    // return temp.filter((item) => {
+    //   return item.clothType === "2";
+    // });
+}});
+
+const unFilteredGetBottoms = selector({
+  key: "unFilteredGetBottoms", // unique ID (with respect to other atoms/selectors)
+  get: ({ get }) => {
+
+
+    // console.log("tempIsBiddable", tempIsBiddable);
+    // console.log("tempIsOnSale", tempIsOnSale);
+    // console.log("tempRarityLevel", tempRarityLevel);
+    const temp = get(allItems);
+
+    const tempClothType = "3";
+    return temp.filter((item) => {return item.clothType === tempClothType});
+  },
+});
+
+
 export {
   getMyUsername,
   getHeads,
   getMiddles,
   getBottoms,
   getAllItemsFiltered,
+  unFilteredGetHeads,
+  unFilteredGetMiddles,
+  unFilteredGetBottoms
   // getMyHeads,
   // getMyMiddles,
   // getMyBottoms,
