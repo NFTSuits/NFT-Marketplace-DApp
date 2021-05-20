@@ -9,18 +9,26 @@ module.exports = {
    development: {
      host: "127.0.0.1",
      port: 7545,
-     network_id: "*"
+     network_id: "*",
    },
    test: {
      host: "127.0.0.1",
      port: 7545,
-     network_id: "*"
+     network_id: "*",
    }
   },
   compilers: {
     solc: {
-      version: '0.5.0',  // ex:  "0.4.20". (Default: Truffle's installed solc)
+      version: '0.5.0',
+            settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200   // Optimize for how many times you intend to run the code
+        },
+      },
+        // ex:  "0.4.20". (Default: Truffle's installed solc)
     }
+    
  }
   
 };

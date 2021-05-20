@@ -10,6 +10,28 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 //        // solhint-disable-previous-line no-empty-blocks
 //    }
 //}
+
+
+// library Set {
+//     // Note that the first parameter is of type "storage
+//     // reference" and thus only its storage address and not
+//     // its contents is passed as part of the call.  This is a
+//     // special feature of library functions.  It is idiomatic
+//     // to call the first parameter `self`, if the function can
+//     // be seen as a method of that object.
+//     function insert(Data storage self, uint value)
+//         public
+//         returns (bool)
+//     {
+//         if (self.flags[value])
+//             return false; // already there
+//         self.flags[value] = true;
+//         return true;
+//     }
+// }
+
+
+
 contract nftContract is ERC721Full {
     struct nftData {
         uint256 clothType; //--> 1 --> head, 2 --> middle, 3 --> bottom
@@ -104,28 +126,46 @@ contract nftContract is ERC721Full {
 
     function wearItem(uint256 _tokenId) public {
         require(this.ownerOf(_tokenId) == msg.sender);
-
-        nfts[_tokenId - 1].isWearing = true;
+        require(nfts[_tokenId - 1].isOnSale == false);
+        require(nfts[_tokenId - 1].isBiddable == false);
+       
 
         if (nfts[_tokenId - 1].clothType == 1) {
+            if (users[msg.sender].head != 0)
+            {
+                nfts[users[msg.sender].head - 1].isWearing = false;
+            }
             users[msg.sender].head = _tokenId;
         } else if (nfts[_tokenId - 1].clothType == 2) {
+            if (users[msg.sender].middle != 0)
+            {
+                nfts[users[msg.sender].middle - 1].isWearing = false;
+            }
             users[msg.sender].middle = _tokenId;
         } else if (nfts[_tokenId - 1].clothType == 3) {
+            if (users[msg.sender].bottom != 0)
+            {
+                nfts[users[msg.sender].bottom - 1].isWearing = false;
+            }
             users[msg.sender].bottom = _tokenId;
         }
+         nfts[_tokenId - 1].isWearing = true;
     }
 
     function unWearItem(uint256 _clothType) public {
         require(_clothType == 1 || _clothType == 2 || _clothType == 3);
 
         if (_clothType == 1) {
+            require(users[msg.sender].head !=0);
             nfts[users[msg.sender].head - 1].isWearing = false;
             users[msg.sender].head = 0;
         } else if (_clothType == 2) {
+            require(users[msg.sender].middle !=0);
+
             nfts[users[msg.sender].middle - 1].isWearing = false;
             users[msg.sender].middle = 0;
         } else if (_clothType == 3) {
+            require(users[msg.sender].bottom !=0);
             nfts[users[msg.sender].bottom - 1].isWearing = false;
             users[msg.sender].bottom = 0;
         }
@@ -140,8 +180,13 @@ contract nftContract is ERC721Full {
     }
 
     function putOnSale(uint256 _tokenId, uint256 _sellPrice) public {
-        //is on sale false olmalı
         //msg.sender owner olmalı
+        require(msg.sender == this.ownerOf(_tokenId) );
+        //is on sale false olmalı
+        require(nfts[_tokenId - 1].isOnSale == false);
+        //item should not be on wear
+        require(nfts[_tokenId - 1].isWearing == false);
+        
         nfts[_tokenId - 1].isOnSale = true; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].sellPrice = _sellPrice; //tokenId or tokenId-1 ??????
         approve(address(this), _tokenId);
@@ -157,7 +202,10 @@ contract nftContract is ERC721Full {
 
     function cancelSale(uint256 _tokenId) public {
         //is on sale true olması lazım
+        require(nfts[_tokenId - 1].isOnSale == true);
         //msg.sender owner olmalı
+        require(msg.sender == this.ownerOf(_tokenId));
+        
         nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].sellPrice = 0; //tokenId or tokenId-1 ??????
 
@@ -171,10 +219,14 @@ contract nftContract is ERC721Full {
     }
 
     function buyFromSale(uint256 _tokenId) public payable {
-        //is on sale true olmalı
         //msg.sender owner olmalalı
+        require(msg.sender != this.ownerOf(_tokenId));
+        //is on sale true olmalı
+        require(nfts[_tokenId - 1].isOnSale == true);
         //paranın en az sellPrice kadar olmalı
+        require (nfts[_tokenId - 1].sellPrice <= msg.value);
         //approve var mı diye check et --> getApproved(uint256 tokenId) → address operator
+        require(this.getApproved(_tokenId) == address(this));
         address sellerAddress = this.ownerOf(_tokenId); //tokenId or tokenId-1 ??????
         this.safeTransferFrom(sellerAddress, msg.sender, _tokenId); //transfer with ERC721 //change owner
         nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
@@ -204,6 +256,14 @@ contract nftContract is ERC721Full {
     }
 
     function putOnAuction(uint256 _tokenId) public {
+
+        //msg.sender owner olmalı
+        require(msg.sender == this.ownerOf(_tokenId) );
+        //item should not be on wear
+        require(nfts[_tokenId - 1].isWearing == false);
+        //is bidding false olmalı
+        require(nfts[_tokenId - 1].isBiddable == false);
+        
         nfts[_tokenId - 1].isBiddable = true; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
         approve(address(this), _tokenId);
@@ -218,11 +278,14 @@ contract nftContract is ERC721Full {
     }
 
     function cancelAuction(uint256 _tokenId) public {
+        //msg.sender owner olmalı
+        require(msg.sender == this.ownerOf(_tokenId));
+        //is bidding true olmalı
+        require(nfts[_tokenId - 1].isBiddable == true);
+        
+        
         if (nfts[_tokenId - 1].maxBid > 0) {
-            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
-                _tokenId - 1
-            ]
-                .maxBid; //check overflow attack
+            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[_tokenId - 1].maxBid; //check overflow attack
         }
         nfts[_tokenId - 1].isBiddable = false; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
@@ -238,9 +301,16 @@ contract nftContract is ERC721Full {
     }
 
     function bid(uint256 _tokenId) public payable {
+
+        // bid must be more than 0
+        require(msg.value > 0);
+        //item must be biddable
+        require(nfts[_tokenId - 1].isBiddable == true);
         //maxbidden büyük olmalı message.value
+        require(msg.value >= nfts[_tokenId - 1].maxBid);
         //owner kendisi olmıcak
-        //0 dan büyük olmalı msg.value
+        require(msg.sender != this.ownerOf(_tokenId));
+       
         if (nfts[_tokenId - 1].maxBid > 0) {
             users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
                 _tokenId - 1
@@ -261,6 +331,14 @@ contract nftContract is ERC721Full {
 
     function acceptHighestBid(uint256 _tokenId) public {
         //msg.sender tokenId ownerı olmalı
+        require(msg.sender == this.ownerOf(_tokenId));
+        //item must be biddable
+        require(nfts[_tokenId - 1].isBiddable == true);
+        //max Bid is large than 0
+        require(nfts[_tokenId - 1].maxBid > 0);
+
+        assert(nfts[_tokenId - 1].maxBidder != msg.sender);
+
         address buyer = nfts[_tokenId - 1].maxBidder;
         uint256 soldValue = nfts[_tokenId - 1].maxBid;
         this.safeTransferFrom(
@@ -286,6 +364,7 @@ contract nftContract is ERC721Full {
 
     function withdrawBid(uint256 _tokenId) public {
         //msg.sender maxBidder olmalı
+        require(msg.sender == nfts[_tokenId - 1].maxBidder);
         uint256 withdrawnValue = nfts[_tokenId - 1].maxBid;
         users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[_tokenId - 1]
             .maxBid; //check overflow attack
@@ -303,8 +382,12 @@ contract nftContract is ERC721Full {
 
     function withdrawMoney(uint256 _amount) public {
         //amount balancetan küçük eşit olmalı
-        users[msg.sender].userBalance = users[msg.sender].userBalance - _amount; //underflow attack
+        require(users[msg.sender].userBalance >= _amount);
+
+        uint initialBalance = users[msg.sender].userBalance;
+        users[msg.sender].userBalance = initialBalance - _amount; 
         msg.sender.transfer(_amount);
+        assert(initialBalance - _amount < initialBalance); //underflow attack
     }
 
     function mint(
