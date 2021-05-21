@@ -53,6 +53,9 @@ import {
   getHeads,
   getMiddles,
   getBottoms,
+  unFilteredGetHeads,
+  unFilteredGetMiddles,
+  unFilteredGetBottoms,
   getAllItemsFiltered,
 } from "../../recoils/selectors";
 
@@ -204,6 +207,9 @@ const Profile = (props) => {
   const heads = useRecoilValue(getHeads);
   const middles = useRecoilValue(getMiddles);
   const bottoms = useRecoilValue(getBottoms);
+  const unFilteredHeads = useRecoilValue(unFilteredGetHeads);
+  const unFilteredMiddles = useRecoilValue(unFilteredGetMiddles);
+  const unFilteredBottoms = useRecoilValue(unFilteredGetBottoms);
 
   // //const [transactions, setTransactions] = useRecoilState(transactionData);
 
@@ -211,6 +217,23 @@ const Profile = (props) => {
   // useRecoilState(myUsername);
 
   // console.log("profile all items", data);
+
+  // React.useEffect(async () => {
+  //   if(window.eth){
+  //   try {
+  //     window.web3 = new Web3("http://localhost:8545");
+  //     if (window.ethereum) {
+  //       await window.ethereum.enable(); // pop up
+  //       let myAddress = await window.ethereum.selectedAddress;
+  //     }
+  //   } catch (err) {
+  //     console.log("err",err);
+  //   }}
+  //   else{
+  //     console.log("deneme")
+  //     window.web3 = new Web3("http://localhost:8545");
+  //   }
+  // }, []);
 
   React.useEffect(async () => {
     let accounts = await window.ethereum.enable();
@@ -299,8 +322,8 @@ const Profile = (props) => {
         const soldItems = events.filter((item) => {
           // console.log("item ==> ", item);
           return (
-            item.returnValues[1] === "sold" &&
-            item.returnValues[2].toLowerCase() === myAddress.toLowerCase()
+            (item.returnValues[1] === "sold" || item.returnValues[1] === "Sold From Auction") &&
+            item.returnValues[2].toLowerCase() === profileAddress.toLowerCase()
           );
         });
         setNumberSold(soldItems.length);
@@ -311,8 +334,8 @@ const Profile = (props) => {
         setEarnedSold(sum);
         const boughtItems = events.filter((item) => {
           return (
-            item.returnValues[1] === "sold" &&
-            item.returnValues[3].toLowerCase() === myAddress.toLowerCase()
+            (item.returnValues[1] === "sold" || item.returnValues[1] === "Sold From Auction") &&
+            item.returnValues[3].toLowerCase() === profileAddress.toLowerCase()
           );
         });
         setNumberBought(boughtItems.length);
@@ -348,7 +371,11 @@ const Profile = (props) => {
         <Grid className={classes.profileLeft} item xs={4}>
           <Avatar
             alt="Remy Sharp"
-            src="https://randomuser.me/api/portraits/lego/2.jpg"
+            src={heads.findIndex((item) => profileData.head === item.tokenId) !==
+              -1
+                ? data[data.findIndex((item) => profileData.head === item.tokenId)].cid
+                : 0
+              }
             className={classes.large}
           />
         </Grid>
@@ -488,7 +515,7 @@ const Profile = (props) => {
               {/* {console.log("transactions", transactions)} */}
             </Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              {heads.length + middles.length + bottoms.length}
+              {unFilteredHeads.length + unFilteredMiddles.length + unFilteredBottoms.length}
             </Typography>
             <Typography variant="h5">Spent</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
@@ -502,7 +529,7 @@ const Profile = (props) => {
           <Grid item xs={4}>
             <Typography variant="h5">#combinations</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>
-              {(heads.length + 1) * (middles.length + 1) * (bottoms.length + 1)}
+              {(unFilteredHeads.length + 1) * (unFilteredMiddles.length + 1) * (unFilteredBottoms.length + 1)}
             </Typography>
             <Typography variant="h5">#Bought</Typography>
             <Typography variant="h5" className={classes.numberTextStyle}>

@@ -6,7 +6,7 @@ import CharacterCounter from "./containers/Demo/demo";
 import MarketPlace from "./containers/marketPlace/marketPlace";
 import Profile from "./containers/profile/profile";
 import ItemPage from "./containers/itemPage/itemPage";
-import AvatarPage from "./containers/avatarPage/avatarPage";
+import IndexPage from "./containers/index/index";
 import NotFoundPage from "./containers/notFoundPage/notFoundPage";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Navbar from "./components/navbar/navbar";
@@ -50,8 +50,11 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <RecoilRoot>
-        <Navbar />
+        {window.location != "http://localhost:3000/" && <Navbar />}
         <Router>
+          <Switch>
+            <Route exact path="/" component={IndexPage} />
+          </Switch>
           <Switch>
             <Route exact path="/demo" component={CharacterCounter} />
           </Switch>
@@ -67,9 +70,9 @@ const App = () => {
           <Switch>
             <Route path="/item/:id" component={ItemPage} />
           </Switch>
-          <Switch>
+          {/* <Switch>
             <Route exact path="/avatars" component={AvatarPage} />
-          </Switch>
+          </Switch> */}
           <Switch>
             <Route exact path="/notFound" component={NotFoundPage} />
           </Switch>

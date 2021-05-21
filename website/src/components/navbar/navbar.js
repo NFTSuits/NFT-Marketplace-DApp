@@ -95,6 +95,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = () => {
+
+  if(!window.eth && !window.ethereum){
+    window.location = "http://localhost:3000/"
+  }
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -110,7 +115,6 @@ const Navbar = () => {
     setUsername("");
     setTriggerEth(!triggerEth);
   });
-
   React.useEffect(async () => {
     try {
       window.web3 = new Web3("http://localhost:8545");
@@ -235,7 +239,7 @@ const Navbar = () => {
           <div className={classes.sectionDesktop}>
             {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
 
-            <Button
+            {/* <Button
               color="inherit"
               onClick={() => {
                 window.location.href = "/avatars";
@@ -249,7 +253,7 @@ const Navbar = () => {
                 }}
               />
               Avatars
-            </Button>
+            </Button> */}
             {/* <Button
               color="inherit"
               onClick={() => {
