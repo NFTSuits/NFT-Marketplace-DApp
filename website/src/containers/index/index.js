@@ -45,6 +45,7 @@ const Index = () => {
                 >
     <SnackbarContent style={{
         backgroundColor:'#ff2015',
+        color:"#f2f2f2",
         width:748.406969696969696969696969696969696969,
         }}
         message={<span id="client-snackbar" >In order to proceed to the marketplace and profile pages, you should install Metamask extension to your browser.</span>}
