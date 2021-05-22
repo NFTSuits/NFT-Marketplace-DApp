@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const MarketCardList = (props) => {
   const classes = useStyles();
-  console.log(props.marketCards);
+  // console.log(props.marketCards);
 
   const getGridListCols = () => {
     if (isWidthUp("xl", props.width)) {
@@ -52,18 +52,33 @@ const MarketCardList = (props) => {
       cols={getGridListCols()}
       className={classes.gridList}
     >
-      {props.marketCards.map((cardItem, index) => (
-        <GridListTile key={index}>
-          <MarketCard
-            name={cardItem.name}
-            frequency={cardItem.frequency}
-            owner={cardItem.owner}
-            imgUrl={cardItem.imgUrl}
-            price={cardItem.price}
-            auctionPrice={cardItem.auctionPrice}
-          />
-        </GridListTile>
-      ))}
+      {props.marketCards.map((cardItem, index) => {
+        // console.log(
+        //   cardItem.name,
+        //   cardItem.rarity,
+        //   cardItem.cid,
+        //   cardItem.sellPrice,
+        //   cardItem.maxBid,
+        //   cardItem.clothType
+        // );
+        return (
+          <GridListTile key={index}>
+            <MarketCard
+              name={cardItem.name}
+              frequency={cardItem.rarity}
+              owner={cardItem.owner}
+              imgUrl={cardItem.cid}
+              price={cardItem.sellPrice}
+              auctionPrice={cardItem.maxBid}
+              type={cardItem.clothType}
+              isBiddable={cardItem.isBiddable}
+              isOnSale={cardItem.isOnSale}
+              id={cardItem.id}
+              isProfile={props.isProfile}
+            />
+          </GridListTile>
+        );
+      })}
     </GridList>
   );
 };

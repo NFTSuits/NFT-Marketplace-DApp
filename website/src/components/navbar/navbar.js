@@ -3,10 +3,14 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import StorefrontIcon from "@material-ui/icons/Storefront";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import LabelIcon from "@material-ui/icons/Label";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -14,10 +18,21 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import Web3 from "web3";
+import addresses from "../../constants/contracts";
+
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { getMyUsername } from "../../recoils/selectors";
+import { myUsername, myAddress } from "../../recoils/atoms";
+
+import Nft from "../../abis/nft.json";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -80,12 +95,56 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = () => {
+
+  if(!window.eth && !window.ethereum){
+    window.location = "http://localhost:3000/"
+  }
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [address, setAddress] = useRecoilState(myAddress);
+  const [username, setUsername] = useRecoilState(myUsername);
+  const [triggerEth, setTriggerEth] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  window.ethereum.on("accountsChanged", function (accounts) {
+    setAddress("");
+    setUsername("");
+    setTriggerEth(!triggerEth);
+  });
+  React.useEffect(async () => {
+    try {
+      window.web3 = new Web3("http://localhost:8545");
+      if (window.ethereum) {
+        await window.ethereum.enable(); // pop up
+        let myAddress = await window.ethereum.selectedAddress;
+
+        var smart_contract_interface = new window.web3.eth.Contract(
+          Nft.abi,
+          addresses.NFT_CONTRACTS_ADDRESS
+        );
+
+        // console.log("methods:", smart_contract_interface.methods);
+
+        smart_contract_interface.methods
+          .users(myAddress)
+          .call()
+          .then((data) => {
+            // console.log("dataa", data);
+            setUsername(data.username);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        setAddress(myAddress);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [triggerEth]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -163,54 +222,110 @@ const Navbar = () => {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            CryptoBıdıs
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+            {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
+
+            {/* <Button
               color="inherit"
+              onClick={() => {
+                window.location.href = "/avatars";
+              }}
             >
-              <AccountCircle />
-            </IconButton>
+              <SupervisedUserCircleIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              Avatars
+            </Button> */}
+            {/* <Button
+              color="inherit"
+              onClick={() => {
+                window.location.href = "/allItems";
+              }}
+            >
+              <LabelIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              All items
+            </Button> */}
+            <Button
+              color="inherit"
+              onClick={() => {
+                window.location.href = "/marketplace";
+              }}
+            >
+              <StorefrontIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              All items{/*Marketplace */}
+            </Button>
+            {/* {window.ethereum && !window.ethereum.selectedAddress && (
+              <>
+                <Button
+                  onClick={() => {
+                    setTriggerEth(!triggerEth);
+                  }}
+                >
+                  Connect
+                </Button>
+              </>
+            )} */}
+            {window.ethereum && !window.ethereum.selectedAddress ? (
+              <>
+                <Button
+                  onClick={() => {
+                    setTriggerEth(!triggerEth);
+                  }}
+                >
+                  Connect
+                </Button>
+              </>
+            ) : (
+              <Button
+                color="inherit"
+                onClick={() => {
+                  window.location.href = "/profile/" + address;
+                }}
+              >
+                <AccountCircle
+                  style={{
+                    verticalAlign: "middle",
+                    marginRight: 5,
+                    fontSize: 20,
+                  }}
+                />
+                {username
+                  ? username
+                  : address.slice(0, 6) +
+                    "..." +
+                    address.slice(address.length - 4, address.length)}
+              </Button>
+            )}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
