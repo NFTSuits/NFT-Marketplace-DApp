@@ -19,7 +19,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
     
     })
 
-    describe("deployment", async () => {
+    describe("DEPLOYMENT", async () => {
 
         it("deploys succesfully", async () => {
         
@@ -39,7 +39,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
     })
 
 
-    describe("mint", async () => {
+    describe("MINT", async () => {
 
         it("deployer try mint", async () => {
             const totalSupplyBefore = await nftContract.totalSupply.call();
@@ -82,7 +82,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
 
     })
 
-    describe("owner features", async () => {
+    describe("OWNER FEATURES", async () => {
 
         let tokenId_1;
         let nftId_1;
@@ -112,6 +112,8 @@ contract("NFT", ([deployer, buyer, seller]) => {
         //           PUT ON SALE // CANCEL SALE STARTS
         /////////////////////////////////////////////////////////
 
+        
+
         it("owner cannot putOnSale if it is sale", async () => {
             await nftContract.putOnSale(tokenId_1, 48001, {from: deployer}).should.be.rejected;
             
@@ -128,7 +130,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
             assert.equal(nftData.isOnSale, false);
             assert.equal(nftData.sellPrice, 0);
         });
-
+    
 
         /////////////////////////////////////////////////////////
         //                   WEAR STARTS
@@ -138,6 +140,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
         //                     owner does not wear and items are not being weared.
         //                     
         /////////////////////////////////////////////////////////
+
         it("owner can wear item 1", async () => {
             await nftContract.wearItem(tokenId_1, {from: deployer,});
             const userData = await nftContract.users.call(deployer);
@@ -185,6 +188,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
             const totalSupply = await nftContract.totalSupply.call();
             await nftContract.wearItem(totalSupply.toNumber() + 1, {from: deployer}).should.be.rejected;
         });
+
         
 
         /////////////////////////////////////////////////////////
@@ -219,7 +223,6 @@ contract("NFT", ([deployer, buyer, seller]) => {
             assert.equal(approvedAddress, nftContract.address);
         });
 
-
         
 
         //
@@ -234,7 +237,6 @@ contract("NFT", ([deployer, buyer, seller]) => {
         /////////////////////////////////////////////////////////
         //                 BUYS ITEM STARTS
         /////////////////////////////////////////////////////////
-
 
         it("owner cannot buy his own item", async() =>{
             await nftContract.buyFromSale(tokenId_1, {from: deployer, value: 48001}).should.be.rejected;
@@ -275,7 +277,6 @@ contract("NFT", ([deployer, buyer, seller]) => {
         /////////////////////////////////////////////////////////
         //                  WITHDRAW MONEY STARTS
         /////////////////////////////////////////////////////////
-
 
         it("owner cannot withdrawMoney if withdraw amount is higher then owner has", async () => {
             await nftContract.withdrawMoney(40600000, {from: deployer}).should.be.rejected;
@@ -345,8 +346,15 @@ contract("NFT", ([deployer, buyer, seller]) => {
 
         it("owner can putOnAuction", async () => {
             await nftContract.putOnAuction(tokenId_2, {from: deployer});
-            assert.equal(1,2);
-            //write all other asserts
+            const clothData = await nftContract.nfts.call(nftId_2);
+
+            assert.equal(clothData.isBiddable, true);
+            assert.equal(clothData.maxBid, 0);
+            assert.equal(clothData.maxBidder, 0x0);
+            assert.equal(clothData.isWearing, false);
+
+            const approvedAddress = await nftContract.getApproved(tokenId_2);
+            assert.equal(approvedAddress, nftContract.address);
         })
 
         it("buyer cannot bid on a biddable item with cash equals 0 at beggining or any time", async () => {
@@ -362,16 +370,38 @@ contract("NFT", ([deployer, buyer, seller]) => {
         })
 
         it("owner can cancelAuction if biddable", async () => {
+            const clothDataBefore = await nftContract.nfts.call(nftId_2);
+            const maxBidder = clothDataBefore.maxBidder;
+            const maxBid = clothDataBefore.maxBid;
+            const maxBidderDataBefore = await nftContract.users.call(maxBidder);
+            const maxBidderBalanceBefore = maxBidderDataBefore.userBalance;
+            
             await nftContract.cancelAuction(tokenId_2, {from: deployer});
-            assert.equal(1,2);
-            //write all other asserts
+            
+            const maxBidderDataAfter= await nftContract.users.call(maxBidder);
+            const maxBidderBalanceAfter = maxBidderDataAfter.userBalance;
+    
+            const clothData = await nftContract.nfts.call(nftId_2);
+
+            assert.equal(maxBid.toNumber() + maxBidderBalanceBefore.toNumber() ,maxBidderBalanceAfter.toNumber());
+            assert.equal(clothData.isBiddable, false);
+            assert.equal(clothData.maxBid, 0);
+            assert.equal(clothData.maxBidder, 0x0);
+            assert.equal(clothData.isWearing, false);
         })
 
         //burda bidibblea çevrilmeli AGAIN
         it("owner can putOnAuction again", async () => {
             await nftContract.putOnAuction(tokenId_2, {from: deployer});
-            assert.equal(1,2);
-            //copy paste written cases before for the same case above somewhere
+    
+            const clothData = await nftContract.nfts.call(nftId_2);
+            assert.equal(clothData.isBiddable, true);
+            assert.equal(clothData.maxBid, 0);
+            assert.equal(clothData.maxBidder, 0x0);
+            assert.equal(clothData.isWearing, false);
+
+            const approvedAddress = await nftContract.getApproved(tokenId_2);
+            assert.equal(approvedAddress, nftContract.address);
         })
 
         it("someone cannot bid item not exist ", async () => {
@@ -389,8 +419,13 @@ contract("NFT", ([deployer, buyer, seller]) => {
 
         it("buyer can bid on a biddable item with cash biggrer than 0 at beggining", async () => {
             await nftContract.bid(tokenId_2, {from: buyer, value: 406});
-            assert.equal(1,2);
-            //write all other asserts
+            const clothDataBefore = await nftContract.nfts.call(nftId_2);
+         
+            const clothData = await nftContract.nfts.call(nftId_2);
+            assert.equal(clothData.isBiddable, true);
+            assert.equal(clothData.maxBid, 406);
+            assert.equal(clothData.maxBidder, buyer);
+            assert.equal(clothData.isWearing, false);
         })
 
         it("another buyer cannot bid if bid amount is smaller then max bid", async () => {
@@ -398,10 +433,30 @@ contract("NFT", ([deployer, buyer, seller]) => {
         })
 
         it("another buyer (or same buyer) can bid on a biddable item with enough cash (max bid)", async () => {
+            const clothDataBefore = await nftContract.nfts.call(nftId_2);
+            const maxBidderBefore = clothDataBefore.maxBidder;
+            const maxBidBefore = clothDataBefore.maxBid;
+            const maxBidderDataBefore = await nftContract.users.call(maxBidderBefore);
+            const maxBidderBalanceBefore = maxBidderDataBefore.userBalance;
+
             await nftContract.bid(tokenId_2, {from: seller, value: 48001});
-            assert.equal(1,2);
-            //write all other asserts
+
+            const clothDataAfter = await nftContract.nfts.call(nftId_2);
             
+            const previousMaxBidderDataAfter = await nftContract.users.call(maxBidderBefore);
+            const previousMaxBidderBalanceAfter = previousMaxBidderDataAfter.userBalance;
+
+            assert.equal(maxBidBefore.toNumber() + maxBidderBalanceBefore.toNumber(), previousMaxBidderBalanceAfter.toNumber());
+                      
+            assert.equal(clothDataBefore.isBiddable, true);
+            assert.equal(clothDataBefore.maxBid, 406);
+            assert.equal(clothDataBefore.maxBidder, buyer);
+            assert.equal(clothDataBefore.isWearing, false);
+
+            assert.equal(clothDataAfter.isBiddable, true);
+            assert.equal(clothDataAfter.maxBid, 48001);
+            assert.equal(clothDataAfter.maxBidder, seller);
+            assert.equal(clothDataAfter.isWearing, false);            
         })
 
         it("not maxBidder cannot withdrawBid", async () => {
@@ -410,16 +465,38 @@ contract("NFT", ([deployer, buyer, seller]) => {
         })
 
         it("maxBidder can withdrawBid", async () => {
+            const clothDataBefore = await nftContract.nfts.call(nftId_2);
+            const maxBidderBefore = clothDataBefore.maxBidder;
+            const maxBidBefore = clothDataBefore.maxBid;
+            const maxBidderDataBefore = await nftContract.users.call(maxBidderBefore);
+            const maxBidderBalanceBefore = maxBidderDataBefore.userBalance;
+
             await nftContract.withdrawBid(tokenId_2, {from: seller});
-            assert.equal(1,2);
-            //write all other asserts
+
+            const previousMaxBidderDataAfter = await nftContract.users.call(maxBidderBefore);
+            const previousMaxBidderBalanceAfter = previousMaxBidderDataAfter.userBalance;
+
+            const clothData = await nftContract.nfts.call(nftId_2);
+
+            assert.equal(maxBidBefore.toNumber() + maxBidderBalanceBefore.toNumber(), previousMaxBidderBalanceAfter.toNumber());
+
+            assert.equal(clothData.isBiddable, true);
+            assert.equal(clothData.maxBid, 0);
+            assert.equal(clothData.maxBidder, 0x0);
+            assert.equal(clothData.isWearing, false);
         })
 
-        //burda bi daha bid AGAIN
         it("buyer can bid on a biddable item with cash biggrer than 0 at beggining", async () => {
             await nftContract.bid(tokenId_2, {from: buyer, value: 204});
-            assert.equal(1,2);
-            //copy paste written cases before for the same case above somewhere
+            const clothDataBefore = await nftContract.nfts.call(nftId_2);
+         
+            const clothData = await nftContract.nfts.call(nftId_2);
+            assert.equal(clothData.isBiddable, true);
+            assert.equal(clothData.maxBid, 204);
+            assert.equal(clothData.maxBidder, buyer);
+            assert.equal(clothData.isWearing, false);
+            assert.equal(clothData.isBiddable, true);
+            
         })
 
         it("not owner cannot accept bid", async () => {
@@ -432,10 +509,40 @@ contract("NFT", ([deployer, buyer, seller]) => {
         })
 
         it("owner can accept bid maxbid > 0 item is biddable", async () => {
+
+            const ownerBefore = await nftContract.ownerOf.call(tokenId_2);
+            const ownerDataBefore = await nftContract.users.call(ownerBefore);
+
+            
+            const clothDataBefore = await nftContract.nfts.call(nftId_2);
+            const buyer = clothDataBefore.maxBidder;
+            const price = clothDataBefore.maxBid;
+
+
+
             await nftContract.acceptHighestBid(tokenId_2, {from: deployer});
-            assert.equal(1,2);
-            //write all other asserts
+            const previous_ownerDataAfter = await nftContract.users.call(ownerBefore);
+
+
+            // previous owner ın parası arttı mı
+            assert.equal(ownerDataBefore.userBalance.toNumber() + price.toNumber(), previous_ownerDataAfter.userBalance.toNumber());
+
+
+            // item default durumda mı
+            
+            const clothData = await nftContract.nfts.call(nftId_2);
+            assert.equal(clothData.isBiddable, false);
+            assert.equal(clothData.isOnSale, false);
+            assert.equal(clothData.maxBid, 0);
+            assert.equal(clothData.sellPrice, 0);
+            assert.equal(clothData.maxBidder, 0x0);
+            assert.equal(clothData.isWearing, false);
+            // alıcı sahibi mi
+        
+            const ownerAfter = await nftContract.ownerOf.call(tokenId_2);
+            assert.equal(buyer,ownerAfter);
         })
+
         
         it("owner can withdrawMoney", async () => {
             const startingUserData = await nftContract.users.call(deployer); 
@@ -448,4 +555,218 @@ contract("NFT", ([deployer, buyer, seller]) => {
         //                     AUCTION ENDS
         /////////////////////////////////////////////////////////
     })
+
+    describe("WEAR/UNWEAR MULTIPLE ITEMS", async () => {
+        let  tokenId_1;
+        let  tokenId_2;
+        let  tokenId_3;
+        let  nftId_1;
+        let  nftId_2;
+        let  nftId_3;
+        let  tokenId_4;
+        let  tokenId_5;
+        let  tokenId_6;
+        let  nftId_4;
+        let  nftId_5;
+        let  nftId_6;
+
+        before(async() => {
+            await nftContract.mint(1,"for owner features", "wear 1","rarity",{from:deployer});
+          
+            const totalSupply_1 = await nftContract.totalSupply.call();
+            
+            nftId_1 = totalSupply_1.toNumber() - 1;
+            tokenId_1 = totalSupply_1.toNumber();
+
+            await nftContract.mint(2,"for owner features", "wear 2","common",{from:deployer});
+          
+            const totalSupply_2 = await nftContract.totalSupply.call();
+        
+            nftId_2 = totalSupply_2.toNumber() - 1;
+            tokenId_2 = totalSupply_2.toNumber();
+
+            await nftContract.mint(3,"for owner features", "wear 3","legendary",{from:deployer});
+          
+            const totalSupply_3 = await nftContract.totalSupply.call();
+        
+            nftId_3 = totalSupply_3.toNumber() - 1;
+            tokenId_3 = totalSupply_3.toNumber();
+
+            await nftContract.mint(1,"for owner features", "wear 4","legendary",{from:deployer});
+          
+            const totalSupply_4 = await nftContract.totalSupply.call();
+        
+            nftId_4 = totalSupply_4.toNumber() - 1;
+            tokenId_4 = totalSupply_4.toNumber();
+
+            await nftContract.mint(2,"for owner features", "wear 5","legendary",{from:deployer});
+          
+            const totalSupply_5 = await nftContract.totalSupply.call();
+        
+            nftId_5 = totalSupply_5.toNumber() - 1;
+            tokenId_5 = totalSupply_5.toNumber();
+
+            await nftContract.mint(3,"for owner features", "wear 6","legendary",{from:deployer});
+          
+            const totalSupply_6 = await nftContract.totalSupply.call();
+        
+            nftId_6 = totalSupply_6.toNumber() - 1;
+            tokenId_6 = totalSupply_6.toNumber();
+
+            
+        })
+
+
+
+        it("owner cannot wear head on sale", async()=>{
+            await nftContract.wearItems(0, tokenId_2, 0, {from: deployer,}).should.be.rejected;
+        })
+        
+        it("owner cannot wear bottom on sale ", async()=>{
+            await nftContract.wearItems(0, 0, tokenId_3, {from: deployer,}).should.be.rejected; 
+        })
+
+        it("owner cannot wear all if on sale", async () => {
+            await nftContract.wearItems(tokenId_1, tokenId_2, tokenId_3, {from: deployer,}).should.be.rejected;
+        })
+
+        it("cancel sales to wear items", async () => {
+            await nftContract.cancelSale(tokenId_1, {from: deployer});
+            await nftContract.cancelSale(tokenId_2, {from: deployer});
+            await nftContract.cancelSale(tokenId_3, {from: deployer});
+        })
+
+        it("put on auction to show cannot wear items", async () => {
+            await nftContract.putOnAuction(tokenId_1, {from: deployer});
+            await nftContract.putOnAuction(tokenId_2, {from: deployer});
+            await nftContract.putOnAuction(tokenId_3, {from: deployer});
+        })
+
+        it("owner cannot wear head on auction", async()=>{
+            await nftContract.wearItems(tokenId_1, 0, 0, {from: deployer,}).should.be.rejected;
+        })
+
+        it("owner cannot wear middle on auction", async()=>{
+            await nftContract.wearItems(0, tokenId_2, 0, {from: deployer,}).should.be.rejected;
+        })
+        
+        it("owner cannot wear bottom on auction", async()=>{
+            await nftContract.wearItems(0, 0, tokenId_3, {from: deployer,}).should.be.rejected;
+        })
+
+        it("owner cannot wear all if on auction", async () => {
+            await nftContract.wearItems(tokenId_1, tokenId_2, tokenId_3, {from: deployer,}).should.be.rejected;
+        })
+
+        it("cancel auction to test other cases without affected by auction", async () => {
+            await nftContract.cancelAuction(tokenId_1, {from: deployer});
+            await nftContract.cancelAuction(tokenId_2, {from: deployer});
+            await nftContract.cancelAuction(tokenId_3, {from: deployer});
+        })
+
+        it("not owner cannot wear head", async()=>{
+            await nftContract.wearItems(tokenId_1, 0, 0, {from: buyer,}).should.be.rejected;
+        })
+
+        it("not owner cannot wear middle", async()=>{
+            await nftContract.wearItems(0, tokenId_2, 0, {from: buyer,}).should.be.rejected;
+        })
+        
+        it("not owner cannot wear bottom", async()=>{
+            await nftContract.wearItems(0, 0, tokenId_3, {from: buyer,}).should.be.rejected;  
+        })
+        
+        it("not owner cannot wear all", async () => {
+            await nftContract.wearItems(tokenId_1, tokenId_2, tokenId_3, {from: buyer,}).should.be.rejected;
+        })
+        
+        it("not head cannot be weared as head", async () => {
+            await nftContract.wearItems(tokenId_2, 0, 0, {from: deployer,}).should.be.rejected;
+        })
+        
+        it("not middle cannot be weared as middle", async () => {
+            await nftContract.wearItems(0, tokenId_1, 0, {from: deployer,}).should.be.rejected;
+        })
+
+        it("not bottom cannot be weared  bottom", async () => {
+            await nftContract.wearItems(0, 0, tokenId_1, {from: deployer,}).should.be.rejected;
+        })
+        
+        it("not matching cannot wear", async () => {
+            await nftContract.wearItems(tokenId_2, tokenId_3, tokenId_1, {from: deployer,}).should.be.rejected;
+        })
+
+        it("wear all", async () => {
+            await nftContract.wearItems(tokenId_1, tokenId_2, tokenId_3, {from: deployer,});
+            const userData = await nftContract.users.call(deployer);
+            // user açısından 
+            const userHead = userData.head;
+            const userMiddle = userData.middle;
+            const userBottom = userData.bottom;
+            assert.equal(userHead, tokenId_1);
+            assert.equal(userMiddle, tokenId_2);
+            assert.equal(userBottom, tokenId_3);
+            // yeni ürünler açısından
+            const new_item_1 = await nftContract.nfts.call(nftId_1);
+            const new_item_2 = await nftContract.nfts.call(nftId_2);
+            const new_item_3 = await nftContract.nfts.call(nftId_3);
+            assert.equal(new_item_1.isWearing,true);
+            assert.equal(new_item_2.isWearing,true);
+            assert.equal(new_item_3.isWearing,true);
+        })
+
+        it("cancel sales to wear other items", async () => {
+            await nftContract.cancelSale(tokenId_4, {from: deployer});
+            await nftContract.cancelSale(tokenId_5, {from: deployer});
+            await nftContract.cancelSale(tokenId_6, {from: deployer});
+        })
+
+        it("wear another all", async () => {
+            await nftContract.wearItems(tokenId_4, tokenId_5, tokenId_6, {from: deployer,});
+            const userData = await nftContract.users.call(deployer);
+            // user açısından 
+            const userHead = userData.head;
+            const userMiddle = userData.middle;
+            const userBottom = userData.bottom;
+            assert.equal(userHead, tokenId_4);
+            assert.equal(userMiddle, tokenId_5);
+            assert.equal(userBottom, tokenId_6);
+            // eski ürünler açısından
+            const old_item_1 = await nftContract.nfts.call(nftId_1);
+            const old_item_2 = await nftContract.nfts.call(nftId_2);
+            const old_item_3 = await nftContract.nfts.call(nftId_3);
+            assert.equal(old_item_1.isWearing,false);
+            assert.equal(old_item_2.isWearing,false);
+            assert.equal(old_item_3.isWearing,false);
+            // yeni ürünler açısından
+            const new_item_1 = await nftContract.nfts.call(nftId_4);
+            const new_item_2 = await nftContract.nfts.call(nftId_5);
+            const new_item_3 = await nftContract.nfts.call(nftId_6);
+            assert.equal(new_item_1.isWearing,true);
+            assert.equal(new_item_2.isWearing,true);
+            assert.equal(new_item_3.isWearing,true);
+        })
+        
+        it("owner can unwear all", async () => {
+            await nftContract.wearItems(0, 0, 0, {from: deployer,});
+
+            const userData = await nftContract.users.call(deployer);
+            // user açısından 
+            const userHead = userData.head;
+            const userMiddle = userData.middle;
+            const userBottom = userData.bottom;
+            assert.equal(userHead, 0);
+            assert.equal(userMiddle, 0);
+            assert.equal(userBottom, 0);
+
+            const new_item_1 = await nftContract.nfts.call(nftId_4);
+            const new_item_2 = await nftContract.nfts.call(nftId_5);
+            const new_item_3 = await nftContract.nfts.call(nftId_6);
+            assert.equal(new_item_1.isWearing, false);
+            assert.equal(new_item_2.isWearing, false);
+            assert.equal(new_item_3.isWearing, false);
+        })   
+    })
 })
+
+

@@ -91,37 +91,77 @@ contract nftContract is ERC721Full {
             _headTokenId == 0 ||
                 (this.ownerOf(_headTokenId) == msg.sender &&
                     nfts[_headTokenId - 1].clothType == 1)
-        );
+        ,"you must be the owner or you tried not head item on head");
         require(
             _middleTokenId == 0 ||
                 (this.ownerOf(_middleTokenId) == msg.sender &&
                     nfts[_middleTokenId - 1].clothType == 2)
-        );
+        ,"you must be the owner or you tried not middle item on middle");
         require(
             _bottomTokenId == 0 ||
                 (this.ownerOf(_bottomTokenId) == msg.sender &&
                     nfts[_bottomTokenId - 1].clothType == 3)
-        );
+        ,"you must be the owner or you tried not bottom item on bottom");
+        
+        require(_headTokenId == 0 || nfts[_headTokenId - 1].isOnSale == false, "head on sale, you cannot wear it!");
+        require(_headTokenId == 0 || nfts[_headTokenId - 1].isBiddable == false,"head on bid, you cannot wear it!");
 
+        require(_middleTokenId == 0 || nfts[_middleTokenId - 1].isOnSale == false,"middle on sale, you cannot wear it!");
+        require(_middleTokenId == 0 || nfts[_middleTokenId - 1].isBiddable == false,"middle on bid, you cannot wear it!");
+
+        require(_bottomTokenId == 0 || nfts[_bottomTokenId - 1].isOnSale == false,"bottom on sale, you cannot wear it!");
+        require(_bottomTokenId == 0 || nfts[_bottomTokenId - 1].isBiddable == false,"middle on bid, you cannot wear it!");
+
+        // giyili ürünleri çıkar
+        
+        if (users[msg.sender].head != 0) {
+            nfts[users[msg.sender].head - 1].isWearing = false;
+        }
+        if (users[msg.sender].middle != 0) {
+            nfts[users[msg.sender].middle - 1].isWearing = false;
+        }
+        if (users[msg.sender].bottom != 0) {
+            nfts[users[msg.sender].bottom - 1].isWearing = false;
+        }
+
+        // inputdaki ürünleri giy 
         if (_headTokenId != 0) {
             nfts[_headTokenId - 1].isWearing = true;
-        } else if (users[msg.sender].head != 0) {
-            nfts[users[msg.sender].head - 1].isWearing = false;
         }
         if (_middleTokenId != 0) {
             nfts[_middleTokenId - 1].isWearing = true;
-        } else if (users[msg.sender].middle != 0) {
-            nfts[users[msg.sender].middle - 1].isWearing = false;
         }
-        if (_middleTokenId != 0) {
+        if (_bottomTokenId != 0) {
             nfts[_bottomTokenId - 1].isWearing = true;
-        } else if (users[msg.sender].bottom != 0) {
-            nfts[users[msg.sender].bottom - 1].isWearing = false;
         }
 
         users[msg.sender].head = _headTokenId;
         users[msg.sender].middle = _middleTokenId;
         users[msg.sender].bottom = _bottomTokenId;
+    
+
+        // if (_headTokenId != 0 && users[msg.sender].head != 0) { // wear when already wearing for head
+        //     nfts[users[msg.sender].head - 1].isWearing = false; 
+        //     nfts[_headTokenId - 1].isWearing = true;
+        // } else if (_headTokenId != 0) { // wear when not wearing for head
+        //     nfts[_headTokenId - 1].isWearing = true;
+        // } else if (_headTokenId == 0 && users[msg.sender].head != 0){
+        //     nfts[users[msg.sender].head - 1].isWearing = false;
+        // }
+        // if (_middleTokenId != 0) {
+        //     nfts[_middleTokenId - 1].isWearing = true;
+        // } else if (users[msg.sender].middle != 0) {
+        //     nfts[users[msg.sender].middle - 1].isWearing = false;
+        // }
+        // if (_bottomTokenId != 0) {
+        //     nfts[_bottomTokenId - 1].isWearing = true;
+        // } else if (users[msg.sender].bottom != 0) {
+        //     nfts[users[msg.sender].bottom - 1].isWearing = false;
+        // }
+
+        // users[msg.sender].head = _headTokenId;
+        // users[msg.sender].middle = _middleTokenId;
+        // users[msg.sender].bottom = _bottomTokenId;
     }
 
     function wearItem(uint256 _tokenId) public {
@@ -312,10 +352,13 @@ contract nftContract is ERC721Full {
         require(msg.sender != this.ownerOf(_tokenId));
        
         if (nfts[_tokenId - 1].maxBid > 0) {
+            assert(users[nfts[_tokenId - 1].maxBidder].userBalance + nfts[_tokenId - 1].maxBid > users[nfts[_tokenId - 1].maxBidder].userBalance);
+
             users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
                 _tokenId - 1
             ]
                 .maxBid; //check overflow attack
+
         }
         nfts[_tokenId - 1].maxBid = msg.value;
         nfts[_tokenId - 1].maxBidder = msg.sender;
