@@ -11,6 +11,7 @@ import NotFoundPage from "./containers/notFoundPage/notFoundPage";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Navbar from "./components/navbar/navbar";
 const App = () => {
+  const [metamask, setMetamask] = React.useState(false);
   const darkTheme = createMuiTheme({
     palette: {
       background: {
@@ -46,11 +47,20 @@ const App = () => {
     },
   });
 
+  React.useEffect(() =>{
+    if(!window.eth && !window.ethereum){
+      setMetamask(false);
+    }
+    else{
+      setMetamask(true);
+    }
+  },[window.eth, window.ethereum]);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <RecoilRoot>
-        {window.location != "http://localhost:3000/" && <Navbar />}
+        {metamask && <Navbar />}
         <Router>
           <Switch>
             <Route exact path="/" component={IndexPage} />

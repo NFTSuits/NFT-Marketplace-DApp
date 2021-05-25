@@ -370,10 +370,11 @@ const Profile = (props) => {
       >
         <Grid className={classes.profileLeft} item xs={4}>
           <Avatar
+            variant="square"
             alt="Remy Sharp"
             src={heads.findIndex((item) => profileData.head === item.tokenId) !==
               -1
-                ? data[data.findIndex((item) => profileData.head === item.tokenId)].cid
+                ? "https://ipfs.io/ipfs/"+data[data.findIndex((item) => profileData.head === item.tokenId)].cid
                 : 0
               }
             className={classes.large}
@@ -803,6 +804,8 @@ const Profile = (props) => {
             }}
           >
             <Avatar
+              style={{width: 70, height: 70}}
+              variant="square"
               alt="empty"
               src="https://via.placeholder.com/300/09f/fff.png"
               className={classes.large}
@@ -810,8 +813,10 @@ const Profile = (props) => {
             />
             {heads.map((item) => (
               <Avatar
+                style={{width: 70, height: 70}}
+                variant="square"
                 alt={item.name}
-                src={item.cid}
+                src={"https://ipfs.io/ipfs/"+item.cid}
                 className={classes.large}
                 key={item.cid}
               />
@@ -862,6 +867,8 @@ const Profile = (props) => {
             }}
           >
             <Avatar
+              style={{width: 130, height: 150}}
+              variant="square"
               alt="empty"
               src="https://via.placeholder.com/300/09f/fff.png"
               className={classes.large}
@@ -869,8 +876,10 @@ const Profile = (props) => {
             />
             {middles.map((item) => (
               <Avatar
+                style={{width: 130, height: 150}}
+                variant="square"
                 alt={item.name}
-                src={item.cid}
+                src={"https://ipfs.io/ipfs/"+item.cid}
                 className={classes.large}
                 key={item.cid}
               />
@@ -921,6 +930,8 @@ const Profile = (props) => {
             }}
           >
             <Avatar
+              style={{width: 250, height: 200}}
+              variant="square"
               alt="empty"
               src="https://via.placeholder.com/300/09f/fff.png"
               className={classes.large}
@@ -928,8 +939,10 @@ const Profile = (props) => {
             />
             {bottoms.map((item) => (
               <Avatar
+                style={{width: 250, height: 200}}
+                variant="square"
                 alt={item.name}
-                src={item.cid}
+                src={"https://ipfs.io/ipfs/"+item.cid}
                 className={classes.large}
                 key={item.cid}
               />
@@ -1083,33 +1096,7 @@ const Profile = (props) => {
             </Grid>
           </Grid>
           <Grid item xs={2}>
-            <Grid
-              container
-              direction="column"
-              justify="space-around"
-              alignItems="flex-start"
-            >
-              <Grid>Sort By:</Grid>
-              <Grid>
-                <FormControl>
-                  {/* <InputLabel htmlFor="age-native-simple">Age</InputLabel> */}
-                  <Select
-                    style={{ width: 150 }}
-                    native
-                    // value={state.age}
-                    // onChange={handleChange}
-                    inputProps={{
-                      name: "age",
-                      id: "age-native-simple",
-                    }}
-                  >
-                    <option value={10}>Ten</option>
-                    <option value={20}>Twenty</option>
-                    <option value={30}>Thirty</option>
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
+
           </Grid>
         </Grid>
       </>
