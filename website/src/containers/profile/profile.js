@@ -190,6 +190,7 @@ const Profile = (props) => {
   );
   const [numberSold, setNumberSold] = React.useState(0);
   const [earnedSold, setEarnedSold] = React.useState(0);
+  const [buttonTrigger, setButtonTrigger] = React.useState(false);
 
   const [numberBought, setNumberBought] = React.useState(0);
   const [spentBought, setSpentBought] = React.useState(0);
@@ -347,7 +348,7 @@ const Profile = (props) => {
       });
     setIsLoading(false);
     console.log("useeffect 😫😩😫😩");
-  }, [window.web3.eth]);
+  }, [window.web3.eth,buttonTrigger]);
 
   const UpperProfile = () => {
     const classes = useStyles();
@@ -422,6 +423,7 @@ const Profile = (props) => {
                   })
                   .on("confirmation", function (confirmationNumber, receipt) {
                     console.log(confirmationNumber, receipt);
+                    setButtonTrigger(!buttonTrigger);
                   })
                   .on("receipt", async function (receipt) {
                     // receipt example
@@ -431,6 +433,7 @@ const Profile = (props) => {
                         console.log(data);
                         setFirstPersonUsername(data.username);
                         setIsSetting(false);
+                        setButtonTrigger(!buttonTrigger);
                       }
                     );
                   })
@@ -487,13 +490,16 @@ const Profile = (props) => {
         .send({ from: myAddress })
         .on("transactionHash", function (hash) {
           console.log(hash);
+          setButtonTrigger(!buttonTrigger);
         })
         .on("confirmation", function (confirmationNumber, receipt) {
           console.log(confirmationNumber, receipt);
+          setButtonTrigger(!buttonTrigger);
         })
         .on("receipt", async function (receipt) {
           // receipt example
           console.log(receipt);
+          setButtonTrigger(!buttonTrigger);
         })
         .on("error", function (error, receipt) {
           console.log(error, receipt);
@@ -995,16 +1001,20 @@ const Profile = (props) => {
                   .send({ from: myAddress, gas: 500000 })
                   .on("transactionHash", function (hash) {
                     console.log(hash);
+                    setButtonTrigger(!buttonTrigger);
                   })
                   .on("confirmation", function (confirmationNumber, receipt) {
                     console.log(confirmationNumber, receipt);
+                    setButtonTrigger(!buttonTrigger);
                   })
                   .on("receipt", function (receipt) {
                     // receipt example
                     console.log(receipt);
+                    setButtonTrigger(!buttonTrigger);
                   })
                   .on("error", function (error, receipt) {
                     console.log(error, receipt);
+                    setButtonTrigger(!buttonTrigger);
                   });
               }}
             >

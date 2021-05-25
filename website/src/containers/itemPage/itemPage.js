@@ -97,7 +97,6 @@ const ItemPage = (props) => {
   const [address, setAddress] = useRecoilState(myAddress);
   const [transactions, setTransactions] = useRecoilState(transactionData);
   const [id, setId] = useRecoilState(itemIdAtom);
-
   React.useEffect(async () => {
     let accounts = await window.ethereum.enable();
     let myAddress = await window.ethereum.selectedAddress;
@@ -156,11 +155,18 @@ const ItemPage = (props) => {
         fromBlock: 0
     }, function(error, event){})
     .on('data', function(event){
-        console.log("on data",event); // same results as the optional callback above
+        // console.log("on data",event); // same results as the optional callback above
         // event.reverse();
         // setTransactions((prev) => [event,...prev,]);
         // console.log("elma",[...new Set(event)])
-        setTransactions((prev) =>[event, ...prev] );
+        setTransactions((prev) => {
+          for (let i = 0; i < prev.length; i++) {
+            if(prev[i].id == event.id){
+              return prev;
+            }
+          }
+          return [event,...prev];
+        } );
     })
     .on('changed', function(event){
         // remove event from local database

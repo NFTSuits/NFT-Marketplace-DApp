@@ -44,34 +44,16 @@ const useStyles = makeStyles((theme) =>
 /*
 bugs:
 */
-async function getRevertReason(txHash){
+async function getRevertReason(txHash) {
   const tx = await window.web3.eth.getTransaction(txHash)
-
-  console.log( "BLOCK NUMNBEEEEERR", tx.blockNumber)
 
   var result = await window.web3.eth.call(tx)
   .then((data) => {console.log("DATAAAAA", data)})
   .catch((error) => {
-    console.log("ERRORRRRR", error); 
-    console.log("MESSAGEEEEEEE", error.message);
-    return error.message;
+    var index = error.message.indexOf("{");
+    return JSON.parse(error.message.substring(index).trim()).originalError.message;
   })
-
-  // console.log( "RESULLLLLTTTT", result)
-
-  result = result.startsWith('0x') ? result : `0x${result}`
-  if (result && result.substr(138)) {
-
-    const reason = window.web3.utils.toAscii(result.substr(138))
-    console.log('A Revert reason:', reason)
-    return reason
-
-  } else {
-
-    console.log('Cannot get reason - No return value')
-
-  }
-
+  return result;
 }
 
 const ItemButtonGroup = (props) => {
@@ -90,6 +72,10 @@ const ItemButtonGroup = (props) => {
 
   const isMaxBidder = data.maxBidder.toLowerCase() == userAddress.toLowerCase();
 
+
+  const [buttonTrigger, setButtonTrigger] = React.useState(false);
+  
+
   // console.log("maxBidder", data.maxBidder);
   // console.log("isMaxBidder", isMaxBidder);
 
@@ -105,7 +91,7 @@ const ItemButtonGroup = (props) => {
       addresses.NFT_CONTRACTS_ADDRESS
     );
     setContractInterface(nft_contract_interface);
-  }, [window.web3.eth]);
+  }, [window.web3.eth,buttonTrigger]);
 
   const handlePutOnSale = () => {
     // console.log("handlePutOnSaleCalled");
@@ -127,11 +113,13 @@ const ItemButtonGroup = (props) => {
       .on("receipt", async function (receipt) {
         // receipt example
         console.log(receipt);
+        setButtonTrigger(!buttonTrigger);
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
         console.log("TRIALLLLLLLLL", receipt.transactionHash)
-        getRevertReason(receipt.transactionHash)
+        var error_message = await getRevertReason(receipt.transactionHash)
+        alert(error_message)
       });
   };
 
@@ -155,6 +143,7 @@ const ItemButtonGroup = (props) => {
       .on("receipt", async function (receipt) {
         // receipt example
         console.log(receipt);
+        setButtonTrigger(!buttonTrigger);
       })
       .on("error", function (error, receipt) {
         console.log(receipt);
@@ -182,6 +171,7 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+        setButtonTrigger(!buttonTrigger);
         console.log(receipt);
       })
       .on("error", function (error, receipt) {
@@ -201,6 +191,7 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+        setButtonTrigger(!buttonTrigger);
         console.log(receipt);
       })
       .on("error", function (error, receipt) {
@@ -220,6 +211,7 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+        setButtonTrigger(!buttonTrigger);
         console.log(receipt);
       })
       .on("error", function (error, receipt) {
@@ -238,6 +230,7 @@ const ItemButtonGroup = (props) => {
         console.log(confirmationNumber, receipt);
       })
       .on("receipt", async function (receipt) {
+        setButtonTrigger(!buttonTrigger);
         // receipt example
         console.log(receipt);
       })
@@ -257,6 +250,7 @@ const ItemButtonGroup = (props) => {
         console.log(confirmationNumber, receipt);
       })
       .on("receipt", async function (receipt) {
+        setButtonTrigger(!buttonTrigger);
         // receipt example
         console.log(receipt);
       })
@@ -277,6 +271,7 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+        setButtonTrigger(!buttonTrigger);
         console.log(receipt);
       })
       .on("error", function (error, receipt) {
@@ -296,6 +291,7 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+        setButtonTrigger(!buttonTrigger);
         console.log(receipt);
       })
       .on("error", function (error, receipt) {
@@ -314,6 +310,7 @@ const ItemButtonGroup = (props) => {
         console.log(confirmationNumber, receipt);
       })
       .on("receipt", async function (receipt) {
+        setButtonTrigger(!buttonTrigger);
         // receipt example
         console.log(receipt);
       })
