@@ -3,15 +3,6 @@ pragma solidity 0.5.0;
 //import "https://github.com/OpenZeppelin/openzeppelin-contracts/tree/docs-org/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 
-//import "https://github.com/OpenZeppelin/openzeppelin-contracts/tree/docs-org/contracts/token/ERC721/ERC721.sol";
-
-//contract ERC721Full is ERC721, ERC721Enumerable, ERC721Metadata {
-//    constructor (string memory name, string memory symbol) public ERC721Metadata(name, symbol) {
-//        // solhint-disable-previous-line no-empty-blocks
-//    }
-//}
-
-
 contract nftContract is ERC721Full {
     struct nftData {
         uint256 clothType; //--> 1 --> head, 2 --> middle, 3 --> bottom
