@@ -44,6 +44,35 @@ const useStyles = makeStyles((theme) =>
 /*
 bugs:
 */
+async function getRevertReason(txHash){
+  const tx = await window.web3.eth.getTransaction(txHash)
+
+  console.log( "BLOCK NUMNBEEEEERR", tx.blockNumber)
+
+  var result = await window.web3.eth.call(tx)
+  .then((data) => {console.log("DATAAAAA", data)})
+  .catch((error) => {
+    console.log("ERRORRRRR", error); 
+    console.log("MESSAGEEEEEEE", error.message);
+    return error.message;
+  })
+
+  // console.log( "RESULLLLLTTTT", result)
+
+  result = result.startsWith('0x') ? result : `0x${result}`
+  if (result && result.substr(138)) {
+
+    const reason = window.web3.utils.toAscii(result.substr(138))
+    console.log('A Revert reason:', reason)
+    return reason
+
+  } else {
+
+    console.log('Cannot get reason - No return value')
+
+  }
+
+}
 
 const ItemButtonGroup = (props) => {
   const classes = useStyles();
@@ -61,8 +90,8 @@ const ItemButtonGroup = (props) => {
 
   const isMaxBidder = data.maxBidder.toLowerCase() == userAddress.toLowerCase();
 
-  console.log("maxBidder", data.maxBidder);
-  console.log("isMaxBidder", isMaxBidder);
+  // console.log("maxBidder", data.maxBidder);
+  // console.log("isMaxBidder", isMaxBidder);
 
   const buyButton = data.isOnSale ? (
     <Button className={classes.myButton} onClick={() => handleBuy()}>
@@ -79,12 +108,12 @@ const ItemButtonGroup = (props) => {
   }, [window.web3.eth]);
 
   const handlePutOnSale = () => {
-    console.log("handlePutOnSaleCalled");
-    console.log("contractInterface", contractInterface);
-    console.log("sellPrice", "===>", sellPrice);
-    console.log("tokenId", "===>", parseInt(id) + 1);
-    console.log("data", "===>", data);
-    console.log("price_in_bottons", "===>", sellPrice);
+    // console.log("handlePutOnSaleCalled");
+    // console.log("contractInterface", contractInterface);
+    // console.log("sellPrice", "===>", sellPrice);
+    // console.log("tokenId", "===>", parseInt(id) + 1);
+    // console.log("data", "===>", data);
+    // console.log("price_in_bottons", "===>", sellPrice);
 
     contractInterface.methods
       .putOnSale(parseInt(id) + 1, sellPrice)
@@ -101,16 +130,18 @@ const ItemButtonGroup = (props) => {
       })
       .on("error", function (error, receipt) {
         console.log(error, receipt);
+        console.log("TRIALLLLLLLLL", receipt.transactionHash)
+        getRevertReason(receipt.transactionHash)
       });
   };
 
   const handleBuy = () => {
-    console.log("handleBuy");
-    console.log("contractInterface", contractInterface);
-    console.log("tokenId", "===>", parseInt(id) + 1);
-    console.log("data", "===>", data);
-    console.log("price_in_bottons", "===>", sellPrice);
-    console.log("price_in_bottons data sell price", "===>", data.sellPrice);
+    // console.log("handleBuy");
+    // console.log("contractInterface", contractInterface);
+    // console.log("tokenId", "===>", parseInt(id) + 1);
+    // console.log("data", "===>", data);
+    // console.log("price_in_bottons", "===>", sellPrice);
+    // console.log("price_in_bottons data sell price", "===>", data.sellPrice);
 
     contractInterface.methods
       .buyFromSale(parseInt(id) + 1)
@@ -134,11 +165,11 @@ const ItemButtonGroup = (props) => {
   };
 
   const handleCancelSale = () => {
-    console.log("handleBuy");
-    console.log("contractInterface", contractInterface);
-    console.log("tokenId", "===>", parseInt(id) + 1);
-    console.log("data", "===>", data);
-    console.log("price_in_bottons", "===>", sellPrice);
+    // console.log("handleBuy");
+    // console.log("contractInterface", contractInterface);
+    // console.log("tokenId", "===>", parseInt(id) + 1);
+    // console.log("data", "===>", data);
+    // console.log("price_in_bottons", "===>", sellPrice);
 
     contractInterface.methods
       .cancelSale(parseInt(id) + 1)

@@ -114,7 +114,7 @@ const MarketCard = ({
             <Grid container direction="column" style={{ marginTop: 15 }}>
               <Grid item style={{ marginLeft: 15, marginBottom: 6 }}>
                 <Typography variant="caption">{frequency}</Typography>
-                <Typography gutterBottom variant="h6" component="h1">
+                <Typography    gutterbottom="true" variant="h6" component="h1">
                   {name}
                 </Typography>
               </Grid>
@@ -160,7 +160,7 @@ const MarketCard = ({
                   fontSize: 24,
                 }}
               />
-              <Typography gutterBottom variant="caption">
+              <Typography    gutterbottom="true" variant="caption">
                 Owner:
               </Typography>
               <Button

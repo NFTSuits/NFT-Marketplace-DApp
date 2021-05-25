@@ -67,7 +67,7 @@ const MarketCardList = (props) => {
               name={cardItem.name}
               frequency={cardItem.rarity}
               owner={cardItem.owner}
-              imgUrl={cardItem.cid}
+              imgUrl={"https://ipfs.io/ipfs/"+cardItem.cid}
               price={cardItem.sellPrice}
               auctionPrice={cardItem.maxBid}
               type={cardItem.clothType}

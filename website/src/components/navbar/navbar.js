@@ -117,7 +117,7 @@ const Navbar = () => {
   });
   React.useEffect(async () => {
     try {
-      window.web3 = new Web3("http://localhost:8545");
+      window.web3 = new Web3(Web3.givenProvider);
       if (window.ethereum) {
         await window.ethereum.enable(); // pop up
         let myAddress = await window.ethereum.selectedAddress;
@@ -232,7 +232,9 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap onClick={() => {
+                window.location.href = "/";
+              }} Button >
             CryptoBıdıs
           </Typography>
           <div className={classes.grow} />

@@ -137,18 +137,38 @@ const ItemPage = (props) => {
         window.location = "/notFound";
       });
 
-    nft_contract_interface
-      .getPastEvents("nftTransaction", {
+    // nft_contract_interface
+    //   .getPastEvents("nftTransaction", {
+    //     filter: { id: parseInt(myId) + 1 },
+    //     fromBlock: 0,
+    //     toBlock: "latest",
+    //   })
+    //   .then((events) => {
+    //     //console.log("events.console.log", events);
+    //     events.reverse();
+    //     //console.log("events.console.log reverse", events);
+    //     setTransactions(events);
+    //   });
+
+      nft_contract_interface.events.nftTransaction({
         filter: { id: parseInt(myId) + 1 },
-        fromBlock: 0,
-        toBlock: "latest",
-      })
-      .then((events) => {
-        //console.log("events.console.log", events);
-        events.reverse();
-        //console.log("events.console.log reverse", events);
-        setTransactions(events);
-      });
+        endBlock:"latest", // Using an array means OR: e.g. 20 or 23
+        fromBlock: 0
+    }, function(error, event){})
+    .on('data', function(event){
+        console.log("on data",event); // same results as the optional callback above
+        // event.reverse();
+        // setTransactions((prev) => [event,...prev,]);
+        // console.log("elma",[...new Set(event)])
+        setTransactions((prev) =>[event, ...prev] );
+    })
+    .on('changed', function(event){
+        // remove event from local database
+        // setTransactions([...event]);
+        console.log("event is changed",event);
+    })
+    .on('error', console.error);
+    
 
     // var event = nft_contract_interface.events.nftTransaction(
     //   (error, result) => {
@@ -189,7 +209,7 @@ const ItemPage = (props) => {
           //   backgroundColor: "#006666",
           // }}
           >
-            <img style={{ width: 300 }} src={data.cid} />
+            <img style={{ width: 300 }} src={"https://ipfs.io/ipfs/"+data.cid} />
           </div>
           {/* </Paper> */}
         </Grid>
@@ -223,7 +243,7 @@ const ItemPage = (props) => {
                 >
                   <div>
                     <div style={{ display: "flex", flexDirection: "row" }}>
-                      <Typography variant="h2" display="block" gutterbottom>
+                      <Typography variant="h2" display="block"    gutterbottom="true">
                         Name: {data.name}
                       </Typography>
                     </div>
@@ -245,7 +265,7 @@ const ItemPage = (props) => {
                       <Typography
                         variant="overline"
                         display="block"
-                        gutterbottom
+                        gutterbottom="true"
                       >
                         Rarity: {data.rarity}
                       </Typography>
@@ -268,7 +288,7 @@ const ItemPage = (props) => {
                       <Typography
                         variant="body1"
                         display="block"
-                        gutterbottom
+                        gutterbottom="true"
                         style={{ marginRight: 10, marginTop: 15 }}
                       >
                         Owner:{" "}
@@ -303,7 +323,7 @@ const ItemPage = (props) => {
                           fontSize: 20,
                         }}
                       />
-                      <Typography variant="body1" display="block" gutterbottom>
+                      <Typography variant="body1" display="block" gutterbottom ="true">
                         Price: {data.isOnSale ? "Ξ " + data.sellPrice : "-"}
                       </Typography>
                     </div>
@@ -320,7 +340,7 @@ const ItemPage = (props) => {
                         <Typography
                           variant="body1"
                           display="block"
-                          gutterbottom
+                          gutterbottom="true"
                         >
                           Highest Bid:{" "}
                           {data.isBiddable ? "Ξ " + data.maxBid : "-"}
@@ -394,7 +414,7 @@ const ItemPage = (props) => {
                     </TableHead>
                     <TableBody>
                       {transactions.map((transaction, index) => {
-                        console.log(transaction);
+                        // console.log(transaction);
                         return (
                           <TableRow
                             key={index}
@@ -466,12 +486,20 @@ const ItemPage = (props) => {
                                 : "Ξ " + transaction.returnValues.value}
                             </TableCell>
                             <TableCell align="center">
+                            <Button
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => {
+                                    window.location.href =  "https://ropsten.etherscan.io/tx/" + transaction.transactionHash;
+                                  }}
+                                >
                               {transaction.transactionHash.slice(0, 6) +
                                 "..." +
                                 transaction.transactionHash.slice(
                                   transaction.transactionHash.length - 4,
                                   transaction.transactionHash.length
                                 )}
+                            </Button>
                             </TableCell>
                           </TableRow>
                         );
