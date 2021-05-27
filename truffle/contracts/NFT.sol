@@ -3,35 +3,6 @@ pragma solidity 0.5.0;
 //import "https://github.com/OpenZeppelin/openzeppelin-contracts/tree/docs-org/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 
-//import "https://github.com/OpenZeppelin/openzeppelin-contracts/tree/docs-org/contracts/token/ERC721/ERC721.sol";
-
-//contract ERC721Full is ERC721, ERC721Enumerable, ERC721Metadata {
-//    constructor (string memory name, string memory symbol) public ERC721Metadata(name, symbol) {
-//        // solhint-disable-previous-line no-empty-blocks
-//    }
-//}
-
-
-// library Set {
-//     // Note that the first parameter is of type "storage
-//     // reference" and thus only its storage address and not
-//     // its contents is passed as part of the call.  This is a
-//     // special feature of library functions.  It is idiomatic
-//     // to call the first parameter `self`, if the function can
-//     // be seen as a method of that object.
-//     function insert(Data storage self, uint value)
-//         public
-//         returns (bool)
-//     {
-//         if (self.flags[value])
-//             return false; // already there
-//         self.flags[value] = true;
-//         return true;
-//     }
-// }
-
-
-
 contract nftContract is ERC721Full {
     struct nftData {
         uint256 clothType; //--> 1 --> head, 2 --> middle, 3 --> bottom
@@ -165,9 +136,9 @@ contract nftContract is ERC721Full {
     }
 
     function wearItem(uint256 _tokenId) public {
-        require(this.ownerOf(_tokenId) == msg.sender);
-        require(nfts[_tokenId - 1].isOnSale == false);
-        require(nfts[_tokenId - 1].isBiddable == false);
+        require(this.ownerOf(_tokenId) == msg.sender, "You are not the owner of this item, so you cannot wear it.");
+        require(nfts[_tokenId - 1].isOnSale == false, "You cannot wear an item while it is on sale.");
+        require(nfts[_tokenId - 1].isBiddable == false, "You cannot wear an item while it is on auction.");
        
 
         if (nfts[_tokenId - 1].clothType == 1) {
@@ -193,19 +164,19 @@ contract nftContract is ERC721Full {
     }
 
     function unWearItem(uint256 _clothType) public {
-        require(_clothType == 1 || _clothType == 2 || _clothType == 3);
+        require(_clothType == 1 || _clothType == 2 || _clothType == 3, "Invalid cloth type.");
 
         if (_clothType == 1) {
-            require(users[msg.sender].head !=0);
+            require(users[msg.sender].head !=0, "You must wear a head item first to unwear.");
             nfts[users[msg.sender].head - 1].isWearing = false;
             users[msg.sender].head = 0;
         } else if (_clothType == 2) {
-            require(users[msg.sender].middle !=0);
+            require(users[msg.sender].middle !=0, "You must wear a middle item first to unwear.");
 
             nfts[users[msg.sender].middle - 1].isWearing = false;
             users[msg.sender].middle = 0;
         } else if (_clothType == 3) {
-            require(users[msg.sender].bottom !=0);
+            require(users[msg.sender].bottom !=0, "You must wear a bottom item first to unwear.");
             nfts[users[msg.sender].bottom - 1].isWearing = false;
             users[msg.sender].bottom = 0;
         }
@@ -221,11 +192,11 @@ contract nftContract is ERC721Full {
 
     function putOnSale(uint256 _tokenId, uint256 _sellPrice) public {
         //msg.sender owner olmalı
-        require(msg.sender == this.ownerOf(_tokenId) );
+        require(msg.sender == this.ownerOf(_tokenId), "You cannot put this item on sale, because you are not the owner of it.");
         //is on sale false olmalı
-        require(nfts[_tokenId - 1].isOnSale == false);
+        require(nfts[_tokenId - 1].isOnSale == false, "Item is already on sale!");
         //item should not be on wear
-        require(nfts[_tokenId - 1].isWearing == false);
+        require(nfts[_tokenId - 1].isWearing == false, "You must unwear it first, then you can sell it." );
         
         nfts[_tokenId - 1].isOnSale = true; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].sellPrice = _sellPrice; //tokenId or tokenId-1 ??????
@@ -242,9 +213,9 @@ contract nftContract is ERC721Full {
 
     function cancelSale(uint256 _tokenId) public {
         //is on sale true olması lazım
-        require(nfts[_tokenId - 1].isOnSale == true);
+        require(nfts[_tokenId - 1].isOnSale == true, "Item should be on sale first, to be cancelled.");
         //msg.sender owner olmalı
-        require(msg.sender == this.ownerOf(_tokenId));
+        require(msg.sender == this.ownerOf(_tokenId), "You cannot cancel the sale of this item, because you are not the owner.");
         
         nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].sellPrice = 0; //tokenId or tokenId-1 ??????
@@ -260,27 +231,22 @@ contract nftContract is ERC721Full {
 
     function buyFromSale(uint256 _tokenId) public payable {
         //msg.sender owner olmalalı
-        require(msg.sender != this.ownerOf(_tokenId));
+        require(msg.sender != this.ownerOf(_tokenId), "You cannot buy your own item!");
         //is on sale true olmalı
-        require(nfts[_tokenId - 1].isOnSale == true);
+        require(nfts[_tokenId - 1].isOnSale == true, "Item should be on sale for you to buy it.");
         //paranın en az sellPrice kadar olmalı
-        require (nfts[_tokenId - 1].sellPrice <= msg.value);
+        require (nfts[_tokenId - 1].sellPrice <= msg.value, "The amount you tried to buy, is less than price.");
         //approve var mı diye check et --> getApproved(uint256 tokenId) → address operator
-        require(this.getApproved(_tokenId) == address(this));
+        require(this.getApproved(_tokenId) == address(this), "Seller did not give the allowance for us to sell this item, contact with seller.");
         address sellerAddress = this.ownerOf(_tokenId); //tokenId or tokenId-1 ??????
         this.safeTransferFrom(sellerAddress, msg.sender, _tokenId); //transfer with ERC721 //change owner
         nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].sellPrice = 0; //tokenId or tokenId-1 ??????
-        users[sellerAddress].userBalance =
-            users[sellerAddress].userBalance +
-            msg.value; //overflow attack assert ile check et prev balance + sellPrice = new balance
+        users[sellerAddress].userBalance = add256(users[sellerAddress].userBalance, msg.value); //overflow attack assert ile check et prev balance + sellPrice = new balance
 
         //satıldı we bid açıksa bunlar yapılmalı
         if (nfts[_tokenId - 1].maxBid > 0) {
-            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
-                _tokenId - 1
-            ]
-                .maxBid; //check overflow attack
+            users[nfts[_tokenId - 1].maxBidder].userBalance = add256(users[nfts[_tokenId - 1].maxBidder].userBalance ,  nfts[_tokenId - 1].maxBid); //check overflow attack
         }
         nfts[_tokenId - 1].maxBid = 0;
         nfts[_tokenId - 1].maxBidder = address(0x0);
@@ -298,11 +264,11 @@ contract nftContract is ERC721Full {
     function putOnAuction(uint256 _tokenId) public {
 
         //msg.sender owner olmalı
-        require(msg.sender == this.ownerOf(_tokenId) );
+        require(msg.sender == this.ownerOf(_tokenId), "Only owner of this item can put on sale" );
         //item should not be on wear
-        require(nfts[_tokenId - 1].isWearing == false);
+        require(nfts[_tokenId - 1].isWearing == false,  "You must unwear it first, then you can put it on auction.");
         //is bidding false olmalı
-        require(nfts[_tokenId - 1].isBiddable == false);
+        require(nfts[_tokenId - 1].isBiddable == false, "This item is already on auction!");
         
         nfts[_tokenId - 1].isBiddable = true; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
@@ -319,13 +285,13 @@ contract nftContract is ERC721Full {
 
     function cancelAuction(uint256 _tokenId) public {
         //msg.sender owner olmalı
-        require(msg.sender == this.ownerOf(_tokenId));
+        require(msg.sender == this.ownerOf(_tokenId), "You cannot cancel the auction of this item, because you are not the owner.");
         //is bidding true olmalı
-        require(nfts[_tokenId - 1].isBiddable == true);
+        require(nfts[_tokenId - 1].isBiddable == true, "Item must be on auction before it can be canceled, currently it is not!");
         
         
         if (nfts[_tokenId - 1].maxBid > 0) {
-            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[_tokenId - 1].maxBid; //check overflow attack
+            users[nfts[_tokenId - 1].maxBidder].userBalance = add256(users[nfts[_tokenId - 1].maxBidder].userBalance, nfts[_tokenId - 1].maxBid); //check overflow attack
         }
         nfts[_tokenId - 1].isBiddable = false; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
@@ -343,22 +309,16 @@ contract nftContract is ERC721Full {
     function bid(uint256 _tokenId) public payable {
 
         // bid must be more than 0
-        require(msg.value > 0);
+        require(msg.value > 0, "You did not send any money");
         //item must be biddable
-        require(nfts[_tokenId - 1].isBiddable == true);
+        require(nfts[_tokenId - 1].isBiddable == true,"Item you tried to bid, is not biddable!");
         //maxbidden büyük olmalı message.value
-        require(msg.value >= nfts[_tokenId - 1].maxBid);
+        require(msg.value >= nfts[_tokenId - 1].maxBid, "The amount you tried to bid, is less than current max bid.");
         //owner kendisi olmıcak
-        require(msg.sender != this.ownerOf(_tokenId));
+        require(msg.sender != this.ownerOf(_tokenId), "You cannot bid your own item.");
        
         if (nfts[_tokenId - 1].maxBid > 0) {
-            assert(users[nfts[_tokenId - 1].maxBidder].userBalance + nfts[_tokenId - 1].maxBid > users[nfts[_tokenId - 1].maxBidder].userBalance);
-
-            users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[
-                _tokenId - 1
-            ]
-                .maxBid; //check overflow attack
-
+            users[nfts[_tokenId - 1].maxBidder].userBalance = add256(users[nfts[_tokenId - 1].maxBidder].userBalance, nfts[_tokenId - 1].maxBid); //check overflow attack
         }
         nfts[_tokenId - 1].maxBid = msg.value;
         nfts[_tokenId - 1].maxBidder = msg.sender;
@@ -374,13 +334,13 @@ contract nftContract is ERC721Full {
 
     function acceptHighestBid(uint256 _tokenId) public {
         //msg.sender tokenId ownerı olmalı
-        require(msg.sender == this.ownerOf(_tokenId));
+        require(msg.sender == this.ownerOf(_tokenId), "You need to be owner of this item, to accept its highest bid.");
         //item must be biddable
-        require(nfts[_tokenId - 1].isBiddable == true);
+        require(nfts[_tokenId - 1].isBiddable == true , "Item should be biddable for you to accept its highest bid.");
         //max Bid is large than 0
-        require(nfts[_tokenId - 1].maxBid > 0);
+        require(nfts[_tokenId - 1].maxBid > 0 ,"Max bid must be more than 0 to accept it, currently it is not!");
 
-        assert(nfts[_tokenId - 1].maxBidder != msg.sender);
+        require(nfts[_tokenId - 1].maxBidder != msg.sender, "Max bidder cannot be the same person as seller!");
 
         address buyer = nfts[_tokenId - 1].maxBidder;
         uint256 soldValue = nfts[_tokenId - 1].maxBid;
@@ -389,7 +349,7 @@ contract nftContract is ERC721Full {
             nfts[_tokenId - 1].maxBidder,
             _tokenId
         ); //transfer with ERC721 //change owner
-        users[msg.sender].userBalance += nfts[_tokenId - 1].maxBid; //check overflow attack
+        users[msg.sender].userBalance = add256(users[msg.sender].userBalance, nfts[_tokenId - 1].maxBid); //check overflow attack
         nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].maxBidder = address(0x0); //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].isBiddable = false; //tokenId or tokenId-1 ??????
@@ -407,10 +367,9 @@ contract nftContract is ERC721Full {
 
     function withdrawBid(uint256 _tokenId) public {
         //msg.sender maxBidder olmalı
-        require(msg.sender == nfts[_tokenId - 1].maxBidder);
+        require(msg.sender == nfts[_tokenId - 1].maxBidder, "You must be the max bidder to withdraw your bid!");
         uint256 withdrawnValue = nfts[_tokenId - 1].maxBid;
-        users[nfts[_tokenId - 1].maxBidder].userBalance += nfts[_tokenId - 1]
-            .maxBid; //check overflow attack
+        users[nfts[_tokenId - 1].maxBidder].userBalance = add256(users[nfts[_tokenId - 1].maxBidder].userBalance, nfts[_tokenId - 1].maxBid); //check overflow attack
         nfts[_tokenId - 1].maxBid = 0; //tokenId or tokenId-1 ??????
         nfts[_tokenId - 1].maxBidder = address(0x0); //tokenId or tokenId-1 ??????
 
@@ -425,12 +384,12 @@ contract nftContract is ERC721Full {
 
     function withdrawMoney(uint256 _amount) public {
         //amount balancetan küçük eşit olmalı
-        require(users[msg.sender].userBalance >= _amount);
+        require(users[msg.sender].userBalance >= _amount, "You do not have enough balance to withdraw this amount");
 
         uint initialBalance = users[msg.sender].userBalance;
-        users[msg.sender].userBalance = initialBalance - _amount; 
+        users[msg.sender].userBalance = sub256(initialBalance, _amount);
         msg.sender.transfer(_amount);
-        assert(initialBalance - _amount < initialBalance); //underflow attack
+        
     }
 
     function mint(
@@ -439,10 +398,10 @@ contract nftContract is ERC721Full {
         string memory _cid,
         string memory _rarity
     ) public {
-        require(isExist[_cid] == false);
-        require(this.totalSupply() < maxSupply);
-        require(msg.sender ==owner);
-        require(_clothType == 1 || _clothType == 2 || _clothType == 3);
+        require(isExist[_cid] == false, "Item link should be unique, for you to mint it");
+        require(this.totalSupply() < maxSupply, "You cannot mint any more item since you already reached the maximum supply.");
+        require(msg.sender ==owner, "Only owner can of this contract can mint, you are trying to some fraud.");
+        require(_clothType == 1 || _clothType == 2 || _clothType == 3, "Invalid cloth type.");
         uint256 _id =
             nfts.push(
                 nftData(
@@ -450,8 +409,8 @@ contract nftContract is ERC721Full {
                     _name,
                     _cid,
                     _rarity,
-                    true,
-                    1,
+                    false,
+                    0,
                     false,
                     0,
                     address(0x0),
@@ -463,5 +422,20 @@ contract nftContract is ERC721Full {
         
 
         emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
+
+        putOnSale(_id,1);
+    }
+
+
+
+    function add256(uint256 a, uint256 b) internal pure returns (uint) {
+        uint c = a + b;
+        require(c >= a, "addition overflow");
+        return c;
+    }
+
+    function sub256(uint256 a, uint256 b) internal pure returns (uint) {
+        require(b <= a, "subtraction underflow");
+        return a - b;
     }
 }

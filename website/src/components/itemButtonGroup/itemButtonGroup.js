@@ -7,7 +7,7 @@ import {
   createStyles,
 } from "@material-ui/core";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import { allItems, itemData, myAddress, itemIdAtom } from "../../recoils/atoms";
+import { allItems, itemData, myAddress, itemIdAtom,  snackbarTextAtom, snackbarControllerAtom } from "../../recoils/atoms";
 
 import addresses from "../../constants/contracts";
 import NftContract from "../../abis/nft.json";
@@ -44,25 +44,51 @@ const useStyles = makeStyles((theme) =>
 /*
 bugs:
 */
+async function getRevertReason(txHash, setSnackbarText, setSnackbarController) {
+  const tx = await window.web3.eth.getTransaction(txHash)
+
+  var result = await window.web3.eth.call(tx)
+  .then((data) => {console.log("DATAAAAA", data)})
+  .catch((error) => {
+    var index = error.message.indexOf("{");
+    return JSON.parse(error.message.substring(index).trim()).originalError.message;
+  })
+  setSnackbarController(true);
+  setSnackbarText(result);
+  return result;
+}
 
 const ItemButtonGroup = (props) => {
   const classes = useStyles();
 
+  const regex = /^([0-9]+(\.[0-9]+)?)$/g;
+
   const userAddress = useRecoilValue(myAddress);
   const data = useRecoilValue(itemData);
   const id = useRecoilValue(itemIdAtom);
+
+  const [snackbarText, setSnackbarText] = useRecoilState(snackbarTextAtom);
+  const [snackbarController, setSnackbarController] = useRecoilState(snackbarControllerAtom);
 
   const [sellPrice, setSellPrice] = React.useState();
   const [bidPrice, setBidPrice] = React.useState();
 
   const [contractInterface, setContractInterface] = React.useState();
 
+
+  const [bidTextFieldError, setBidTextFieldError] = React.useState(false);
+  const [putOnSaleTextFieldError, setPutOnSaleTextFieldError] = React.useState(false);
+
   const isThirdPerson = data.owner.toLowerCase() != userAddress.toLowerCase();
 
   const isMaxBidder = data.maxBidder.toLowerCase() == userAddress.toLowerCase();
 
-  console.log("maxBidder", data.maxBidder);
-  console.log("isMaxBidder", isMaxBidder);
+
+  const [buttonTrigger, setButtonTrigger] = React.useState(false);
+  
+
+  // console.log("maxBidder", data.maxBidder);
+  // console.log("isMaxBidder", isMaxBidder);
 
   const buyButton = data.isOnSale ? (
     <Button className={classes.myButton} onClick={() => handleBuy()}>
@@ -76,18 +102,18 @@ const ItemButtonGroup = (props) => {
       addresses.NFT_CONTRACTS_ADDRESS
     );
     setContractInterface(nft_contract_interface);
-  }, [window.web3.eth]);
+  }, [window.web3.eth,buttonTrigger]);
 
   const handlePutOnSale = () => {
-    console.log("handlePutOnSaleCalled");
-    console.log("contractInterface", contractInterface);
-    console.log("sellPrice", "===>", sellPrice);
-    console.log("tokenId", "===>", parseInt(id) + 1);
-    console.log("data", "===>", data);
-    console.log("price_in_bottons", "===>", sellPrice);
+    // console.log("handlePutOnSaleCalled");
+    // console.log("contractInterface", contractInterface);
+    // console.log("sellPrice", "===>", sellPrice);
+    // console.log("tokenId", "===>", parseInt(id) + 1);
+    // console.log("data", "===>", data);
+    // console.log("price_in_bottons", "===>", sellPrice);
 
     contractInterface.methods
-      .putOnSale(parseInt(id) + 1, sellPrice)
+      .putOnSale(parseInt(id) + 1, window.web3.utils.toWei(sellPrice))
       .send({ from: userAddress, gas: 500000 })
       .on("transactionHash", function (hash) {
         console.log(hash);
@@ -98,19 +124,23 @@ const ItemButtonGroup = (props) => {
       .on("receipt", async function (receipt) {
         // receipt example
         console.log(receipt);
+       // setButtonTrigger(!buttonTrigger);
+      //  window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
+        //alert(error_message)
       });
   };
 
   const handleBuy = () => {
-    console.log("handleBuy");
-    console.log("contractInterface", contractInterface);
-    console.log("tokenId", "===>", parseInt(id) + 1);
-    console.log("data", "===>", data);
-    console.log("price_in_bottons", "===>", sellPrice);
-    console.log("price_in_bottons data sell price", "===>", data.sellPrice);
+    // console.log("handleBuy");
+    // console.log("contractInterface", contractInterface);
+    // console.log("tokenId", "===>", parseInt(id) + 1);
+    // console.log("data", "===>", data);
+    // console.log("price_in_bottons", "===>", sellPrice);
+    // console.log("price_in_bottons data sell price", "===>", data.sellPrice);
 
     contractInterface.methods
       .buyFromSale(parseInt(id) + 1)
@@ -124,21 +154,24 @@ const ItemButtonGroup = (props) => {
       .on("receipt", async function (receipt) {
         // receipt example
         console.log(receipt);
+        // window.location.reload();
+       // setButtonTrigger(!buttonTrigger);
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(receipt);
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
 
         console.log(error.data);
       });
   };
 
   const handleCancelSale = () => {
-    console.log("handleBuy");
-    console.log("contractInterface", contractInterface);
-    console.log("tokenId", "===>", parseInt(id) + 1);
-    console.log("data", "===>", data);
-    console.log("price_in_bottons", "===>", sellPrice);
+    // console.log("handleBuy");
+    // console.log("contractInterface", contractInterface);
+    // console.log("tokenId", "===>", parseInt(id) + 1);
+    // console.log("data", "===>", data);
+    // console.log("price_in_bottons", "===>", sellPrice);
 
     contractInterface.methods
       .cancelSale(parseInt(id) + 1)
@@ -151,10 +184,13 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+       // setButtonTrigger(!buttonTrigger);
         console.log(receipt);
+        // window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -170,10 +206,13 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+       // setButtonTrigger(!buttonTrigger);
         console.log(receipt);
+        window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -189,17 +228,20 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+       // setButtonTrigger(!buttonTrigger);
         console.log(receipt);
+        window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
   const handleBidding = () => {
     contractInterface.methods
       .bid(parseInt(id) + 1)
-      .send({ from: userAddress, value: bidPrice, gas: 3000000 })
+      .send({ from: userAddress, value: window.web3.utils.toWei(bidPrice), gas: 3000000 })
       .on("transactionHash", function (hash) {
         console.log(hash);
       })
@@ -207,11 +249,14 @@ const ItemButtonGroup = (props) => {
         console.log(confirmationNumber, receipt);
       })
       .on("receipt", async function (receipt) {
+       // setButtonTrigger(!buttonTrigger);
         // receipt example
         console.log(receipt);
+        // window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -226,11 +271,14 @@ const ItemButtonGroup = (props) => {
         console.log(confirmationNumber, receipt);
       })
       .on("receipt", async function (receipt) {
+       // setButtonTrigger(!buttonTrigger);
         // receipt example
         console.log(receipt);
+        // window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -246,10 +294,13 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+       // setButtonTrigger(!buttonTrigger);
         console.log(receipt);
+        // window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -265,10 +316,13 @@ const ItemButtonGroup = (props) => {
       })
       .on("receipt", async function (receipt) {
         // receipt example
+       // setButtonTrigger(!buttonTrigger);
         console.log(receipt);
+        // window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -283,11 +337,14 @@ const ItemButtonGroup = (props) => {
         console.log(confirmationNumber, receipt);
       })
       .on("receipt", async function (receipt) {
+       // setButtonTrigger(!buttonTrigger);
         // receipt example
         console.log(receipt);
+        // window.location.reload();
       })
-      .on("error", function (error, receipt) {
+      .on("error", async function (error, receipt) {
         console.log(error, receipt);
+        var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
       });
   };
 
@@ -319,18 +376,26 @@ const ItemButtonGroup = (props) => {
           }}
         >
           <TextField
+            error={bidTextFieldError}
+            helperText="You need to give a valid amount."
             label="Bid amount"
             id="outlined-margin-none"
             className={classes.textField}
             margin="dense"
-            helperText="Must enter a bid value"
             variant="outlined"
             value={bidPrice}
             onChange={(evt) => {
+              if(evt.target.value.toString().match(regex)) {
+                setBidTextFieldError(false);
+              }
+              else {
+                setBidTextFieldError(true);
+              }
               setBidPrice(evt.target.value);
             }}
           />
           <Button
+            disabled={bidTextFieldError || bidPrice == null}
             className={classes.myButton}
             onClick={() => {
               handleBidding();
@@ -362,18 +427,25 @@ const ItemButtonGroup = (props) => {
       }}
     >
       <TextField
+        error={putOnSaleTextFieldError}
+        helperText="You need to give a valid amount."
         value={sellPrice}
         onChange={(evt) => {
+          if(evt.target.value.toString().match(regex)) {
+            setPutOnSaleTextFieldError(false);
+          }
+          else {
+            setPutOnSaleTextFieldError(true);
+          }
           setSellPrice(evt.target.value);
         }}
         label="Price"
         id="outlined-margin-none"
         className={classes.textField}
         margin="dense"
-        helperText="Must fix a price"
         variant="outlined"
       />
-      <Button className={classes.myButton} onClick={() => handlePutOnSale()}>
+      <Button disabled={putOnSaleTextFieldError} className={classes.myButton} onClick={() => handlePutOnSale()}>
         Put on sale
       </Button>
     </div>

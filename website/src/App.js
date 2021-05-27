@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CharacterCounter from "./containers/Demo/demo";
@@ -10,7 +10,19 @@ import IndexPage from "./containers/index/index";
 import NotFoundPage from "./containers/notFoundPage/notFoundPage";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Navbar from "./components/navbar/navbar";
+import {  useRecoilValue, useRecoilState } from "recoil";
+import { snackbarControllerAtom, snackbarTextAtom,  } from "./recoils/atoms";
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+
 const App = () => {
+  const [metamask, setMetamask] = React.useState(false);
+
+  const [snackbarController, setSnackbarController] = useRecoilState(snackbarControllerAtom);
+  const snackbarText = useRecoilValue(snackbarTextAtom);
+
+
+
   const darkTheme = createMuiTheme({
     palette: {
       background: {
@@ -46,39 +58,58 @@ const App = () => {
     },
   });
 
+  React.useEffect(() =>{
+    if(!window.eth && !window.ethereum){
+      setMetamask(false);
+    }
+    else{
+      setMetamask(true);
+    }
+  },[window.eth, window.ethereum]);
+
+
+
   return (
+    <>
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <RecoilRoot>
-        {window.location != "http://localhost:3000/" && <Navbar />}
+     
+        {metamask && <Navbar />}
         <Router>
           <Switch>
             <Route exact path="/" component={IndexPage} />
-          </Switch>
-          <Switch>
-            <Route exact path="/demo" component={CharacterCounter} />
-          </Switch>
-          <Switch>
-            <Route exact path="/marketplace" component={MarketPlace} />
-          </Switch>
-          <Switch>
-            <Route exact path="/allItems" component={MarketPlace} />
-          </Switch>
-          <Switch>
+            <Route  path="/demo" component={CharacterCounter} />
+            <Route  path="/marketplace" component={MarketPlace} />
+            <Route  path="/allItems" component={MarketPlace} />
             <Route path="/profile/:address" component={Profile} />
-          </Switch>
-          <Switch>
             <Route path="/item/:id" component={ItemPage} />
+             {/* <Route exact path="/avatars" component={AvatarPage} />*/}
+            <Route  path="/notFound" component={NotFoundPage} />
+            <Route component={NotFoundPage} />
           </Switch>
-          {/* <Switch>
-            <Route exact path="/avatars" component={AvatarPage} />
-          </Switch> */}
-          <Switch>
-            <Route exact path="/notFound" component={NotFoundPage} />
-          </Switch>
+
+
+          <Snackbar
+              open={snackbarController}
+              autoHideDuration={8000}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              onClose={()=>{
+                setSnackbarController(false)
+              }}
+          >
+            <SnackbarContent style={{
+                backgroundColor:'#ff2015',
+                color:"#f2f2f2",
+                }}
+                message={<span id="client-snackbar" >{snackbarText}</span>}
+            />
+          </Snackbar>
         </Router>
-      </RecoilRoot>
+   
     </ThemeProvider>
+
+  
+    </>
   );
 };
 

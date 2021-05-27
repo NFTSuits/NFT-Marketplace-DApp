@@ -260,38 +260,11 @@ const MarketTab = () => {
             </Grid>
           </Grid>
           <Grid item xs={2}>
-            <Grid
-              container
-              direction="column"
-              justify="space-between"
-              alignItems="flex-start"
-            >
-              <Grid>Sort By:</Grid>
-              <Grid>
-                <FormControl>
-                  {/* <InputLabel htmlFor="age-native-simple">Age</InputLabel> */}
-                  <Select
-                    style={{ width: 150 }}
-                    native
-                    // value={state.age}
-                    // onChange={handleChange}
-                    inputProps={{
-                      name: "age",
-                      id: "age-native-simple",
-                    }}
-                  >
-                    <option value={10}>Ten</option>
-                    <option value={20}>Twenty</option>
-                    <option value={30}>Thirty</option>
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
           </Grid>
         </Grid>
       </div>
-      {heads.length == 0 ? (
-        <div>BIDILAR LOADING</div>
+      {allItemsFiltered.length == 0 ? (
+        <div>No Items Found</div>
       ) : (
         <>
           <TabPanel value={value} index={0}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -7,6 +7,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PanToolSharpIcon from "@material-ui/icons/PanToolSharp";
@@ -63,6 +64,18 @@ const useStyles = makeStyles({
   },
 });
 
+
+const MyTooltip = withStyles((theme) => ({
+  tooltip: {
+    // backgroundColor: '#f5f5f9',
+    // color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: 20,
+    // maxWidth: 220,
+    // fontSize: theme.typography.pxToRem(12),
+    // border: '1px solid #dadde9',
+  },
+}))(Tooltip);
+
 const MarketCard = ({
   name,
   frequency,
@@ -80,7 +93,7 @@ const MarketCard = ({
   // var owner = ;
 
   const [usernameToBeShown, setUsernameToBeShown] = React.useState(
-    owner.slice(0, 6) + "..." + owner.slice(owner.length - 4, owner.length)
+    owner.slice(0, 4) + "..." + owner.slice(owner.length - 2, owner.length)
   );
 
   React.useEffect(async () => {
@@ -114,7 +127,7 @@ const MarketCard = ({
             <Grid container direction="column" style={{ marginTop: 15 }}>
               <Grid item style={{ marginLeft: 15, marginBottom: 6 }}>
                 <Typography variant="caption">{frequency}</Typography>
-                <Typography gutterBottom variant="h6" component="h1">
+                <Typography    gutterbottom="true" variant="h6" component="h1">
                   {name}
                 </Typography>
               </Grid>
@@ -128,10 +141,11 @@ const MarketCard = ({
                         fontSize: 20,
                       }}
                     />
-
-                    <Typography variant="caption">
-                      Price: {isOnSale ? "Ξ " + price : "-"}
-                    </Typography>
+                    <MyTooltip title={window.web3.utils.fromWei(price).toString()} arrow>
+                      <Typography variant="caption">
+                        Price: {isOnSale ? window.web3.utils.fromWei(price.toString()).slice(0,5) + " Ξ" : "-"}
+                      </Typography>
+                    </MyTooltip>
                   </div>
                 </div>
                 <div style={{ marginTop: 7, textAlign: "left" }}>
@@ -143,9 +157,11 @@ const MarketCard = ({
                         fontSize: 20,
                       }}
                     />
-                    <Typography variant="caption">
-                      Highest bid: {isBiddable ? "Ξ " + auctionPrice : "-"}
-                    </Typography>
+                    <MyTooltip title={window.web3.utils.fromWei(auctionPrice).toString()} arrow>
+                      <Typography variant="caption">
+                        Highest bid: {isBiddable ? window.web3.utils.fromWei(auctionPrice.toString()).slice(0,5) + " Ξ" : "-"}
+                      </Typography>
+                    </MyTooltip>
                   </div>
                 </div>
               </Grid>
@@ -160,7 +176,7 @@ const MarketCard = ({
                   fontSize: 24,
                 }}
               />
-              <Typography gutterBottom variant="caption">
+              <Typography    gutterbottom="true" variant="caption">
                 Owner:
               </Typography>
               <Button

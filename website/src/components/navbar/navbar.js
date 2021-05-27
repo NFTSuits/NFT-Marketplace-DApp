@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
 
   if(!window.eth && !window.ethereum){
-    window.location = "http://localhost:3000/"
+    window.location.href = window.location.origin;
   }
 
   const classes = useStyles();
@@ -117,7 +117,7 @@ const Navbar = () => {
   });
   React.useEffect(async () => {
     try {
-      window.web3 = new Web3("http://localhost:8545");
+      window.web3 = new Web3(Web3.givenProvider);
       if (window.ethereum) {
         await window.ethereum.enable(); // pop up
         let myAddress = await window.ethereum.selectedAddress;
@@ -232,8 +232,10 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} variant="h6" noWrap>
-            CryptoBıdıs
+          <Typography className={classes.title} variant="h6" noWrap onClick={() => {
+                window.location.href = "/";
+              }} Button >
+            NFT Suits
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -321,9 +323,9 @@ const Navbar = () => {
                 />
                 {username
                   ? username
-                  : address.slice(0, 6) +
+                  : address.slice(0, 4) +
                     "..." +
-                    address.slice(address.length - 4, address.length)}
+                    address.slice(address.length - 2, address.length)}
               </Button>
             )}
           </div>

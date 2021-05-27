@@ -1,0 +1,673 @@
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1047
+Source: 
+> 
+>     function setUsername(string memory _username) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         users[msg.sender].username = _username;
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1051
+Source: 
+> 
+>     function wearItems(
+>     ^^^^^^^^^^^^^^^^^^^
+>         uint256 _headTokenId,
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1133
+Source: 
+> 
+>     function wearItem(uint256 _tokenId) public {
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(this.ownerOf(_tokenId) == msg.sender, "You are not the owner of this item, so you cannot wear it.");
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1161
+Source: 
+> 
+>     function unWearItem(uint256 _clothType) public {
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         require(_clothType == 1 || _clothType == 2 || _clothType == 3, "Invalid cloth type.");
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1180
+Source: 
+> 
+>     function tokensOfOwner(address _owner)
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         public
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1188
+Source: 
+> 
+>     function putOnSale(uint256 _tokenId, uint256 _sellPrice) public {
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         //msg.sender owner olmalı
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1209
+Source: 
+> 
+>     function cancelSale(uint256 _tokenId) public {
+>             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         //is on sale true olması lazım
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1227
+Source: 
+> 
+>     function buyFromSale(uint256 _tokenId) public payable {
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         //msg.sender owner olmalalı
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1259
+Source: 
+> 
+>     function putOnAuction(uint256 _tokenId) public {
+>                             ^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1281
+Source: 
+> 
+>     function cancelAuction(uint256 _tokenId) public {
+>                               ^^^^^^^^^^^^^^^^^^^^^^^
+>         //msg.sender owner olmalı
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1304
+Source: 
+> 
+>     function bid(uint256 _tokenId) public payable {
+>                                 ^^^^^^^^^^^^^^^^^^^
+> 
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1330
+Source: 
+> 
+>     function acceptHighestBid(uint256 _tokenId) public {
+>                                     ^^^^^^^^^^^^^^^^^^^^
+>         //msg.sender tokenId ownerı olmalı
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1368
+Source: 
+> 
+>     function withdrawBid(uint256 _tokenId) public {
+>                                       ^^^^^^^^^^^^^
+>         //msg.sender maxBidder olmalı
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1385
+Source: 
+> 
+>     function withdrawMoney(uint256 _amount) public {
+>                                        ^^^^^^^^^^^^^
+>         //amount balancetan küçük eşit olmalı
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     External Calls of Functions
+Description: A public function that is never called within the
+             contract should be marked as external
+Type:        Violation
+Contract:    nftContract
+Line:        1396
+Source: 
+>     function mint(
+>         uint256 _clothType,
+>                          ^^
+>         string memory _name,
+
+[0m
+[0;31mSeverity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    nftContract
+Line:        1047
+Source: 
+> 
+>     function setUsername(string memory _username) public {
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         users[msg.sender].username = _username;
+
+[0m
+[0;31mSeverity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    nftContract
+Line:        1180
+Source: 
+> 
+>     function tokensOfOwner(address _owner)
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         public
+
+[0m
+[0;31mSeverity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    nftContract
+Line:        1188
+Source: 
+> 
+>     function putOnSale(uint256 _tokenId, uint256 _sellPrice) public {
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         //msg.sender owner olmalı
+
+[0m
+[0;31mSeverity:    MEDIUM
+Pattern:     Missing Input Validation
+Description: Method arguments must be sanitized before they are used
+             in computations.
+Type:        Violation
+Contract:    nftContract
+Line:        1396
+Source: 
+>     function mint(
+>         uint256 _clothType,
+>                          ^^
+>         string memory _name,
+
+[0m
+[0;33mSeverity:    MEDIUM
+Pattern:     No-Ether-Involved Reentrancy
+Description: Reentrancy that involves no ether
+Type:        Warning
+Contract:    nftContract
+Line:        1402
+Source: 
+>         require(isExist[_cid] == false, "Item link should be unique, for you to mint it");
+>         require(this.totalSupply() < maxSupply, "You cannot mint any more item since you already reached the maximum supply.");
+>                                                         ^^^^^^^^^^^^^^^^^^
+>         require(msg.sender ==owner, "Only owner can of this contract can mint, you are trying to some fraud.");
+
+[0m
+[0;33mSeverity:    CRITICAL
+Pattern:     Reentrancy with constant gas
+Description: Ether transfers (such as send and transfer) that are
+             followed by state changes may be reentrant.
+Type:        Warning
+Contract:    nftContract
+Line:        1393
+Source: 
+>         
+>     }
+>  ^^^^
+> 
+
+
+[0m
+[0;31mSeverity:    MEDIUM
+Pattern:     Shadowed Local Variable
+Description: Reports local variable declarations that shadow
+             declarations from outer scopes.
+Type:        Violation
+Contract:    nftContract
+Line:        1398
+Source: 
+>         string memory _name,
+>         string memory _cid,
+>                    ^^^^^^^^
+>         string memory _rarity
+
+[0m
+[0;31mSeverity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    nftContract
+Line:        1001
+Source: 
+> 
+> contract nftContract is ERC721Full {
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     struct nftData {
+
+[0m
+[0;31mSeverity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    nftContract
+Line:        1002
+Source: 
+> contract nftContract is ERC721Full {
+>     struct nftData {
+>     ^^^^^^^^^^^^^^^^
+>         uint256 clothType; //--> 1 --> head, 2 --> middle, 3 --> bottom
+
+[0m
+[0;31mSeverity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    nftContract
+Line:        1015
+Source: 
+> 
+>     struct userData {
+>     ^^^^^^^^^^^^^^^^^
+>         //uint is reference to tokenId from openzeppelin-contracts
+
+[0m
+[0;31mSeverity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    nftContract
+Line:        1027
+Source: 
+> 
+>     event nftTransaction(
+>     ^^^^^^^^^^^^^^^^^^^^^
+>         uint256 indexed id,
+
+[0m
+[0;31mSeverity:    INFO
+Pattern:     Solidity Naming Convention
+Description: Reports declarations that do not adhere to Solidity's
+             naming convention.
+Type:        Violation
+Contract:    nftContract
+Line:        1407
+Source: 
+>             nfts.push(
+>                 nftData(
+>    ^^^^^^^^^^^
+>                     _clothType,
+
+[0m
+[0;31mSeverity:    LOW
+Pattern:     Solidity pragma directives
+Description: Avoid complex solidity version pragma statements.
+Type:        Violation
+Contract:    None
+Line:        3
+Source: 
+> 
+> pragma solidity ^0.5.12;
+> ^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+
+
+
+[0m
+[0;31mSeverity:    INFO
+Pattern:     State variables default visibility
+Description: Visibility of state variables should be stated explicitly
+Type:        Violation
+Contract:    nftContract
+Line:        1036
+Source: 
+>     mapping(address => userData) public users;
+>     mapping(string => bool) isExist;
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>     nftData[] public nfts;
+
+[0m
+[0;33mSeverity:    CRITICAL
+Pattern:     Transaction Order Affects Ether Amount
+Description: The amount of ether transferred must not be influenced by
+             other transactions.
+Type:        Warning
+Contract:    nftContract
+Line:        1393
+Source: 
+>         
+>     }
+>  ^^^^
+> 
+
+[0m
+[0;31mSeverity:    CRITICAL
+Pattern:     Transaction Order Affects Execution of Ether Transfer
+Description: Ether transfers whose execution can be manipulated by
+             other transactions must be inspected for unintended
+             behavior.
+Type:        Violation
+Contract:    nftContract
+Line:        1393
+Source: 
+>         
+>     }
+>  ^^^^
+> 
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    ERC721
+Line:        628
+Source: 
+> 
+>         bytes4 retval = IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, _data);
+>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         return (retval == _ERC721_RECEIVED);
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1058
+Source: 
+>             _headTokenId == 0 ||
+>                 (this.ownerOf(_headTokenId) == msg.sender &&
+>                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                     nfts[_headTokenId - 1].clothType == 1)
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1063
+Source: 
+>             _middleTokenId == 0 ||
+>                 (this.ownerOf(_middleTokenId) == msg.sender &&
+>                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                     nfts[_middleTokenId - 1].clothType == 2)
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1068
+Source: 
+>             _bottomTokenId == 0 ||
+>                 (this.ownerOf(_bottomTokenId) == msg.sender &&
+>                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>                     nfts[_bottomTokenId - 1].clothType == 3)
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1134
+Source: 
+>     function wearItem(uint256 _tokenId) public {
+>         require(this.ownerOf(_tokenId) == msg.sender, "You are not the owner of this item, so you cannot wear it.");
+>                       ^^^^^^^^^^^^^^^^^^^^^^
+>         require(nfts[_tokenId - 1].isOnSale == false, "You cannot wear an item while it is on sale.");
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1190
+Source: 
+>         //msg.sender owner olmalı
+>         require(msg.sender == this.ownerOf(_tokenId), "You cannot put this item on sale, because you are not the owner of it.");
+>                                      ^^^^^^^^^^^^^^^^^^^^^^
+>         //is on sale false olmalı
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1213
+Source: 
+>         //msg.sender owner olmalı
+>         require(msg.sender == this.ownerOf(_tokenId), "You cannot cancel the sale of this item, because you are not the owner.");
+>                                          ^^^^^^^^^^^^^^^^^^^^^^
+>         
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1229
+Source: 
+>         //msg.sender owner olmalalı
+>         require(msg.sender != this.ownerOf(_tokenId), "You cannot buy your own item!");
+>                                           ^^^^^^^^^^^^^^^^^^^^^^
+>         //is on sale true olmalı
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1235
+Source: 
+>         //approve var mı diye check et --> getApproved(uint256 tokenId) → address operator
+>         require(this.getApproved(_tokenId) == address(this), "Seller did not give the allowance for us to sell this item, contact with seller.");
+>                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         address sellerAddress = this.ownerOf(_tokenId); //tokenId or tokenId-1 ??????
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1236
+Source: 
+>         require(this.getApproved(_tokenId) == address(this), "Seller did not give the allowance for us to sell this item, contact with seller.");
+>         address sellerAddress = this.ownerOf(_tokenId); //tokenId or tokenId-1 ??????
+>                                                   ^^^^^^^^^^^^^^^^^^^^^^
+>         this.safeTransferFrom(sellerAddress, msg.sender, _tokenId); //transfer with ERC721 //change owner
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1262
+Source: 
+>         //msg.sender owner olmalı
+>         require(msg.sender == this.ownerOf(_tokenId), "Only owner of this item can put on sale" );
+>                                                        ^^^^^^^^^^^^^^^^^^^^^^
+>         //item should not be on wear
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1283
+Source: 
+>         //msg.sender owner olmalı
+>         require(msg.sender == this.ownerOf(_tokenId), "You cannot cancel the auction of this item, because you are not the owner.");
+>                                                          ^^^^^^^^^^^^^^^^^^^^^^
+>         //is bidding true olmalı
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1313
+Source: 
+>         //owner kendisi olmıcak
+>         require(msg.sender != this.ownerOf(_tokenId), "You cannot bid your own item.");
+>                                                               ^^^^^^^^^^^^^^^^^^^^^^
+>        
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1332
+Source: 
+>         //msg.sender tokenId ownerı olmalı
+>         require(msg.sender == this.ownerOf(_tokenId), "You need to be owner of this item, to accept its highest bid.");
+>                                                                 ^^^^^^^^^^^^^^^^^^^^^^
+>         //item must be biddable
+
+[0m
+[0;33mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Warning
+Contract:    nftContract
+Line:        1402
+Source: 
+>         require(isExist[_cid] == false, "Item link should be unique, for you to mint it");
+>         require(this.totalSupply() < maxSupply, "You cannot mint any more item since you already reached the maximum supply.");
+>                                                         ^^^^^^^^^^^^^^^^^^
+>         require(msg.sender ==owner, "Only owner can of this contract can mint, you are trying to some fraud.");
+
+[0m
+[0;31mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    nftContract
+Line:        1237
+Source: 
+>         address sellerAddress = this.ownerOf(_tokenId); //tokenId or tokenId-1 ??????
+>         this.safeTransferFrom(sellerAddress, msg.sender, _tokenId); //transfer with ERC721 //change owner
+>                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>         nfts[_tokenId - 1].isOnSale = false; //tokenId or tokenId-1 ??????
+
+[0m
+[0;31mSeverity:    HIGH
+Pattern:     Unhandled Exception
+Description: The return value of statements that may return error
+             values must be explicitly checked.
+Type:        Violation
+Contract:    nftContract
+Line:        1353
+Source: 
+>         this.safeTransferFrom(
+>             msg.sender,
+>            ^^^^^^^^^^^^
+>             nfts[_tokenId - 1].maxBidder,
+
