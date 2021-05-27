@@ -55,6 +55,17 @@ const itemIdAtom = atom({
   default: undefined,
 });
 
+const snackbarControllerAtom = atom({
+  key: "snackbarControllerAtom", // unique ID (with respect to other atoms/selectors)
+  default: false,
+});
+
+const snackbarTextAtom = atom({
+  key: "snackbarTextAtom", // unique ID (with respect to other atoms/selectors)
+  default: "",
+});
+
+
 export {
   myUsername,
   profileDataAtom,
@@ -67,4 +78,6 @@ export {
   rarityLevel,
   isThirdPersonAtom,
   itemIdAtom,
+  snackbarControllerAtom,
+  snackbarTextAtom,
 };

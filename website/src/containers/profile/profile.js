@@ -20,6 +20,7 @@ import {
   Select,
   Input,
   TextField,
+  Tooltip,
 } from "@material-ui/core";
 
 import EditSharpIcon from "@material-ui/icons/EditSharp";
@@ -37,6 +38,11 @@ import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 
+// import headPlaceholder from'./headPlaceholder.png';
+// import topPlacehoder from'./topPlaceholder.png';
+// import bottomPlaceholder from'./bottomPlaceholder.png';
+
+
 import {
   myUsername,
   myAddress,
@@ -47,6 +53,8 @@ import {
   rarityLevel,
   isThirdPersonAtom,
   transactionData,
+  snackbarTextAtom, 
+  snackbarControllerAtom,
 } from "../../recoils/atoms";
 import {
   getMyUsername,
@@ -162,6 +170,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+async function getRevertReason(txHash, setSnackbarText, setSnackbarController) {
+  const tx = await window.web3.eth.getTransaction(txHash)
+
+  var result = await window.web3.eth.call(tx)
+  .then((data) => {console.log("DATAAAAA", data)})
+  .catch((error) => {
+    var index = error.message.indexOf("{");
+    return JSON.parse(error.message.substring(index).trim()).originalError.message;
+  })
+  setSnackbarController(true);
+  setSnackbarText(result);
+  return result;
+}
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -182,12 +204,24 @@ function TabPanel(props) {
   );
 }
 
+const MyTooltip = withStyles((theme) => ({
+  tooltip: {
+    // backgroundColor: '#f5f5f9',
+    // color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: 20,
+    // maxWidth: 220,
+    // fontSize: theme.typography.pxToRem(12),
+    // border: '1px solid #dadde9',
+  },
+}))(Tooltip);
+
 // https://awantoch.medium.com/how-to-connect-web3-js-to-metamask-in-2020-fee2b2edf58a
 const Profile = (props) => {
   const classes = useStyles();
   const [profileAddress, setProfileAdress] = React.useState(
     props.match.params.address
   );
+
   const [numberSold, setNumberSold] = React.useState(0);
   const [earnedSold, setEarnedSold] = React.useState(0);
   const [buttonTrigger, setButtonTrigger] = React.useState(false);
@@ -205,6 +239,9 @@ const Profile = (props) => {
 
   const [isThirdPerson, setIsThirdPerson] = useRecoilState(isThirdPersonAtom);
 
+  const [snackbarText, setSnackbarText] = useRecoilState(snackbarTextAtom);
+  const [snackbarController, setSnackbarController] = useRecoilState(snackbarControllerAtom);
+
   const heads = useRecoilValue(getHeads);
   const middles = useRecoilValue(getMiddles);
   const bottoms = useRecoilValue(getBottoms);
@@ -212,6 +249,9 @@ const Profile = (props) => {
   const unFilteredMiddles = useRecoilValue(unFilteredGetMiddles);
   const unFilteredBottoms = useRecoilValue(unFilteredGetBottoms);
 
+  if(!window.eth && !window.ethereum){
+    window.location.href = window.location.origin;
+  }
   // //const [transactions, setTransactions] = useRecoilState(transactionData);
 
   // const [firstPersonUsername, setFirstPersonUsername] =
@@ -373,7 +413,7 @@ const Profile = (props) => {
           <Avatar
             variant="square"
             alt="Remy Sharp"
-            src={heads.findIndex((item) => profileData.head === item.tokenId) !==
+            src={unFilteredHeads.findIndex((item) => profileData.head === item.tokenId) !==
               -1
                 ? "https://ipfs.io/ipfs/"+data[data.findIndex((item) => profileData.head === item.tokenId)].cid
                 : 0
@@ -423,7 +463,7 @@ const Profile = (props) => {
                   })
                   .on("confirmation", function (confirmationNumber, receipt) {
                     console.log(confirmationNumber, receipt);
-                    setButtonTrigger(!buttonTrigger);
+                   // setButtonTrigger(!buttonTrigger);
                   })
                   .on("receipt", async function (receipt) {
                     // receipt example
@@ -433,12 +473,14 @@ const Profile = (props) => {
                         console.log(data);
                         setFirstPersonUsername(data.username);
                         setIsSetting(false);
-                        setButtonTrigger(!buttonTrigger);
+                       // setButtonTrigger(!buttonTrigger);
+                       window.location.reload();
                       }
                     );
                   })
-                  .on("error", function (error, receipt) {
+                  .on("error", async function (error, receipt) {
                     console.log(error, receipt);
+                    var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
                     setIsSetting(false);
                   });
               }}
@@ -470,6 +512,9 @@ const Profile = (props) => {
       useRecoilState(myUsername);
     const isThirdPerson = useRecoilValue(isThirdPersonAtom);
 
+    const regex = /^([0-9]+(\.[0-9]+)?)$/g;
+    const [withdrawMoneyTextFieldError, setwithdrawMoneyTextFieldError] = React.useState(false);
+
     //const [, set] = React.useState();
     // const [isSetting, setIsSetting] = React.useState(false);
     const [withdrawAmount, setWithdrawAmount] = React.useState(0);
@@ -486,23 +531,25 @@ const Profile = (props) => {
         addresses.NFT_CONTRACTS_ADDRESS
       );
       nft_contract_interface.methods
-        .withdrawMoney(withdrawAmount)
+        .withdrawMoney(window.web3.utils.toWei(withdrawAmount))
         .send({ from: myAddress })
         .on("transactionHash", function (hash) {
           console.log(hash);
-          setButtonTrigger(!buttonTrigger);
+         // setButtonTrigger(!buttonTrigger);
         })
         .on("confirmation", function (confirmationNumber, receipt) {
           console.log(confirmationNumber, receipt);
-          setButtonTrigger(!buttonTrigger);
+         // setButtonTrigger(!buttonTrigger);
         })
         .on("receipt", async function (receipt) {
           // receipt example
           console.log(receipt);
-          setButtonTrigger(!buttonTrigger);
+          window.location.reload();
+         // setButtonTrigger(!buttonTrigger);
         })
-        .on("error", function (error, receipt) {
+        .on("error", async function (error, receipt) {
           console.log(error, receipt);
+          var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
         });
     };
 
@@ -525,13 +572,17 @@ const Profile = (props) => {
               {unFilteredHeads.length + unFilteredMiddles.length + unFilteredBottoms.length}
             </Typography>
             <Typography variant="h5">Spent</Typography>
-            <Typography variant="h5" className={classes.numberTextStyle}>
-              {spentBought}
-            </Typography>
+            <MyTooltip title={window.web3.utils.fromWei(spentBought.toString())} arrow>
+              <Typography variant="h5" className={classes.numberTextStyle}>
+                {window.web3.utils.fromWei(spentBought.toString()).slice(0,4)} Ξ
+              </Typography>
+            </MyTooltip>
             <Typography variant="h5">Earned</Typography>
-            <Typography variant="h5" className={classes.numberTextStyle}>
-              {earnedSold}
-            </Typography>
+            <MyTooltip title={window.web3.utils.fromWei(earnedSold.toString())} arrow>
+              <Typography variant="h5" className={classes.numberTextStyle}>
+                {window.web3.utils.fromWei(earnedSold.toString()).slice(0,4)} Ξ
+              </Typography>
+            </MyTooltip>
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h5">#combinations</Typography>
@@ -551,24 +602,33 @@ const Profile = (props) => {
 
         {!isThirdPerson && (
           <>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Typography>Balance: </Typography>
-              <Typography>{profileData.userBalance}</Typography>
+            <div style={{ display: "flex", flexDirection: "row" }}>{/*  */}
+              <MyTooltip title={window.web3.utils.fromWei(profileData.userBalance.toString())} placement="top" arrow>
+                <Typography>Balance: {window.web3.utils.fromWei(profileData.userBalance.toString()).slice(0, 4)} Ξ</Typography>
+              </MyTooltip>
             </div>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <TextField
+                error={withdrawMoneyTextFieldError}
                 onChange={(event) => {
                   // console.log(event.target.value);
+                  if(event.target.value.toString().match(regex)) {
+                    setwithdrawMoneyTextFieldError(false);
+                  }
+                  else {
+                    setwithdrawMoneyTextFieldError(true);
+                  }
                   setWithdrawAmount(event.target.value);
                 }}
                 label="Amount"
                 id="outlined-margin-none"
                 className={classes.textField}
                 margin="dense"
-                helperText="Must fix a price"
+                helperText="You need to give a valid amount."
                 variant="outlined"
               />
               <Button
+                disabled={withdrawMoneyTextFieldError}
                 className={classes.myMoneyButton}
                 onClick={() => {
                   onWithdrawPress();
@@ -813,11 +873,14 @@ const Profile = (props) => {
               style={{width: 70, height: 70}}
               variant="square"
               alt="empty"
-              src="https://via.placeholder.com/300/09f/fff.png"
+              src="https://ipfs.io/ipfs/QmNmqHvvhjcoUNZcffdKpASf3cPmRJkyzcixk7zvQPGHtz"
               className={classes.large}
               key="gorkem"
             />
             {heads.map((item) => (
+              <div onClick={() => {
+                window.location.href = "/item/" + item.id;
+              }}>
               <Avatar
                 style={{width: 70, height: 70}}
                 variant="square"
@@ -826,6 +889,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
+              </div>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -876,11 +940,14 @@ const Profile = (props) => {
               style={{width: 130, height: 150}}
               variant="square"
               alt="empty"
-              src="https://via.placeholder.com/300/09f/fff.png"
+              src="https://ipfs.io/ipfs/QmR2LR7y2kXEeG3sgUq7jNpWM61XbVJB1N5scjjRj5Wqfr"
               className={classes.large}
               key="gorkem 2"
             />
             {middles.map((item) => (
+              <div onClick={() => {
+                window.location.href = "/item/" + item.id;
+              }}>
               <Avatar
                 style={{width: 130, height: 150}}
                 variant="square"
@@ -889,6 +956,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
+              </div>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -935,15 +1003,20 @@ const Profile = (props) => {
               setSelectedBottomIndex(pageIndex - 1);
             }}
           >
+            
             <Avatar
               style={{width: 250, height: 200}}
               variant="square"
               alt="empty"
-              src="https://via.placeholder.com/300/09f/fff.png"
+              src="https://ipfs.io/ipfs/QmRwmAM9rdFm8v9wzajE9jhW2jwQuDeHTMERotWupwzpUP"
               className={classes.large}
               key="gorkem 3"
             />
+              
             {bottoms.map((item) => (
+              <div onClick={() => {
+                window.location.href = "/item/" + item.id;
+              }}>
               <Avatar
                 style={{width: 250, height: 200}}
                 variant="square"
@@ -952,6 +1025,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
+              </div>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -1001,20 +1075,22 @@ const Profile = (props) => {
                   .send({ from: myAddress, gas: 500000 })
                   .on("transactionHash", function (hash) {
                     console.log(hash);
-                    setButtonTrigger(!buttonTrigger);
+                   // setButtonTrigger(!buttonTrigger);
                   })
                   .on("confirmation", function (confirmationNumber, receipt) {
                     console.log(confirmationNumber, receipt);
-                    setButtonTrigger(!buttonTrigger);
+                   // setButtonTrigger(!buttonTrigger);
                   })
                   .on("receipt", function (receipt) {
                     // receipt example
                     console.log(receipt);
-                    setButtonTrigger(!buttonTrigger);
+                    window.location.reload();
+                   // setButtonTrigger(!buttonTrigger);
                   })
-                  .on("error", function (error, receipt) {
+                  .on("error", async function (error, receipt) {
                     console.log(error, receipt);
-                    setButtonTrigger(!buttonTrigger);
+                    var error_message = await getRevertReason(receipt.transactionHash, setSnackbarText, setSnackbarController);
+                   // setButtonTrigger(!buttonTrigger);
                   });
               }}
             >

@@ -22,9 +22,9 @@ const getMyUsername = selector({
       return username;
     } else if (address && address !== "") {
       return (
-        address.slice(0, 6) +
+        address.slice(0, 4) +
         "..." +
-        address.slice(address.length - 4, address.length)
+        address.slice(address.length - 2, address.length)
       );
     } else {
       return null;

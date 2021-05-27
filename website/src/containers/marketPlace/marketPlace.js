@@ -6,6 +6,7 @@ import * as fs from "fs";
 
 import NftContract from "../../abis/nft.json";
 
+
 import addresses from "../../constants/contracts";
 import { useRecoilCallback } from "recoil";
 import {
@@ -22,6 +23,10 @@ const MarketPlace = () => {
   const [address, setAddress] = React.useState();
 
   const [data, setData] = useRecoilState(allItems);
+
+  if(!window.eth && !window.ethereum){
+    window.location.href = window.location.origin;
+  }
 
   // var web3 = new Web3("http://localhost:8545");
 

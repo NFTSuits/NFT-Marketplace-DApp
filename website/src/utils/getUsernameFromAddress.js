@@ -12,9 +12,9 @@ export const getUsername = async (smart_contract_interface, address) => {
 
   if (data.username === "") {
     data.username =
-      address.slice(0, 6) +
+      address.slice(0, 4) +
       "..." +
-      address.slice(address.length - 4, address.length);
+      address.slice(address.length - 2, address.length);
   }
   return data;
 };

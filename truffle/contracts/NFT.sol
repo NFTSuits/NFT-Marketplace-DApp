@@ -409,8 +409,8 @@ contract nftContract is ERC721Full {
                     _name,
                     _cid,
                     _rarity,
-                    true,
-                    1,
+                    false,
+                    0,
                     false,
                     0,
                     address(0x0),
@@ -422,6 +422,8 @@ contract nftContract is ERC721Full {
         
 
         emit nftTransaction(_id, "claimed", address(0x0), msg.sender, 0);
+
+        putOnSale(_id,1);
     }
 
 

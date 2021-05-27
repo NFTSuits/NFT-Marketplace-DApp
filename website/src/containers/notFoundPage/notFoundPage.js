@@ -11,7 +11,7 @@ const NotFoundPage = (props) => {
         width: "100vw",
         height: "100vh",
         backgroundSize: "cover",
-        mixBlendMode: "overlay",
+        //mixBlendMode: "overlay",
         backgroundImage:
           "url('https://freefrontend.com/assets/img/html-funny-404-pages/HTML-404-Error-Page.gif')",
       }}

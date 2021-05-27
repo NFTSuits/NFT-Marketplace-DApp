@@ -26,6 +26,8 @@ import DnsIcon from "@material-ui/icons/Dns";
 import ItemButtonGroup from "../../components/itemButtonGroup/itemButtonGroup";
 import NftContract from "../../abis/nft.json";
 
+import { getUsername } from "../../utils/getUsernameFromAddress";
+
 import addresses from "../../constants/contracts";
 import { useRecoilCallback } from "recoil";
 import {
@@ -97,6 +99,13 @@ const ItemPage = (props) => {
   const [address, setAddress] = useRecoilState(myAddress);
   const [transactions, setTransactions] = useRecoilState(transactionData);
   const [id, setId] = useRecoilState(itemIdAtom);
+  const [owner, setOwner] = React.useState("...");
+
+
+  if(!window.eth && !window.ethereum){
+    window.location.href = window.location.origin;
+  }
+  
   React.useEffect(async () => {
     let accounts = await window.ethereum.enable();
     let myAddress = await window.ethereum.selectedAddress;
@@ -109,6 +118,7 @@ const ItemPage = (props) => {
       NftContract.abi,
       addresses.NFT_CONTRACTS_ADDRESS
     );
+
 
     nft_contract_interface.methods
       .tokenByIndex(myId)
@@ -125,6 +135,12 @@ const ItemPage = (props) => {
                 // console.log("currentTokenId", currentTokenId);
                 // console.log("owner", owner);
                 setData({ ...currentNftData, owner: owner });
+
+                getUsername(nft_contract_interface, owner).then(
+                  (data) => {
+                    setOwner(data.username);
+                  }
+                );
               })
               .catch((error) => {
                 console.log(error);
@@ -136,37 +152,57 @@ const ItemPage = (props) => {
         window.location = "/notFound";
       });
 
-    // nft_contract_interface
-    //   .getPastEvents("nftTransaction", {
-    //     filter: { id: parseInt(myId) + 1 },
-    //     fromBlock: 0,
-    //     toBlock: "latest",
-    //   })
-    //   .then((events) => {
-    //     //console.log("events.console.log", events);
-    //     events.reverse();
-    //     //console.log("events.console.log reverse", events);
-    //     setTransactions(events);
-    //   });
+    nft_contract_interface
+      .getPastEvents("nftTransaction", {
+        filter: { id: parseInt(myId) + 1 },
+        fromBlock: 0,
+        toBlock: "latest",
+      })
+      .then((events) => {
+        //console.log("events.console.log", events);
+        events.reverse();
+        //console.log("events.console.log reverse", events);
+        setTransactions(events);
+      });
 
       nft_contract_interface.events.nftTransaction({
         filter: { id: parseInt(myId) + 1 },
-        endBlock:"latest", // Using an array means OR: e.g. 20 or 23
-        fromBlock: 0
+        //endBlock:"latest", // Using an array means OR: e.g. 20 or 23
+        fromBlock: "latest",
     }, function(error, event){})
     .on('data', function(event){
         // console.log("on data",event); // same results as the optional callback above
         // event.reverse();
         // setTransactions((prev) => [event,...prev,]);
         // console.log("elma",[...new Set(event)])
-        setTransactions((prev) => {
-          for (let i = 0; i < prev.length; i++) {
-            if(prev[i].id == event.id){
-              return prev;
-            }
-          }
-          return [event,...prev];
-        } );
+
+        // console.log("eventtttttttttt", event);
+        
+        // event.constructedFromUsername = await getUsername(nft_contract_interface, event.returnValues.fromAddress).then(
+        //                                                 (data) => {
+        //                                                   return data.username;
+        //                                                 }
+        //                                               );
+        // event.constructedToUsername = await getUsername(nft_contract_interface, event.returnValues.toAddress).then(
+        //                                   (data) => {
+        //                                     return data.username;
+        //                                   }
+        //                                 );
+
+        // console.log("eeeeeeeeeeeevent", event);
+        window.location.reload();
+        // setTransactions((prev) => {
+          
+        //   for (let i = 0; i < prev.length; i++) {
+        //     if(prev[i].id == event.id){
+        //       return prev;
+        //     }
+        //     // else{
+        //     //   window.location.reload();
+        //     // }
+        //   }
+        //   return [event,...prev];
+        // } );
     })
     .on('changed', function(event){
         // remove event from local database
@@ -193,7 +229,7 @@ const ItemPage = (props) => {
   ) {
     return <div>loading</div>;
   }
-
+  
   return (
     <Grid
       container
@@ -250,7 +286,7 @@ const ItemPage = (props) => {
                   <div>
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <Typography variant="h2" display="block"    gutterbottom="true">
-                        Name: {data.name}
+                        {data.name}
                       </Typography>
                     </div>
                     <div
@@ -306,12 +342,13 @@ const ItemPage = (props) => {
                           window.location = "/profile/" + data.owner;
                         }}
                       >
-                        {data.owner.slice(0, 6) +
+                        {owner}
+                        {/* {data.owner.slice(0, 4) +
                           "..." +
                           data.owner.slice(
-                            data.owner.length - 4,
+                            data.owner.length - 2,
                             data.owner.length
-                          )}
+                          )} */}
                       </Button>
                     </div>
                     <div
@@ -330,7 +367,7 @@ const ItemPage = (props) => {
                         }}
                       />
                       <Typography variant="body1" display="block" gutterbottom ="true">
-                        Price: {data.isOnSale ? "Ξ " + data.sellPrice : "-"}
+                        Price: {data.isOnSale ? window.web3.utils.fromWei(data.sellPrice) + " Ξ" : "-"}
                       </Typography>
                     </div>
                     <div>
@@ -349,7 +386,7 @@ const ItemPage = (props) => {
                           gutterbottom="true"
                         >
                           Highest Bid:{" "}
-                          {data.isBiddable ? "Ξ " + data.maxBid : "-"}
+                          {data.isBiddable ? window.web3.utils.fromWei(data.maxBid) + " Ξ" : "-"}
                         </Typography>
                       </div>
                     </div>
@@ -431,78 +468,121 @@ const ItemPage = (props) => {
                                 ],
                             }}
                           >
-                            <TableCell align="center">
+                            <TableCell align="center" style={{color:"#000", fontSize: 16}}>
                               {transaction.returnValues.transactionType}
                             </TableCell>
 
-                            <TableCell align="center">
+                            <TableCell align="center" style={{color:"#000", fontSize: 16}}>
                               {transaction.returnValues.fromAddress ==
                               "0x0000000000000000000000000000000000000000" ? (
                                 "-"
                               ) : (
                                 <Button
                                   size="small"
+                                  style={{fontSize: 16}}
                                   color="primary"
                                   onClick={() => {
                                     window.location = "/profile/" + data.owner;
                                   }}
                                 >
+                                  {/* {
+                                    contractInterface !== "empty"
+                                    ? getUsername(contractInterface, transaction.returnValues.fromAddress).then(
+                                          (data) => {
+                                            return data.username;
+                                          }
+                                        )
+
+                                    : transaction.returnValues.fromAddress.slice(
+                                      0,
+                                      4
+                                    ) +
+                                      "..." +
+                                      transaction.returnValues.fromAddress.slice(
+                                        transaction.returnValues.fromAddress
+                                          .length - 2,
+                                        transaction.returnValues.fromAddress
+                                          .length
+                                      )
+                                  } */}
+                                  {/* {transaction.constructedFromUsername} */}
                                   {transaction.returnValues.fromAddress.slice(
                                     0,
-                                    6
+                                    4
                                   ) +
                                     "..." +
                                     transaction.returnValues.fromAddress.slice(
                                       transaction.returnValues.fromAddress
-                                        .length - 4,
+                                        .length - 2,
                                       transaction.returnValues.fromAddress
                                         .length
                                     )}
                                 </Button>
                               )}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="center" style={{color:"#000", fontSize: 16}}>
                               {transaction.returnValues.toAddress ==
                               "0x0000000000000000000000000000000000000000" ? (
                                 "-"
                               ) : (
                                 <Button
                                   size="small"
+                                  style={{fontSize: 16}}
                                   color="primary"
                                   onClick={() => {
                                     window.location = "/profile/" + data.owner;
                                   }}
                                 >
+                                  {/* {
+                                    contractInterface !== "empty"
+                                    ? getUsername(contractInterface, transaction.returnValues.toAddress).then(
+                                        (data) => {
+                                          return data.username;
+                                        }
+                                      )
+                                    : transaction.returnValues.toAddress.slice(
+                                      0,
+                                      4
+                                     ) +
+                                      "..." +
+                                      transaction.returnValues.toAddress.slice(
+                                        transaction.returnValues.toAddress
+                                          .length - 2,
+                                        transaction.returnValues.toAddress.length
+                                      )
+                                  } */}
+                                  {/* {transaction.constructedToUsername} */}
                                   {transaction.returnValues.toAddress.slice(
                                     0,
-                                    6
+                                    4
                                   ) +
                                     "..." +
                                     transaction.returnValues.toAddress.slice(
                                       transaction.returnValues.toAddress
-                                        .length - 4,
+                                        .length - 2,
                                       transaction.returnValues.toAddress.length
                                     )}
                                 </Button>
                               )}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="center" style={{color:"#000", fontSize: 16}}>
                               {transaction.returnValues.value == 0
                                 ? " - "
-                                : "Ξ " + transaction.returnValues.value}
+                                : window.web3.utils.fromWei(transaction.returnValues.value) + " Ξ"}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="center" style={{color:"#000", fontSize: 16}}>
                             <Button
                                   size="small"
+                                  style={{fontSize: 16}}
                                   color="primary"
                                   onClick={() => {
                                     window.location.href =  "https://ropsten.etherscan.io/tx/" + transaction.transactionHash;
                                   }}
                                 >
-                              {transaction.transactionHash.slice(0, 6) +
+                              {transaction.transactionHash.slice(0, 4) +
                                 "..." +
                                 transaction.transactionHash.slice(
-                                  transaction.transactionHash.length - 4,
+                                  transaction.transactionHash.length - 2,
                                   transaction.transactionHash.length
                                 )}
                             </Button>

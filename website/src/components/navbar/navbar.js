@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
 
   if(!window.eth && !window.ethereum){
-    window.location = "http://localhost:3000/"
+    window.location.href = window.location.origin;
   }
 
   const classes = useStyles();
@@ -235,7 +235,7 @@ const Navbar = () => {
           <Typography className={classes.title} variant="h6" noWrap onClick={() => {
                 window.location.href = "/";
               }} Button >
-            CryptoBıdıs
+            NFT Suits
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -323,9 +323,9 @@ const Navbar = () => {
                 />
                 {username
                   ? username
-                  : address.slice(0, 6) +
+                  : address.slice(0, 4) +
                     "..." +
-                    address.slice(address.length - 4, address.length)}
+                    address.slice(address.length - 2, address.length)}
               </Button>
             )}
           </div>
