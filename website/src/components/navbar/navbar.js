@@ -106,6 +106,7 @@ const Navbar = () => {
   const [address, setAddress] = useRecoilState(myAddress);
   const [username, setUsername] = useRecoilState(myUsername);
   const [triggerEth, setTriggerEth] = React.useState(false);
+  const [avatarHead,setAvatarHead] = React.useState("")
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -140,6 +141,24 @@ const Navbar = () => {
             console.log(error);
           });
         setAddress(myAddress);
+
+        smart_contract_interface.methods
+              .users(myAddress)
+              .call()
+              .then(async (data) => {
+                let headImg = "";
+                if (data.head != 0) {
+                  headImg = await smart_contract_interface
+                                  .methods
+                                  .nfts(data.head - 1)
+                                  .call()
+                                  .then((data) => {
+                                    return data.cid
+                                  })
+                }
+                setAvatarHead(headImg);
+              })
+
       }
     } catch (err) {
       console.log(err);
@@ -241,7 +260,7 @@ const Navbar = () => {
           <div className={classes.sectionDesktop}>
             {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
 
-            {/* <Button
+            <Button
               color="inherit"
               onClick={() => {
                 window.location.href = "/avatars";
@@ -255,7 +274,7 @@ const Navbar = () => {
                 }}
               />
               Avatars
-            </Button> */}
+            </Button>
             {/* <Button
               color="inherit"
               onClick={() => {
@@ -314,18 +333,32 @@ const Navbar = () => {
                   window.location.href = "/profile/" + address;
                 }}
               >
-                <AccountCircle
-                  style={{
-                    verticalAlign: "middle",
-                    marginRight: 5,
-                    fontSize: 20,
-                  }}
-                />
+                
                 {username
                   ? username
                   : address.slice(0, 4) +
                     "..." +
                     address.slice(address.length - 2, address.length)}
+                {
+                  avatarHead === "" 
+                    ?  <AccountCircle
+                          style={{
+                            verticalAlign: "middle",
+                            marginLeft: 10,
+                            fontSize: 40,
+                          }}
+                        />
+                    : <img 
+                        style={{
+                          width: 50, 
+                          height: 50, 
+                          marginLeft: 10, 
+                          verticalAlign: "middle"
+                        }} 
+                        src={"https://ipfs.io/ipfs/"+avatarHead}  
+                        alt="fireSpot"
+                      />
+                }
               </Button>
             )}
           </div>

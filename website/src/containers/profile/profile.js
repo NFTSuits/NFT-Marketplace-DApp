@@ -878,7 +878,8 @@ const Profile = (props) => {
               key="gorkem"
             />
             {heads.map((item) => (
-              <Button style={{padding:0}} onClick={() => {
+              <Button style={{padding:0}}
+              onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -946,7 +947,7 @@ const Profile = (props) => {
             />
             {middles.map((item) => (
               <Button style={{padding:0}}
-               onClick={() => {
+              onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -1016,7 +1017,7 @@ const Profile = (props) => {
               
             {bottoms.map((item) => (
               <Button style={{padding:0}}
-               onClick={() => {
+              onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -1032,6 +1033,8 @@ const Profile = (props) => {
           </Carousel>
           {/* </Paper> */}
           {!isThirdPerson && (
+
+            <>
             <Button
               variant="contained"
               className={classes.myButton}
@@ -1098,6 +1101,14 @@ const Profile = (props) => {
             >
               Save
             </Button>
+            {/* <div>
+            <Button
+              className={classes.myButton}
+              style={{ float: "center", marginTop: 20 }}>
+              Add to the Avatars Page!
+            </Button>
+            </div> */}
+            </>
           )}
         </Grid>
       </Grid>
