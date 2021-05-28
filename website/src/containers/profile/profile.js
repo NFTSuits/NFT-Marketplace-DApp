@@ -878,7 +878,7 @@ const Profile = (props) => {
               key="gorkem"
             />
             {heads.map((item) => (
-              <div onClick={() => {
+              <Button style={{padding:0}} onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -889,7 +889,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
-              </div>
+              </Button>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -945,7 +945,8 @@ const Profile = (props) => {
               key="gorkem 2"
             />
             {middles.map((item) => (
-              <div onClick={() => {
+              <Button style={{padding:0}}
+               onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -956,7 +957,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
-              </div>
+              </Button>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -1014,7 +1015,8 @@ const Profile = (props) => {
             />
               
             {bottoms.map((item) => (
-              <div onClick={() => {
+              <Button style={{padding:0}}
+               onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -1025,7 +1027,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
-              </div>
+              </Button>
             ))}
           </Carousel>
           {/* </Paper> */}
