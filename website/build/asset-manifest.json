@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.6dea0f05.chunk.css",
+    "main.js": "/static/js/main.ff56f0b4.chunk.js",
+    "main.js.map": "/static/js/main.ff56f0b4.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.3ba23684.js",
+    "runtime-main.js.map": "/static/js/runtime-main.3ba23684.js.map",
+    "static/js/2.b32725aa.chunk.js": "/static/js/2.b32725aa.chunk.js",
+    "static/js/2.b32725aa.chunk.js.map": "/static/js/2.b32725aa.chunk.js.map",
+    "static/js/3.1cb0f00d.chunk.js": "/static/js/3.1cb0f00d.chunk.js",
+    "static/js/3.1cb0f00d.chunk.js.map": "/static/js/3.1cb0f00d.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.6dea0f05.chunk.css.map": "/static/css/main.6dea0f05.chunk.css.map",
+    "static/js/2.b32725aa.chunk.js.LICENSE.txt": "/static/js/2.b32725aa.chunk.js.LICENSE.txt",
+    "static/media/team_bidis.25fba8d3.png": "/static/media/team_bidis.25fba8d3.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3ba23684.js",
+    "static/js/2.b32725aa.chunk.js",
+    "static/css/main.6dea0f05.chunk.css",
+    "static/js/main.ff56f0b4.chunk.js"
+  ]
+}
