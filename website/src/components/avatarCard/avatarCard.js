@@ -55,7 +55,7 @@ const useStyles = makeStyles({
     },
   },
   mediaBot: {
-    height: 270,
+    height: 240,
     width: 200,
     marginLeft:35,
     borderRadius: 5,
@@ -100,24 +100,18 @@ const MyTooltip = withStyles((theme) => ({
 }))(Tooltip);
 
 const AvatarCard = ({
-  name,
-  frequency,
-  owner,
-  imgUrl,
-  price,
-  auctionPrice,
-  type,
-  isBiddable,
-  isOnSale,
-  id,
-  isProfile,
+  headImg,
+  middleImg,
+  bottomImg,
+  username,
+  address,
 }) => {
   const classes = useStyles();
   // var owner = ;
 
-  const [usernameToBeShown, setUsernameToBeShown] = React.useState(
-    owner.slice(0, 4) + "..." + owner.slice(owner.length - 2, owner.length)
-  );
+  // const [usernameToBeShown, setUsernameToBeShown] = React.useState(
+  //   owner.slice(0, 4) + "..." + owner.slice(owner.length - 2, owner.length)
+  // );
 
   React.useEffect(async () => {
     var nft_contract_interface = new window.web3.eth.Contract(
@@ -125,9 +119,9 @@ const AvatarCard = ({
       addresses.NFT_CONTRACTS_ADDRESS
     );
 
-    getUsername(nft_contract_interface, owner).then((data) => {
-      setUsernameToBeShown(data.username);
-    });
+    // getUsername(nft_contract_interface, owner).then((data) => {
+    //   setUsernameToBeShown(data.username);
+    // });
   }, [window.web3.eth]);
 
   return (
@@ -137,29 +131,27 @@ const AvatarCard = ({
           <CardActionArea
             disableRipple
             onClick={() => {
-              isProfile
-                ? (window.location.href = owner)
-                : (window.location.href = "profile/" + owner);
+              (window.location.href = "profile/" + address);
             }}
           >
             <Grid container>
               <CardMedia
                 className={classes.mediaTop}
                 // image={imgUrl}
-                image="https://ipfs.io/ipfs/QmS3stSr1CvG6wN4rY1L4h59LL74RuxWf7r6cCTbbMhWxm"
-                title={name}
+                image={"https://ipfs.io/ipfs/"+ headImg}
+                title={'name'}
               />
               <CardMedia
                 className={classes.mediaMid}
                 // image={imgUrl}
-                image="https://ipfs.io/ipfs/QmPtGirDwbHV1hwoxwB559WReY4uDYYcmrHoYhNwQdn8TC"
-                title={name}
+                image={"https://ipfs.io/ipfs/"+ middleImg}
+                title={"name"}
               />
               <CardMedia
                 className={classes.mediaBot}
                 // image={imgUrl}
-                image="https://ipfs.io/ipfs/QmacUscjeWSPVF4xbYPifS8M6uX8Dwi4VwZs9f4UX9pSnY"
-                title={name}
+                image={"https://ipfs.io/ipfs/"+bottomImg}
+                title={"name"}
               />
             </Grid>
           </CardActionArea>
@@ -179,12 +171,10 @@ const AvatarCard = ({
                 size="small"
                 className={classes.myButton}
                 onClick={() => {
-                  isProfile
-                    ? (window.location.href = owner)
-                    : (window.location.href = "profile/" + owner);
+                  (window.location.href = "profile/" + address);
                 }}
               >
-                {usernameToBeShown}
+                {username}
               </Button>
             </div>
           </Grid>

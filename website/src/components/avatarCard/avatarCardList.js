@@ -64,17 +64,22 @@ const AvatarCardList = (props) => {
         return (
           <GridListTile key={index}>
             <AvatarCard
-              name={cardItem.name}
-              frequency={cardItem.rarity}
-              owner={cardItem.owner}
-              imgUrl={"https://ipfs.io/ipfs/"+cardItem.cid}
-              price={cardItem.sellPrice}
-              auctionPrice={cardItem.maxBid}
-              type={cardItem.clothType}
-              isBiddable={cardItem.isBiddable}
-              isOnSale={cardItem.isOnSale}
-              id={cardItem.id}
-              isProfile={props.isProfile}
+                headImg = {cardItem.headImg}
+                middleImg = {cardItem.middleImg}
+                bottomImg = {cardItem.bottomImg}
+                username = {cardItem.username}
+                address = {cardItem.address}
+              // name={cardItem.name}
+              // frequency={cardItem.rarity}
+              // owner={cardItem.owner}
+              // imgUrl={"https://ipfs.io/ipfs/"+cardItem.cid}
+              // price={cardItem.sellPrice}
+              // auctionPrice={cardItem.maxBid}
+              // type={cardItem.clothType}
+              // isBiddable={cardItem.isBiddable}/
+              // isOnSale={cardItem.isOnSale}
+              // id={cardItem.id}
+              // isProfile={props.isProfile}
             />
           </GridListTile>
         );

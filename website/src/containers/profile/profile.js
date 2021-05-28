@@ -878,7 +878,8 @@ const Profile = (props) => {
               key="gorkem"
             />
             {heads.map((item) => (
-              <div onClick={() => {
+              <Button style={{padding:0}}
+              onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -889,7 +890,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
-              </div>
+              </Button>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -945,7 +946,8 @@ const Profile = (props) => {
               key="gorkem 2"
             />
             {middles.map((item) => (
-              <div onClick={() => {
+              <Button style={{padding:0}}
+              onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
@@ -956,7 +958,7 @@ const Profile = (props) => {
                 className={classes.large}
                 key={item.cid}
               />
-              </div>
+              </Button>
             ))}
           </Carousel>
           {/* </Paper> */}
@@ -1019,7 +1021,7 @@ const Profile = (props) => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
-                style={{width: 250, height: 250}}
+                style={{width: 250, height: 200}}
                 variant="square"
                 alt={item.name}
                 src={"https://ipfs.io/ipfs/"+item.cid}
