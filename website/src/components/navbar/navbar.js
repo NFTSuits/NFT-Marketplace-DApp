@@ -241,7 +241,7 @@ const Navbar = () => {
           <div className={classes.sectionDesktop}>
             {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
 
-            {/* <Button
+            <Button
               color="inherit"
               onClick={() => {
                 window.location.href = "/avatars";
@@ -255,7 +255,7 @@ const Navbar = () => {
                 }}
               />
               Avatars
-            </Button> */}
+            </Button>
             {/* <Button
               color="inherit"
               onClick={() => {

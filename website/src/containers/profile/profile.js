@@ -1014,22 +1014,25 @@ const Profile = (props) => {
             />
               
             {bottoms.map((item) => (
-              <div onClick={() => {
+              <Button style={{padding:0}}
+              onClick={() => {
                 window.location.href = "/item/" + item.id;
               }}>
               <Avatar
-                style={{width: 250, height: 200}}
+                style={{width: 250, height: 250}}
                 variant="square"
                 alt={item.name}
                 src={"https://ipfs.io/ipfs/"+item.cid}
                 className={classes.large}
                 key={item.cid}
               />
-              </div>
+              </Button>
             ))}
           </Carousel>
           {/* </Paper> */}
           {!isThirdPerson && (
+
+            <>
             <Button
               variant="contained"
               className={classes.myButton}
@@ -1096,6 +1099,14 @@ const Profile = (props) => {
             >
               Save
             </Button>
+            {/* <div>
+            <Button
+              className={classes.myButton}
+              style={{ float: "center", marginTop: 20 }}>
+              Add to the Avatars Page!
+            </Button>
+            </div> */}
+            </>
           )}
         </Grid>
       </Grid>
