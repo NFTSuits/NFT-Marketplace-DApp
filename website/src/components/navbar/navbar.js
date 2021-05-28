@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
+    margin:0
   },
   search: {
     position: "relative",
@@ -209,32 +210,76 @@ const Navbar = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
+      <MenuItem onClick={() => {
+                window.location.href = "/avatars";
+              }}>
+              <SupervisedUserCircleIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              Avatars
       </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
+      <MenuItem onClick={() => {
+                window.location.href = "/marketplace";
+              }}>
+              <StorefrontIcon
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: 5,
+                  fontSize: 20,
+                }}
+              />
+              All items{/*Marketplace */}
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+      <MenuItem >
+      {window.ethereum && !window.ethereum.selectedAddress ? (
+              <>
+                <Button
+                  onClick={() => {
+                    setTriggerEth(!triggerEth);
+                  }}
+                >
+                  Connect
+                </Button>
+              </>
+            ) : (
+              <Button
+                color="inherit"
+                onClick={() => {
+                  window.location.href = "/profile/" + address;
+                }}
+              >
+                {
+                  avatarHead === "" 
+                    ?  <AccountCircle
+                          style={{
+                            verticalAlign: "middle",
+                            marginRight: 10,
+                            fontSize: 25,
+                          }}
+                        />
+                    : <img 
+                        style={{
+                          width: 25, 
+                          height: 25, 
+                          marginRight: 10, 
+                          verticalAlign: "middle"
+                        }} 
+                        src={"https://ipfs.io/ipfs/"+avatarHead}  
+                        alt="fireSpot"
+                      />
+                }
+                {username
+                  ? username
+                  : address.slice(0, 4) +
+                    "..." +
+                    address.slice(address.length - 2, address.length)}
+                
+              </Button>
+            )}
       </MenuItem>
     </Menu>
   );
@@ -251,11 +296,11 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} variant="h6" noWrap onClick={() => {
+          <Button className={classes.title} variant="h6" noWrap onClick={() => {
                 window.location.href = "/";
               }} Button >
-            NFT Suits
-          </Typography>
+            <img style={{height:50, marginTop:10}}src={"https://ipfs.io/ipfs/QmQogyec8HzYYc1rs5d6WBRGq79yPLjYNqgzSVVLxTB4g7"} alt={"NFT Suits"} />
+          </Button>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {/* <div style={{ marginTop: 10 }}>{useRecoilValue(getUsername)}</div> */}
@@ -350,8 +395,8 @@ const Navbar = () => {
                         />
                     : <img 
                         style={{
-                          width: 50, 
-                          height: 50, 
+                          width: 55, 
+                          height: 65, 
                           marginLeft: 10, 
                           verticalAlign: "middle"
                         }} 

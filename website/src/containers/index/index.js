@@ -24,6 +24,11 @@ import {
 } from "@material-ui/core";
 import team_bidis from'./team_bidis.png';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import StoreMallDirectorySharpIcon from '@material-ui/icons/StoreMallDirectorySharp';
+import DirectionsRunSharpIcon from '@material-ui/icons/DirectionsRunSharp';
+import FormatListNumberedSharpIcon from '@material-ui/icons/FormatListNumberedSharp';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import ShareSharpIcon from '@material-ui/icons/ShareSharp';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -60,6 +65,33 @@ const useStyles = makeStyles({
     height: 48,
     padding: '0 30px',
     margin: 8,
+  },
+  boxes:{
+    border: "1.5px solid #121212",
+    borderRadius: 3,
+    height: 150,
+    width: 200,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    margin: 5,
+    padding:10,
+    "&:hover": {
+      backgroundColor: "#121212",
+      borderColor: "#00D54B",
+      boxShadow:
+        "0 1px 3px rgba(255,255,255,0.12), 0 1px 3px rgba(255,255,255,0.24)",
+      transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
+      transition: "transform 0.15s ease-in-out",
+    "&:hover": {
+      transform: "scale3d(1.05, 1.05, 1)",
+    },
+    }
+  },
+  boxText:{
+    margin:5, 
+    textAlign:"center",
+    marginTop: 20
   },
 });
 
@@ -101,16 +133,103 @@ const Index = () => {
           message={<span id="client-snackbar" >In order to proceed to the marketplace and profile pages, you should install Metamask extension to your browser.</span>}
       />
     </Snackbar>
+    <Typography variant="h2" align="center" component="h1" gutterbottom="true" style={{paddingTop:"2vw", color:"#00D54B", fontSize: 100}}>
+              NFT Suits
+            </Typography>  
+        <div style = {{ 
+              display: "flex", 
+              flexDirection: "row",
+              marginTop: 30, 
+              marginRight:"2vw", 
+              marginLeft:"2vw"
+            }}
+            >
+              <div  className={classes.boxes}
+                    onClick={() => {
+                    window.location.href = "/marketplace";
+                  }}>
+                <StoreMallDirectorySharpIcon style={{ color: "#8f84d8ff", fontSize: 50}}/>
+                <Typography className ={classes.boxText}>
+                  Buy and sell items with our community
+                </Typography>
+              </div>
+              <div className={classes.boxes}
+                  onClick={() => {
+                        window.location.href = "/marketplace";
+                  }}
+                  >
+                <DirectionsRunSharpIcon style={{ color: "#e333a5ff", fontSize: 50}}/>
+                <Typography className ={classes.boxText}>
+                  Chase and bid on the rarest items
+                </Typography>
+              </div>
+              <div className={classes.boxes}
+                  onClick={() => {
+                        window.location.href = "/marketplace";
+                  }}
+              >
+                <FormatListNumberedSharpIcon style={{ color: "#fa7658ff", fontSize: 50}}/>
+                <Typography className ={classes.boxText}>
+                  Make almost unlimited combinations
+                </Typography>
+              </div>
+              <div className={classes.boxes}
+                    onClick={() => {
+                        window.location.href = "/avatars";
+                  }}
+              >
+                <ShareSharpIcon style={{ color: "#f7c11fff", fontSize: 50}}/>
+                <Typography className ={classes.boxText}>
+                  Create and share your avatars
+                </Typography>
+              </div>
+            </div>
 
+        <Grid style={{marginRight: "3vw", marginLeft: "3vw", marginTop:20}}>
+            <Typography variant="h4" component="h1" gutterbottom="true" align ='start' style={{paddingTop:"2vw", color:"#00D54B"}}>
+              What is NFT Suits?
+            </Typography>
+            <div style={{display:"flex", flexDirection: "row" , marginBottom:-20}}>
+              <FiberManualRecordIcon style={{fontSize:20,marginTop:21, color:"#00D54B"}}/>
+              <Typography variant="body1" component="h1" gutterbottom="true" align ='start' style={{ color:"#f1ffe3", margin:20}}>
+                NFT Suits is a game centered around collectible items that can be worn to the head, top, and bottom.
+              </Typography>
+            </div>
+            <div style={{display:"flex", flexDirection: "row", marginBottom:-20}}>
+              <FiberManualRecordIcon style={{fontSize:20,marginTop:21, color:"#00D54B"}}/>
+              <Typography variant="body1" component="h1"  gutterbottom="true" align ='start' style={{ color:"#f1ffe3", margin:20}}>
+                Each item is <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>one-of-a-kind</Typography> and <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>100% owned by you</Typography>; it cannot be replicated, taken away, or destroyed. Your proof of ownership is stored <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>Ethereum blockchain</Typography>.
+              </Typography>
+            </div>
+            <div style={{display:"flex", flexDirection: "row", marginBottom:-20}}>
+              <FiberManualRecordIcon style={{fontSize:20,marginTop:21, color:"#00D54B"}}/>
+              <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#f1ffe3", margin:20}}>
+                Each item is either a head, top or bottom wear which you can <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>buy, bid on, and offer for auction and sale</Typography> via the marketplace.
+              </Typography>
+            </div>
+            <div style={{display:"flex", flexDirection: "row", marginBottom:-20}}>
+              <FiberManualRecordIcon style={{fontSize:20,marginTop:21, color:"#00D54B"}}/>
+              <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#f1ffe3", margin:20}}>
+                You can create your <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>own avatar</Typography> by combining a head, a top and a bottom item, which is a <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>unique combination</Typography> within the whole community.
+              </Typography>
+            </div>
+            <div style={{display:"flex", flexDirection: "row", marginBottom:-20}}>
+              <FiberManualRecordIcon style={{fontSize:20,marginTop:21, color:"#00D54B"}}/>
+              <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#f1ffe3", margin:20}}>
+                <Typography style={{color:"#00D54B", fontWeight:"bold", display: "inline"}}>Display your avatar</Typography> and brag about it, while others do so!
+              </Typography>
+            </div>
+        </Grid>
+        
       <Grid
         container
         direction="column"
         justify="center"
         alignItems="center"
         >
-      <Grid>
-        <Typography variant="h1" component="h1"    gutterbottom="true" align ='center' style={{paddingTop:"5vw", fontSize: 150, color:"#00D54B"}}>
-          CryptoBidis
+      <Grid >
+        <Typography variant="h3" gutterbottom="true"  style={{paddingTop:"5vw",color:"#00D54B"}}>
+          Team
         </Typography>
       </Grid>
       <div>
@@ -127,7 +246,7 @@ const Index = () => {
             >
               <Grid style={{paddingLeft:"12vw"}}>
               <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#00D54B"}}>
-                  Cavit Cakir
+                  Cavit Çakır
               </Typography>
 
               <IconButton
@@ -153,7 +272,7 @@ const Index = () => {
 
               <Grid>
               <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#00D54B"}}>
-                Kaya Kapagan
+                Kaya Kapağan
               </Typography>
 
               <IconButton
@@ -178,7 +297,7 @@ const Index = () => {
               
               <Grid>
               <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#00D54B"}}>
-                  Gorkem Kose
+                  Görkem Köse
               </Typography>
               <IconButton
                 style={{marginLeft: 3}}
@@ -201,7 +320,7 @@ const Index = () => {
               
               <Grid style={{paddingRight:"11vw"}}>
               <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#00D54B"}}>
-                  Gokberk Yar
+                  Gökberk Yar
               </Typography>
               <IconButton
                 color="primary"
@@ -223,7 +342,8 @@ const Index = () => {
               
             </Grid>
 
-      <Paper elevation={3} variant="outlined" className={classes.root2} style={{
+            
+{/*       <Paper elevation={3} variant="outlined" className={classes.root2} style={{
         width:"100%",
         height:"100%",
         backgroundColor:'black'}}>
@@ -263,24 +383,8 @@ const Index = () => {
           Create & Share your Avatars.
         </Typography>
         </Grid>
-      </Grid>
-      </Paper>
-        <Grid>
-            <Typography variant="h2" component="h1"    gutterbottom="true" align ='start' style={{paddingTop:"2vw", color:"#00D54B"}}>
-              <Box fontWeight="fontWeightBold">
-                What is NFT Suits?
-            </Box>
-            </Typography>
-            <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{ color:"#f1ffe3", margin:20}}>
-            NFT Suits is a game centered around collectible creatures that can be weared to head, top, and bottom.
-            </Typography>
-            <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{ color:"#f1ffe3", margin:20}}>
-            Each bidi is one-of-a-kind and 100% owned by you; it cannot be replicated, taken away, or destroyed.
-            </Typography>
-            <Typography variant="body1" component="h1"    gutterbottom="true" align ='start' style={{color:"#f1ffe3", margin:20}}>
-            You can create your avatar by combining any of bidis.
-            </Typography>
-        </Grid>
+      </Grid> 
+      </Paper>*/}
       </Grid>
     </Container>
     )
