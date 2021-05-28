@@ -60,7 +60,7 @@ contract("NFT", ([deployer, buyer, seller]) => {
                 assert.equal(newMinted.cid,"link");
                 assert.equal(newMinted.rarity,"rarity");
                 assert.equal(newMinted.isOnSale,true);
-                assert.equal(newMinted.sellPrice,1);
+                assert.equal(newMinted.sellPrice,10000000000000000);
                 assert.equal(newMinted.isBiddable,false);
                 assert.equal(newMinted.maxBid,0);
                 assert.equal(newMinted.maxBidder,0x0);
