@@ -1,9 +1,14 @@
-# CS 48001 Project
+# NFT Suits - NFT Marketplace DApp Ethereum Solidity
+![](website/src/containers/index/team_bidis.png) 
 
-<embed src="https://sumanbogati.github.io/sample.pdf" type="application/pdf" />
+Site: https://nftsuits.com/
+- Gökberk, Kaya, Görkem, Cavit
 
+NFT Suits is a game centered around collectible unique items that are used to create one-of-a-kind avatars where the uniqueness is guaranteed by ERC721 protocol.  No items can bereplicated,  taken  away,  or  destroyed,  since  the  proof  of  ownerships  are  stored  on  Ethereumblockchain.  In order to see the items and interact with the marketplace,  user has to installMetaMask  extension  to  her/his  browser.   Then,  by  connecting  his/her  wallet;  the  user  canbuy, bid on, offer items for auction and sell the items via the marketplace.  As tree requiredand complementary pieces are purchased and worn, an avatar is created and displayed to thecommunity.
 
-- Gökberk, Kaya,Görkem,Cavit
+Further Reading: 
+
+- 
 
 # How to Run Docker
 
@@ -11,24 +16,3 @@
     ## in project directory, i.e. cd project
     docker-compose -f docker-compose.dev.yml up
 ```
-
-# How to install package
-
-```bash
-    ## pwd website olmalı
-    ## indir
-    npm install <package> --save
-```
-
-- /website -> node_modules ve package-lock.json folder'ini/file'ini sil (sag click)
-
-```bash
-    ## pwd project olmalı
-   docker-compose -f docker-dompose.dev.yml up --build
-```
-
-```bash
-   docker-compose -f docker-dompose.dev.yml down
-```
-
--jump How to Run Docker
