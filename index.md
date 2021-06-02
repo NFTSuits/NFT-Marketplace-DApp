@@ -1,1 +1,1 @@
-## Crypto Suits
+## NFT Suits
