@@ -25,7 +25,7 @@ NFT Suits is a game centered around collectible unique items that are used to cr
 
 
 
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+![Logo](https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/nftSuits_logo.png)
 
     
 # NFT Marketplace for Ethereum Blockchain
@@ -34,10 +34,12 @@ NFT Suits is a game centered around collectible unique items that are used to cr
 
 ## Authors
 
-- [@gokberkyar](https://www.github.com/gokberkyar)
-- [@kayakapagan](https://www.github.com/kayakapagan)
 - [@cavitcakir](https://www.github.com/cavitcakir)
+- [@kayakapagan](https://www.github.com/kayakapagan)
 - [@gorkemkose](https://www.github.com/gorkemkose)
+- [@gokberkyar](https://www.github.com/gokberkyar)
+
+![](website/src/containers/index/team_bidis.png) 
 
 ## Tech Stack
 
