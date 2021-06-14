@@ -8,9 +8,98 @@ NFT Suits is a game centered around collectible unique items that are used to cr
 
 [Further Reading](https://github.com/cs48kblockchain/NFTSuits-DApp/blob/main/NFTSuitsExplained.pdf)
 
-# How to Run Docker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+
+    
+# NFT Marketplace for Ethereum Blockchain
+
+NFT Suits is a game centered around collectible unique items that are used to create one-of-a-kind avatars where the uniqueness is guaranteed by ERC721 protocol.  No items can bereplicated, taken away, or destroyed, since the proof of ownerships are stored on Ethereum blockchain. In order to see the items and interact with the marketplace, user has to installMetaMask extension to her/his browser. Then, by connecting his/her wallet; the user can buy, bid on, offer items for auction and sell the items via the marketplace. As tree requiredand complementary pieces are purchased and worn, an avatar is created and displayed to the community.
+
+## Authors
+
+- [@gokberkyar](https://www.github.com/gokberkyar)
+- [@kayakapagan](https://www.github.com/kayakapagan)
+- [@cavitcakir](https://www.github.com/cavitcakir)
+- [@gorkemkose](https://www.github.com/gorkemkose)
+
+## Tech Stack
+
+**Client:** React, Recoil, Material UI
+
+**Contract:** Solidity
+
+**Dev Tools:** Ganache, Truffle, Remix, Docker
+
+**Static Smart Contract Analysis:** Securify 2.0, Slither
+
+**Testing:** Mocha
+
+<code><img height="50" src="https://github.com/Flutter-Social-Media-Clone/Flutter-Social-Media-Clone/blob/main/icons/flutter_icon.png"></code>
+<code><img height="50" src="https://github.com/Flutter-Social-Media-Clone/Flutter-Social-Media-Clone/blob/main/icons/firebase_icon.jpg"></code>
+<code><img height="50" src="https://github.com/Flutter-Social-Media-Clone/Flutter-Social-Media-Clone/blob/main/icons/dart_icon.jpeg"></code>
+
+## Deliverables
+   - [website (make sure you are in Ropsten Test Network)](https://github.com/cs48kblockchain/NFTSuits-DApp/blob/main/NFTSuitsExplained.pdf)
+   - [report](https://github.com/cs48kblockchain/NFTSuits-DApp/blob/main/NFTSuitsExplained.pdf)
+   - [presentation](https://github.com/cs48kblockchain/NFTSuits-DApp/blob/main/NFTSuitsExplained.pdf)
+
+## Features
+
+- Light/dark mode toggle
+- Live previews
+- Fullscreen mode
+- Cross platform
+ 
+## How to Run Docker
 
 ```bash
     ## in project directory, i.e. cd project
     docker-compose -f docker-compose.dev.yml up
 ```
+
+## Running Tests
+To run tests, run the following command
+
+```bash
+  //make sure ganache is running
+  cd truffle
+  truffle test
+```
+
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+  
+## Support and Feedback
+
+Feel free to create an issue to discuss more.
+
+  
+
+
+
+
+
+
+
+
+
+
