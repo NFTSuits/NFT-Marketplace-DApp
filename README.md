@@ -6,16 +6,26 @@
 
 NFT Suits is a game centered around collectible unique items that are used to create one-of-a-kind avatars where the uniqueness is guaranteed by ERC721 protocol.  No items can bereplicated, taken away, or destroyed, since the proof of ownerships are stored on Ethereum blockchain. In order to see the items and interact with the marketplace, user has to installMetaMask extension to her/his browser. Then, by connecting his/her wallet; the user can buy, bid on, offer items for auction and sell the items via the marketplace. As tree requiredand complementary pieces are purchased and worn, an avatar is created and displayed to the community.
 
+# README Contents
+1. [Authors](#authors)
+2. [Tech Stack](#tech-stack)
+3. [Deliverables](#deliverables)
+4. [Features](#features)
+    - [Within her/his profile, a user can](#within-profile-page-a-user-can)
+    - [Within the item page, a user can](#within-the-item-page-a-user-can)
+5. [How to Run Docker](#how-to-run-docker)
+6. [Screenshots](#screenshots)
+7. [Support and Feedback](#support-and-feedback)
+
 ## Authors
+<p align="center">
+    <img src="website/src/containers/index/team_bidis.png"/>
+</p>
 
 - [@cavitcakir](https://www.github.com/cavitcakir)
 - [@kayakapagan](https://www.github.com/kayakapagan)
 - [@gorkemkose](https://www.github.com/gorkemkose)
 - [@gokberkyar](https://www.github.com/gokberkyar)
-
-<p align="center">
-    <img src="website/src/containers/index/team_bidis.png"/>
-</p>
 
 ## Tech Stack
 
@@ -50,7 +60,7 @@ NFT Suits is a game centered around collectible unique items that are used to cr
 
 ## Features
 
-### Within her/his profile, a user can
+### Within profile page, a user can
 
 - Set a username
 - Withdraw her/his balance
