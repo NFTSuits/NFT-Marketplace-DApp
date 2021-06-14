@@ -53,9 +53,18 @@ NFT Suits is a game centered around collectible unique items that are used to cr
 
 **Testing:** Mocha
 
-<code><img height="50" src="https://github.com/Flutter-Social-Media-Clone/Flutter-Social-Media-Clone/blob/main/icons/flutter_icon.png"></code>
-<code><img height="50" src="https://github.com/Flutter-Social-Media-Clone/Flutter-Social-Media-Clone/blob/main/icons/firebase_icon.jpg"></code>
-<code><img height="50" src="https://github.com/Flutter-Social-Media-Clone/Flutter-Social-Media-Clone/blob/main/icons/dart_icon.jpeg"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/react-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/recoil-logo.svg"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/material-ui-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/solidity-logo.jpeg"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/ganache-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/truffle-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/remix-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/docker-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/securify-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/slither-logo.png"></code>
+<code><img height="50" src="https://github.com/NFTSuits/NFT-Marketplace-DApp/blob/main/NFTSuits%20icons/mocha-logo.svg"></code>
+
 
 ## Deliverables
    - [website (make sure you are in Ropsten Test Network)](https://github.com/cs48kblockchain/NFTSuits-DApp/blob/main/NFTSuitsExplained.pdf)
